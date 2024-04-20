@@ -1,8 +1,9 @@
 import logging
 import asyncio
 
-from config import dispatcher, bot
+from config import bot, dispatcher
 import Handlers
+
 
 logging.basicConfig(level=logging.INFO)
 

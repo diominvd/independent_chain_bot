@@ -1,6 +1,7 @@
 from aiogram.filters import Command
 from aiogram.types import Message
 
+import Keyboards
 from config import dispatcher, database
 from strings import translate_answer
 import utils as u
@@ -17,6 +18,7 @@ async def start_handler(message: Message) -> None:
     # Check user in database.
     if not database.check_user(telegram_id):
         database.create_user(telegram_id, username, user_language, registration_date, inviter_id)
+        database.add_referal(inviter_id)
     # Answer with correct language.
     answer_text: str = translate_answer(message_text, user_language)
     await message.answer(answer_text)

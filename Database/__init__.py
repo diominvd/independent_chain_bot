@@ -1,10 +1,12 @@
 from mysql.connector import connect, Error
 
+from vars import database_user, database_password
+
 
 class Database:
     def __init__(self):
         # Create connection to database.
-        self.connection = connect(host="localhost", user="root", password="slvdakl02", database="independent_chain")
+        self.connection = connect(host="localhost", user=database_user, password=database_password, database="independent_chain")
         self.cursor = self.connection.cursor()
 
         self.cursor.execute("CREATE DATABASE IF NOT EXISTS independent_chain;")
@@ -14,13 +16,13 @@ class Database:
         self.cursor.execute("""
             CREATE TABLE IF NOT EXISTS users(
                 project_id INT AUTO_INCREMENT PRIMARY KEY,
-                telegram_id INT NOT NULL,
+                telegram_id BIGINT NOT NULL,
                 username VARCHAR(100),
                 lang VARCHAR(2),
                 balance INT NOT NULL,
                 referals INT NOT NULL,
                 registration_date DATE,
-                inviter_id INT NOT NULL)
+                inviter_id BIGINT NOT NULL)
         """)
         self.connection.commit()
 
@@ -40,6 +42,14 @@ class Database:
 
     def load_profile(self, telegram_id: int) -> list:
         self.cursor.execute("""
-            SELECT project_id, balance, referals, registration_date FROM users WHERE telegram_id = %s;
+            SELECT project_id, telegram_id, balance, referals, registration_date FROM users WHERE telegram_id = %s;
         """, (telegram_id, ))
         return list(self.cursor.fetchall()[0])
+
+    def add_referal(self, inviter_id: int) -> bool:
+        self.cursor.execute("""
+            UPDATE users
+            SET referals = referals + 1, balance = balance + 50 WHERE telegram_id = %s
+        """, (inviter_id, ))
+        self.connection.commit()
+        return True
