@@ -14,24 +14,24 @@ def translate_button(button: str, language: str) -> str:
 
 
 def ru_start(*args) -> str:
-    text: str = (f"Добро пожаловать в Independent Chain Bot.\n\n"
+    text: str = (f"Добро пожаловать в Independent Chain Bot. Не забудьте привязать TON SPACE кошелёк.\n\n"
                  f"<b>Список доступных команд:</b>\n"
                  f"/start - Перезапустить бота.\n"
                  f"/info - Краткая информация.\n"
                  f"/profile - Ваш профиль.\n"
-                 f"/wallet - Привязать кошелёк.\n"
+                 f"/wallet - Привязать TON Space кошелёк.\n"
                  f"/links - Ссылки, связанные с проектом.\n"
                  f"/coin - Информация о жетоне.")
     return text
 
 
 def en_start(*args) -> str:
-    text: str = (f"Welcome to Independent Chain Bot.\n\n"
+    text: str = (f"Welcome to Independent Chain Bot. Don't forget to link your TON SPACE wallet.\n\n"
                  f"<b>List of available commands:</b>\n"
                  f"/start - Restart bot.\n"
                  f"/info - Brief information.\n"
                  f"/profile - Your profile.\n"
-                 f"/wallet - Link your wallet.\n"
+                 f"/wallet - Link your TON Space wallet.\n"
                  f"/links - Links related to the project.\n"
                  f"/coin - Information about the token.")
     return text
@@ -66,11 +66,11 @@ def ru_profile(*args) -> str:
     profile_data: list = args[0]
     date: list = str(profile_data[5]).split("-")
     text: str = (f"[+] <b>Ваш ID в проекте:</b> {profile_data[0]}\n"
-                 f"[+] <b>Адрес TON кошелька:</b> <code>{profile_data[2]}</code>\n"
+                 f"[+] <b>Адрес TON Space кошелька:</b> <code>{profile_data[2]}</code>\n"
                  f"[+] <b>Баланс:</b> {profile_data[3]} INCH\n"
                  f"[+] <b>Количество рефералов:</b> {profile_data[4]}\n"
                  f"[+] <b>Дата регистрации:</b> {date[2]}-{date[1]}-{date[0]}\n\n"
-                 f"[+] <b>Ваша реферальная ссылка:</b> <code>t.me/inch_coin_bot?start={profile_data[1]}</code>")
+                 f"[+] <b>Ваша реферальная ссылка:</b> <code>t.me/inch_coin_bot?start={profile_data[1]}</code>\n(Нажмите чтобы скопировать)")
     return text
 
 
@@ -78,11 +78,11 @@ def en_profile(*args) -> str:
     profile_data: list = args[0]
     date: list = str(profile_data[5]).split("-")
     text: str = (f"[+] <b>Your ID in project:</b> {profile_data[0]}\n"
-                 f"[+] <b>TON wallet address:</b> <code>{profile_data[2]}</code>\n"
+                 f"[+] <b>TON Space wallet address:</b> <code>{profile_data[2]}</code>\n"
                  f"[+] <b>Balance:</b> {profile_data[3]} INCH\n"
                  f"[+] <b>Number of referrals:</b> {profile_data[4]}\n"
                  f"[+] <b>Date of registration:</b> {date[2]}-{date[1]}-{date[0]}\n\n"
-                 f"[+] <b>Your referral link:</b> <code>t.me/inch_coin_bot?start={profile_data[1]}</code>")
+                 f"[+] <b>Your referral link:</b> <code>t.me/inch_coin_bot?start={profile_data[1]}</code>\n(Click to copy)")
     return text
 
 
@@ -133,12 +133,12 @@ def en_subscribe(*args) -> str:
 
 
 def ru_wallet_request(*args) -> str:
-    text: str = f"Отправьте адрес вашего TON кошелька. Будьте внимательны. Проверьте правильность адреса перед отправкой."
+    text: str = f"Отправьте адрес вашего TON Space кошелька. Будьте внимательны. Проверьте правильность адреса перед отправкой."
     return text
 
 
 def en_wallet_request(*args) -> str:
-    text: str = f"Send the address of your TON wallet. Be careful. Check that the address is correct before sending."
+    text: str = f"Send the address of your TON Space wallet. Be careful. Check that the address is correct before sending."
     return text
 
 

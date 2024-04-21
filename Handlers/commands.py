@@ -22,7 +22,7 @@ import utils as u
 
 
 @dispatcher.message(Command("start"))
-async def start_handler(message: Message, state: FSMContext) -> None:
+async def start_handler(message: Message) -> None:
     # Fetch uer data.
     telegram_id: int = u.fetch_user_id(message)
     username: str = u.fetch_username(message)
@@ -31,20 +31,18 @@ async def start_handler(message: Message, state: FSMContext) -> None:
     inviter_id: int = u.fetch_inviter_id(message)
     message_text: str = u.fetch_message_text(message)
     # Check subscribe on channels.
+    # Check user in database.
+    if not database.check_user(telegram_id):
+        database.create_user(telegram_id, username, user_language, registration_date, inviter_id)
+        database.add_referal(inviter_id)
     if not await u.subscribe_check(message):
         answer_text: str = strings.translate_answer("subscribe", user_language)
         keyboard = start_keyboard(user_language)
         await message.answer(answer_text, reply_markup=keyboard)
     else:
-        # Check user in database.
-        if not database.check_user(telegram_id):
-            database.create_user(telegram_id, username, user_language, registration_date, inviter_id)
-            database.add_referal(inviter_id)
-        else:
-            # Answer with correct language.
-            answer_text: str = translate_answer(message_text, user_language)
-            await message.answer(answer_text)
-    await state.clear()
+        # Answer with correct language.
+        answer_text: str = translate_answer(message_text, user_language)
+        await message.answer(answer_text)
 
 
 @dispatcher.message(Command("info"))
@@ -69,6 +67,7 @@ async def profile_handler(message: Message) -> None:
     else:
         user_id: int = u.fetch_user_id(message)
         profile_data = database.load_profile(user_id)
+        print(profile_data)
         answer_text: str = translate_answer(message.text, user_language, profile_data)
         await message.answer(answer_text)
 
