@@ -90,7 +90,7 @@ def ru_links(*args) -> str:
     text: str = (f"[+] Канал проекта: @inch_coin\n"
                  f"[+] Канал команды: @diominvdev\n"
                  f"[+] Чат проекта: @diominvdevc\n\n"
-                 f"[+] Твиттер проекта: x.com/inch_coin\n\n:"
+                 f"[+] Твиттер проекта: x.com/inch_coin\n\n"
                  f"[+] Исходный код проекта: clck.ru/3ACbjN\n"
                  f"[+] Исходный код бота: clck.ru/3ACbju\n\n"
                  f"[+] Whitepaper проекта: clck.ru/3ACbkk")
@@ -101,7 +101,7 @@ def en_links(*args) -> str:
     text: str = (f"[+] Channel of the project: @inch_coin\n"
                  f"[+] Channel of the team: @diominvdev\n"
                  f"[+] Project Chat: @diominvdevc\n\n"
-                 f"[+] Twitter of project: x.com/inch_coin\n\n:"
+                 f"[+] Twitter of project: x.com/inch_coin\n\n"
                  f"[+] Source code of the project: clck.ru/3ACbjN\n"
                  f"[+] Source code of the bot: clck.ru/3ACbju\n\n"
                  f"[+] Whitepaper of the project: clck.ru/3ACbmB")
