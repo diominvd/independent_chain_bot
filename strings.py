@@ -87,24 +87,24 @@ def en_profile(*args) -> str:
 
 
 def ru_links(*args) -> str:
-    text: str = (f"[+] Канал проекта: @inch_coin\n"
-                 f"[+] Канал команды: @diominvdev\n"
-                 f"[+] Чат проекта: @diominvdevc\n\n"
-                 f"[+] Твиттер проекта: x.com/inch_coin\n\n"
-                 f"[+] Исходный код проекта: clck.ru/3ACbjN\n"
-                 f"[+] Исходный код бота: clck.ru/3ACbju\n\n"
-                 f"[+] Whitepaper проекта: clck.ru/3ACbkk")
+    text: str = (f"[+] <b>Канал проекта:</b> @inch_coin\n"
+                 f"[+] <b>Канал команды:</b> @diominvdev\n"
+                 f"[+] <b>Чат проекта:</b> @diominvdevc\n\n"
+                 f"[+] <b>Твиттер проекта:</b> x.com/inch_coin\n\n"
+                 f"[+] <b>Исходный код проекта:</b> clck.ru/3ACbjN\n"
+                 f"[+] <b>Исходный код бота:</b> clck.ru/3ACbju\n\n"
+                 f"[+] <b>Whitepaper проекта:</b> clck.ru/3ACbkk")
     return text
 
 
 def en_links(*args) -> str:
-    text: str = (f"[+] Channel of the project: @inch_coin\n"
-                 f"[+] Channel of the team: @diominvdev\n"
-                 f"[+] Project Chat: @diominvdevc\n\n"
-                 f"[+] Twitter of project: x.com/inch_coin\n\n"
-                 f"[+] Source code of the project: clck.ru/3ACbjN\n"
-                 f"[+] Source code of the bot: clck.ru/3ACbju\n\n"
-                 f"[+] Whitepaper of the project: clck.ru/3ACbmB")
+    text: str = (f"[+] <b>Channel of the project:</b> @inch_coin\n"
+                 f"[+] <b>Channel of the team:</b> @diominvdev\n"
+                 f"[+] <b>Project Chat:</b> @diominvdevc\n\n"
+                 f"[+] <b>Twitter of project:</b> x.com/inch_coin\n\n"
+                 f"[+] <b>Source code of the project:</b> clck.ru/3ACbjN\n"
+                 f"[+] <b>Source code of the bot:</b> clck.ru/3ACbju\n\n"
+                 f"[+] <b>Whitepaper of the project:</b> clck.ru/3ACbmB")
     return text
 
 
