@@ -18,6 +18,7 @@ class Database:
                 project_id INT AUTO_INCREMENT PRIMARY KEY,
                 telegram_id BIGINT NOT NULL,
                 username VARCHAR(100),
+                wallet VARCHAR(100),
                 lang VARCHAR(2),
                 balance INT NOT NULL,
                 referals INT NOT NULL,
@@ -33,6 +34,13 @@ class Database:
         self.connection.commit()
         return True
 
+    def add_user_wallet(self, telegram_id: int, wallet_address: str) -> bool:
+        self.cursor.execute("""
+            UPDATE users SET wallet = %s WHERE telegram_id = %s
+        """, (wallet_address, telegram_id, ))
+        self.connection.commit()
+        return True
+
     def check_user(self, telegram_id: int) -> bool:
         self.cursor.execute("""
                     SELECT telegram_id FROM users;
@@ -42,7 +50,7 @@ class Database:
 
     def load_profile(self, telegram_id: int) -> list:
         self.cursor.execute("""
-            SELECT project_id, telegram_id, balance, referals, registration_date FROM users WHERE telegram_id = %s;
+            SELECT project_id, telegram_id, wallet, balance, referals, registration_date FROM users WHERE telegram_id = %s;
         """, (telegram_id, ))
         return list(self.cursor.fetchall()[0])
 
