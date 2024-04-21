@@ -15,8 +15,8 @@ def translate_button(button: str, language: str) -> str:
 
 def ru_start(*args) -> str:
     text: str = (f"Добро пожаловать в Independent Chain Bot.\n\n"
-                 f"Список доступных команд:\n"
-                 f"/start - Рестарт бота.\n"
+                 f"<b>Список доступных команд:</b>\n"
+                 f"/start - Перезапустить бота.\n"
                  f"/info - Краткая информация.\n"
                  f"/profile - Ваш профиль.\n"
                  f"/wallet - Привязать кошелёк.\n"
@@ -27,7 +27,7 @@ def ru_start(*args) -> str:
 
 def en_start(*args) -> str:
     text: str = (f"Welcome to Independent Chain Bot.\n\n"
-                 f"List of available commands:\n"
+                 f"<b>List of available commands:</b>\n"
                  f"/start - Restart bot.\n"
                  f"/info - Brief information.\n"
                  f"/profile - Your profile.\n"
@@ -64,8 +64,8 @@ def en_info(*args) -> str:
 
 def ru_profile(*args) -> str:
     profile_data: list = args[0]
-    date: list = str(profile_data[5]).split("-")
-    date: str = f"{date[2]}-{date[1]}-{date[0]}"
+    date_values: list = str(profile_data[5]).split("-")
+    date: str = f"{date_values[2]}-{date_values[1]}-{date_values[0]}"
     text: str = (f"<b>Ваш ID в проекте:</b> {profile_data[0]}\n"
                  f"<b>Адрес TON кошелька:</b> <code>{profile_data[2]}</code>\n"
                  f"<b>Баланс:</b> {profile_data[3]} INCH\n"
@@ -198,8 +198,8 @@ strings: dict = {
         "en": en_wallet_accept
     },
     "wallet_accept_error": {
-        "ru": ru_wallet_accept,
-        "en": en_wallet_accept
+        "ru": ru_wallet_accept_error,
+        "en": en_wallet_accept_error
     },
     "unknown": {
         "ru": 1,

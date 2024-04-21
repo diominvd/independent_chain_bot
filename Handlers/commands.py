@@ -23,7 +23,6 @@ import utils as u
 
 @dispatcher.message(Command("start"))
 async def start_handler(message: Message, state: FSMContext) -> None:
-    await state.clear()
     # Fetch uer data.
     telegram_id: int = u.fetch_user_id(message)
     username: str = u.fetch_username(message)
@@ -45,6 +44,7 @@ async def start_handler(message: Message, state: FSMContext) -> None:
             # Answer with correct language.
             answer_text: str = translate_answer(message_text, user_language)
             await message.answer(answer_text)
+    await state.clear()
 
 
 @dispatcher.message(Command("info"))
@@ -99,7 +99,7 @@ async def wallet_address_handler(message: Message, state: FSMContext) -> None:
     wallet_address: str = message.text
     if len(wallet_address) < 40:
         await message.answer(text=strings.translate_answer("wallet_accept_error", user_language))
-    else:
+    elif len(wallet_address) > 40:
         database.add_user_wallet(user_id, wallet_address)
         await message.answer(text=strings.translate_answer("wallet_accept", user_language))
         await state.clear()
