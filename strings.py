@@ -64,63 +64,61 @@ def en_info(*args) -> str:
 
 def ru_profile(*args) -> str:
     profile_data: list = args[0]
-    date_values: list = str(profile_data[5]).split("-")
-    date: str = f"{date_values[2]}-{date_values[1]}-{date_values[0]}"
-    text: str = (f"<b>Ваш ID в проекте:</b> {profile_data[0]}\n"
-                 f"<b>Адрес TON кошелька:</b> <code>{profile_data[2]}</code>\n"
-                 f"<b>Баланс:</b> {profile_data[3]} INCH\n"
-                 f"<b>Количество рефералов:</b> {profile_data[4]}\n"
-                 f"<b>Дата регистрации:</b> {date}\n\n"
-                 f"<b>Ваша реферальная ссылка:</b> <code>t.me/inch_coin_bot?start={profile_data[1]}</code>")
+    date: list = str(profile_data[5]).split("-")
+    text: str = (f"[+] <b>Ваш ID в проекте:</b> {profile_data[0]}\n"
+                 f"[+] <b>Адрес TON кошелька:</b> <code>{profile_data[2]}</code>\n"
+                 f"[+] <b>Баланс:</b> {profile_data[3]} INCH\n"
+                 f"[+] <b>Количество рефералов:</b> {profile_data[4]}\n"
+                 f"[+] <b>Дата регистрации:</b> {date[2]}-{date[1]}-{date[0]}\n\n"
+                 f"[+] <b>Ваша реферальная ссылка:</b> <code>t.me/inch_coin_bot?start={profile_data[1]}</code>")
     return text
 
 
 def en_profile(*args) -> str:
     profile_data: list = args[0]
     date: list = str(profile_data[5]).split("-")
-    date: str = f"{date[2]}-{date[1]}-{date[0]}"
-    text: str = (f"<b>Your ID in project:</b> {profile_data[0]}\n"
-                 f"<b>TON wallet address:</b> <code>{profile_data[2]}</code>\n"
-                 f"<b>Balance:</b> {profile_data[3]} INCH\n"
-                 f"<b>Number of referrals:</b> {profile_data[4]}\n"
-                 f"<b>Date of registration:</b> {date}\n\n"
-                 f"<b>Your referral link:</b> <code>t.me/inch_coin_bot?start={profile_data[1]}</code>")
+    text: str = (f"[+] <b>Your ID in project:</b> {profile_data[0]}\n"
+                 f"[+] <b>TON wallet address:</b> <code>{profile_data[2]}</code>\n"
+                 f"[+] <b>Balance:</b> {profile_data[3]} INCH\n"
+                 f"[+] <b>Number of referrals:</b> {profile_data[4]}\n"
+                 f"[+] <b>Date of registration:</b> {date[2]}-{date[1]}-{date[0]}\n\n"
+                 f"[+] <b>Your referral link:</b> <code>t.me/inch_coin_bot?start={profile_data[1]}</code>")
     return text
 
 
 def ru_links(*args) -> str:
-    text: str = (f"Канал проекта: @inch_coin\n"
-                 f"Канал команды: @diominvdev\n"
-                 f"Чат проекта: @diominvdevc\n\n"
-                 f"Твиттер проекта: x.com/inch_coin\n\n:"
-                 f"Исходный код проекта: clck.ru/3ACbjN\n"
-                 f"Исходный код бота: clck.ru/3ACbju\n\n"
-                 f"Whitepaper проекта: clck.ru/3ACbkk")
+    text: str = (f"[+] Канал проекта: @inch_coin\n"
+                 f"[+] Канал команды: @diominvdev\n"
+                 f"[+] Чат проекта: @diominvdevc\n\n"
+                 f"[+] Твиттер проекта: x.com/inch_coin\n\n:"
+                 f"[+] Исходный код проекта: clck.ru/3ACbjN\n"
+                 f"[+] Исходный код бота: clck.ru/3ACbju\n\n"
+                 f"[+] Whitepaper проекта: clck.ru/3ACbkk")
     return text
 
 
 def en_links(*args) -> str:
-    text: str = (f"Channel of the project: @inch_coin\n"
-                 f"Channel of the team: @diominvdev\n"
-                 f"Project Chat: @diominvdevc\n\n"
-                 f"Twitter of project: x.com/inch_coin\n\n:"
-                 f"Source code of the project: clck.ru/3ACbjN\n"
-                 f"Source code of the bot: clck.ru/3ACbju\n\n"
-                 f"Whitepaper of the project: clck.ru/3ACbmB")
+    text: str = (f"[+] Channel of the project: @inch_coin\n"
+                 f"[+] Channel of the team: @diominvdev\n"
+                 f"[+] Project Chat: @diominvdevc\n\n"
+                 f"[+] Twitter of project: x.com/inch_coin\n\n:"
+                 f"[+] Source code of the project: clck.ru/3ACbjN\n"
+                 f"[+] Source code of the bot: clck.ru/3ACbju\n\n"
+                 f"[+] Whitepaper of the project: clck.ru/3ACbmB")
     return text
 
 
 def ru_coin(*args) -> str:
-    text: str = (f"<b>Выпущено монет:</b> 10 000 000\n"
-                 f"<b>Адрес контракта:</b> <code>EQDRaPxN8MkJOJYX-adlBBFnhMlHfPzIgD7NtyM0dtiauCZL</code>\n"
-                 f"<b>Обзор на TONSCAN:</b> clck.ru/3ACbvj")
+    text: str = (f"[+] <b>Выпущено монет:</b> 10 000 000\n"
+                 f"[+] <b>Адрес контракта:</b> <code>EQDRaPxN8MkJOJYX-adlBBFnhMlHfPzIgD7NtyM0dtiauCZL</code>\n"
+                 f"[+] <b>Обзор на TONSCAN:</b> clck.ru/3ACbvj")
     return text
 
 
 def en_coin(*args) -> str:
-    text: str = (f"<b>Coins issued</b> - 10 000 000\n"
-                 f"<b>Contract address</b> - <code>EQDRaPxN8MkJOJYX-adlBBFnhMlHfPzIgD7NtyM0dtiauCZL</code>\n"
-                 f"<b>Review on TONSCAN</b> - clck.ru/3ACbvj")
+    text: str = (f"[+] <b>Coins issued</b> - 10 000 000\n"
+                 f"[+] <b>Contract address</b> - <code>EQDRaPxN8MkJOJYX-adlBBFnhMlHfPzIgD7NtyM0dtiauCZL</code>\n"
+                 f"[+] <b>Review on TONSCAN</b> - clck.ru/3ACbvj")
     return text
 
 
