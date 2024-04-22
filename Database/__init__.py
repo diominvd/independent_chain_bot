@@ -1,63 +1,65 @@
+from datetime import datetime
+
 from mysql.connector import connect, Error
 
-from vars import database_user, database_password
+from secret import db_name, db_user, db_password
 
 
 class Database:
     def __init__(self):
-        # Create connection to database.
-        self.connection = connect(host="localhost", user=database_user, password=database_password, database="independent_chain_bot")
+        self.connection = connect(host="localhost", user=db_user, password=db_password, database=db_name)
         self.cursor = self.connection.cursor()
-
-        self.cursor.execute("CREATE DATABASE IF NOT EXISTS independent_chain;")
-        self.connection.commit()
 
         # Create default table.
         self.cursor.execute("""
-            CREATE TABLE IF NOT EXISTS users(
-                project_id INT AUTO_INCREMENT PRIMARY KEY,
-                telegram_id BIGINT NOT NULL,
-                username VARCHAR(100),
-                wallet VARCHAR(100),
-                lang VARCHAR(2),
-                balance INT NOT NULL,
-                referals INT NOT NULL,
-                registration_date DATE,
-                inviter_id BIGINT NOT NULL)
-        """)
+                CREATE TABLE IF NOT EXISTS users(
+                    registration VARCHAR(20),
+                    last_activity VARCHAR(20),
+                    language VARCHAR(2),
+                    project_id INT AUTO_INCREMENT PRIMARY KEY,
+                    user_id BIGINT NOT NULL,
+                    inviter_id BIGINT,
+                    username VARCHAR(100),
+                    wallet VARCHAR(100),
+                    balance FLOAT,
+                    referals INT)
+            """)
         self.connection.commit()
 
-    def create_user(self, telegram_id: int, username: str, lang: str, registration_date: str, inviter_id: int) -> bool:
-        self.cursor.execute("""
-            INSERT INTO users (telegram_id, username, lang, balance, referals, registration_date, inviter_id) VALUES (%s, %s, %s, %s, %s, %s, %s)
-        """, (telegram_id, username, lang, 100, 0, registration_date, inviter_id, ))
-        self.connection.commit()
-        return True
+    def check_user_existence(self, telegram_id: int) -> bool:
+        self.cursor.execute("SELECT user_id FROM users WHERE user_id = %s", (telegram_id,))
+        return False if not self.cursor.fetchall() else True
 
-    def add_user_wallet(self, telegram_id: int, wallet_address: str) -> bool:
+    def add_new_user(self, user_data: dict) -> bool:
         self.cursor.execute("""
-            UPDATE users SET wallet = %s WHERE telegram_id = %s
-        """, (wallet_address, telegram_id, ))
+            INSERT INTO users (registration, last_activity, language, user_id, username,  balance, referals) 
+            VALUES (%s, %s, %s, %s, %s, %s, %s)""", (user_data["registration"],  user_data["last_activity"], user_data["language"], user_data["telegram_id"], user_data["username"], user_data["balance"], user_data["referals"],))
         self.connection.commit()
         return True
 
-    def check_user(self, telegram_id: int) -> bool:
-        self.cursor.execute("""
-                    SELECT telegram_id FROM users;
-                """)
-        users = self.cursor.fetchall()
-        return True if (telegram_id,) in users else False
-
-    def load_profile(self, telegram_id: int) -> list:
-        self.cursor.execute("""
-            SELECT project_id, telegram_id, wallet, balance, referals, registration_date FROM users WHERE telegram_id = %s;
-        """, (telegram_id, ))
-        return list(self.cursor.fetchall()[0])
-
-    def add_referal(self, inviter_id: int) -> bool:
-        self.cursor.execute("""
-            UPDATE users
-            SET referals = referals + 1, balance = balance + 50 WHERE telegram_id = %s
-        """, (inviter_id, ))
+    def update_last_activity(self, user_id: int) -> bool:
+        self.cursor.execute("""UPDATE users SET last_activity = %s WHERE user_id = %s""", (str(datetime.now().strftime("%d.%m.%Y %H:%M:%S")), user_id))
         self.connection.commit()
         return True
+
+    def check_user_inviter(self, user_id: int, inviter_id: int) -> bool:
+        self.cursor.execute("""UPDATE users SET inviter_id = %s WHERE user_id = %s""", (inviter_id, user_id,))
+        if user_id != inviter_id:
+            self.cursor.execute("""UPDATE users SET balance = balance + 50, referals = referals + 1 WHERE user_id = %s""", (inviter_id, ))
+            self.connection.commit()
+        return True
+
+    def get_user_language(self, user_id: int) -> str:
+        self.cursor.execute("""SELECT language FROM users WHERE user_id = %s""", (user_id, ))
+        return self.cursor.fetchall()[0][0]
+
+    def load_profile_data(self, user_id: int) -> list:
+        self.cursor.execute("""SELECT username, project_id, balance, referals, wallet FROM users WHERE user_id = %s""", (user_id, ))
+        profile_data: list = list(self.cursor.fetchall()[0])
+        return profile_data
+
+    def update_wallet(self, user_id: int, wallet: str) -> bool:
+        self.cursor.execute("""UPDATE users SET wallet = %s WHERE user_id = %s""", (wallet, user_id))
+        self.connection.commit()
+        return True
+>>>>>>> test

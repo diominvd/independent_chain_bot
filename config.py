@@ -1,8 +1,8 @@
 from aiogram import Bot, Dispatcher
-from vars import API_TOKEN
+
 from Database import Database
+from secret import API_TOKEN
 
-
-bot: Bot = Bot(token=API_TOKEN, parse_mode="HTML")
+bot: Bot = Bot(API_TOKEN, parse_mode="HTML")
 dispatcher: Dispatcher = Dispatcher()
-database = Database()
+database: Database = Database()

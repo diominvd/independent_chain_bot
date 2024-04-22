@@ -1,5 +1,6 @@
-import logging
 import asyncio
+import logging
+from aiogram.methods import DeleteWebhook
 
 from config import bot, dispatcher
 import Handlers
@@ -8,13 +9,11 @@ import Handlers
 logging.basicConfig(level=logging.INFO)
 
 
-async def main():
+async def main() -> None:
+    await bot(DeleteWebhook(drop_pending_updates=True))
     await dispatcher.start_polling(bot)
 
 
 if __name__ == "__main__":
     while True:
-        try:
-            asyncio.run(main())
-        except:
-            asyncio.run(main())
+        asyncio.run(main())

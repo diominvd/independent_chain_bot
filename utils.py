@@ -1,55 +1,56 @@
-from aiogram.types import Message
+import asyncio
+from aiogram.types import Message, CallbackQuery
+from datetime import datetime
 
-import Keyboards
-import strings
 from config import bot
 
 
-def fetch_user_id(message: Message) -> int:
-    return message.chat.id
+def translate_text(strings: dict, key: str, language: str, *args) -> str:
+    language = "en" if language not in ["ru", "en"] else language
+    return strings[key][language](*args)
 
 
-def fetch_username(message: Message) -> str:
-    return message.chat.username
+def translate_button(strings: dict, key: str, language: str) -> str:
+    language = "en" if language not in ["ru", "en"] else language
+    return strings[key][language]
 
 
-def fetch_registration_date(message: Message) -> str:
-    return str(message.date.date())
-
-
-def fetch_user_language(message: Message) -> str:
-    return message.from_user.language_code
+def pack_user_data(message: Message) -> dict:
+    user_data: dict = {
+        "registration": str(datetime.now().strftime("%d.%m.%Y %H:%M:%S")),
+        "last_activity": str(datetime.now().strftime("%d.%m.%Y %H:%M:%S")),
+        "language": str(message.from_user.language_code),
+        "telegram_id": int(message.from_user.id),
+        "username": str(message.from_user.username),
+        "balance": 100,
+        "referals": 0,
+    }
+    return user_data
 
 
 def fetch_inviter_id(message: Message) -> int:
-    try:
-        inviter_id: int = int(message.text.split(" ")[1])
-        if inviter_id == fetch_user_id(message):
+    user_id: int = int(message.from_user.id)
+    message_data: list = message.text.split(" ")
+    if len(message_data) > 1:
+        if message_data[1] == user_id:
             inviter_id: int = 0
-    except IndexError:
-        inviter_id: int = 0
+        else:
+            inviter_id: int = message_data[1]
+    else:
+        inviter_id = 0
     return inviter_id
 
 
-def fetch_message_text(message: Message) -> str:
-    try:
-        message_text: str = message.text.split(" ")[0]
-    except IndexError:
-        message_text: str = message.text
-    return message_text
-
-
-async def subscribe_check(message: Message):
-    user_language: str = fetch_user_language(message)
-    keyboard = Keyboards.start_keyboard(user_language)
-    channel_member = await bot.get_chat_member(chat_id="@inch_coin", user_id=message.chat.id)
-    status = channel_member.status.split(".")[0]
-    if status in ["member", "administrator", "creator"]:
-        channel_member = await bot.get_chat_member(chat_id="@diominvdev", user_id=message.chat.id)
-        status = channel_member.status.split(".")[0]
-        if status in ["member", "creator"]:
-            return True
-        else:
-            return False
+async def check_subscribe(_obj: Message | CallbackQuery) -> bool:
+    subscribe: bool = False
+    user_status = await bot.get_chat_member(chat_id="@inch_coin", user_id=_obj.from_user.id)
+    if user_status.status.split(".")[0] in ["member", "administrator", "creator"]:
+        subscribe = True
     else:
-        return False
+        subscribe = False
+    user_status = await bot.get_chat_member(chat_id="@inch_coin", user_id=_obj.from_user.id)
+    if user_status.status.split(".")[0] in ["member", "administrator", "creator"]:
+        subscribe = True
+    else:
+        subscribe = False
+    return subscribe
