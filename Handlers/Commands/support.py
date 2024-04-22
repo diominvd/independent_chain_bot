@@ -10,11 +10,11 @@ from States.Default import DefaultStates
 import utils as u
 
 
-@dispatcher.callback_query(F.data == "coin")
-async def coin(callback: CallbackQuery, state: FSMContext):
+@dispatcher.callback_query(F.data == "support")
+async def support(callback: CallbackQuery, state: FSMContext):
     database.update_last_activity(int(callback.from_user.id))
     await bot.edit_message_text(
-        text=u.translate_text(strings, "coin", database.get_user_language(int(callback.from_user.id)), int(callback.from_user.id)),
+        text=u.translate_text(strings, "support", database.get_user_language(int(callback.from_user.id)), int(callback.from_user.id)),
         chat_id=callback.from_user.id,
         message_id=callback.message.message_id
     )
@@ -25,19 +25,19 @@ async def coin(callback: CallbackQuery, state: FSMContext):
     )
 
 
-def ru_coin(*args) -> str:
-    text: str = f"""{p.bold("Монет отчеканено")}: 10 000 000 $INCH\n{p.bold("Контракт")}: {p.code("EQDRaPxN8MkJOJYX-adlBBFnhMlHfPzIgD7NtyM0dtiauCZL")}\n{p.bold("TONSCAN")}: clck.ru/3ACbvj"""
+def ru_support(*args) -> str:
+    text: str = f"""В случае возникновения ошибок или каких-либо проблем с ботом просим написать вас в поддержку: @diominvdev.\n\nТекущая версия бота 2.0 🤖"""
     return text
 
 
-def en_coin(*args) -> str:
-    text: str = f"""{p.bold("Coins minted")}: 10 000 000 $INCH\n{p.bold("Contract")}: {p.code("EQDRaPxN8MkJOJYX-adlBBFnhMlHfPzIgD7NtyM0dtiauCZL")}\n{p.bold("TONSCAN")}: clck.ru/3ACbvj"""
+def en_support(*args) -> str:
+    text: str = f"""In case of errors or any problems with the bot, please write to support: @diominvdev.\n\nThe current version of the bot is 2.0 🤖"""
     return text
 
 
 strings: dict = {
-    "coin": {
-        "ru": ru_coin,
-        "en": en_coin
+    "support": {
+        "ru": ru_support,
+        "en": en_support
     }
 }
