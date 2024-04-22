@@ -3,7 +3,7 @@ from aiogram.filters import Command, StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, CallbackQuery
 
-from Keyboards.Inline import main_keyboard
+from Keyboards.Inline import main_keyboard, check_subscribe_keyboard
 import Parse as p
 from config import bot, dispatcher, database
 from States.Default import DefaultStates
