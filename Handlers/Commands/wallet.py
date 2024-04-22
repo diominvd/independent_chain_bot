@@ -32,8 +32,8 @@ async def wallet_address(message: Message, state: FSMContext):
     )
     await asyncio.sleep(2)
     await bot.delete_message(chat_id=message.from_user.id, message_id=message.message_id+1)
-    await bot.delete_message(chat_id=message.from_user.id, message_id=message.message_id)
     await bot.delete_message(chat_id=message.from_user.id, message_id=message.message_id-1)
+    await bot.delete_message(chat_id=message.from_user.id, message_id=message.message_id)
     # Clear states.
     await state.clear()
 
