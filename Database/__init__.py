@@ -62,4 +62,3 @@ class Database:
         self.cursor.execute("""UPDATE users SET wallet = %s WHERE user_id = %s""", (wallet, user_id))
         self.connection.commit()
         return True
->>>>>>> test
