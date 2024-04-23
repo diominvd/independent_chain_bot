@@ -19,7 +19,8 @@ async def wallet(callback: CallbackQuery, state: FSMContext) -> None:
     user_language: str = db.get_user_language(user_id=callback.from_user.id)
     # Callback answer.
     await callback.answer(
-        text=txt.translate_text(s, "wallet", user_language, callback.from_user.id))
+        text=txt.translate_text(s, "wallet", user_language, callback.from_user.id),
+        show_alert=True)
     # Set state for get wallet address.
     await state.set_state(DefaultStates.get_wallet)
     return None
