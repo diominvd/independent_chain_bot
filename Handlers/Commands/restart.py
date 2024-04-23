@@ -38,27 +38,4 @@ async def start(message: Message, state: FSMContext) -> None:
                 message_id -= 1
         except:
             pass
-        # Send success message.
-        await bot.send_message(
-            chat_id=message.chat.id,
-            text=txt.translate_text(s, "restart", user_language))
-        await bot.delete_message(chat_id=message.from_user.id, message_id=message.message_id)
     return None
-
-
-def ru_restart(*args) -> str:
-    return \
-        f"Бот перезапущен ♻️. Воспользуйтесь командой /start."
-
-
-def en_restart(*args) -> str:
-    return \
-        f"Bot restarted ♻️ Use command /start."
-
-
-s: dict = {
-    "restart": {
-        "ru": ru_restart,
-        "en": en_restart
-    }
-}
