@@ -28,18 +28,16 @@ async def start(message: Message, state: FSMContext) -> None:
         # Clear all states.
         await state.clear()
         # Clear chat history.
-        try:
-            chat_id: int = message.from_user.id
-            message_id: int = message.message_id
-            while True:
-                try:
-                    await bot.delete_message(chat_id=chat_id, message_id=message_id)
-                    await asyncio.sleep(0.5)
-                except:
-                    pass
+        chat_id: int = message.from_user.id
+        message_id: int = message.message_id
+        while True:
+            try:
+                await bot.delete_message(chat_id=chat_id, message_id=message_id)
+                await asyncio.sleep(0.5)
+            except:
+                pass
+            else:
                 message_id -= 1
-        except:
-            pass
     return None
 
 

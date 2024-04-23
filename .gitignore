@@ -1,0 +1,9 @@
+.venv
+.idea
+**/__pycache__
+*.pyc
+.server
+
+secret.py
+Handlers/Commands/admin.py
+bot.service
