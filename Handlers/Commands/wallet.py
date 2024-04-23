@@ -15,6 +15,8 @@ import Text as txt
 async def wallet(callback: CallbackQuery, state: FSMContext) -> None:
     # Set state for get wallet address.
     await state.set_state(DefaultStates.get_wallet)
+    # Stop callback.
+    await callback.answer(show_alert=False)
     # Update last user activity.
     db.update_last_activity(user_id=callback.from_user.id)
     # Load user language.
