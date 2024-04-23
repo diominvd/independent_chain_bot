@@ -13,6 +13,8 @@ import utils as u
 
 @dispatcher.message(Command("start"))
 async def start(message: Message, state: FSMContext) -> None:
+    # Clear states.
+    await state.clear()
     # Update last user activity.
     db.update_last_activity(user_id=message.from_user.id)
     # Check user existence in database.
