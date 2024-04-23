@@ -1,11 +1,20 @@
 import asyncio
-import logging
 from aiogram.methods import DeleteWebhook
+import logging
 
 from config import bot, dispatcher
-import Handlers
 
+# Handlers. Comment for off.
+import Handlers.Commands.admin
+import Handlers.Commands.events
+import Handlers.Commands.information
+import Handlers.Commands.profile
+import Handlers.Commands.restart
+import Handlers.Commands.start
+import Handlers.Commands.support
+import Handlers.Commands.wallet
 
+# Comment down string for off logging.
 logging.basicConfig(level=logging.INFO)
 
 

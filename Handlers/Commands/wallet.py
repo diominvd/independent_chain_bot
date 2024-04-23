@@ -5,65 +5,70 @@ from aiogram.filters import Command, StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, CallbackQuery
 
-from Keyboards.Inline import main_keyboard
-import Parse as p
-from config import bot, dispatcher, database
+
+from config import bot, dispatcher, database as db
 from States.Default import DefaultStates
-import utils as u
+import Text as txt
 
 
 @dispatcher.callback_query(F.data == "wallet")
-async def wallet(callback: CallbackQuery, state: FSMContext):
-    database.update_last_activity(int(callback.from_user.id))
+async def wallet(callback: CallbackQuery, state: FSMContext) -> None:
+    # Update last user activity.
+    db.update_last_activity(user_id=callback.from_user.id)
+    # Load user language.
+    user_language: str = db.get_user_language(user_id=callback.from_user.id)
+    # Send message with wallet request.
     await bot.send_message(
         chat_id=callback.from_user.id,
-        text=u.translate_text(strings, "request_wallet", database.get_user_language(int(callback.from_user.id)), int(callback.from_user.id)),
-    )
-    await state.set_state(DefaultStates.wallet_state)
+        text=txt.translate_text(s, "wallet", user_language, callback.from_user.id))
+    # Set state for get wallet address.
+    await state.set_state(DefaultStates.get_wallet)
+    return None
 
 
-@dispatcher.message(StateFilter(DefaultStates.wallet_state))
-async def wallet_address(message: Message, state: FSMContext):
-    database.update_last_activity(int(message.from_user.id))
+@dispatcher.message(StateFilter(DefaultStates.get_wallet))
+async def wait_wallet(message: Message, state: FSMContext):
+    # Update last user activity.
+    db.update_last_activity(user_id=message.from_user.id)
+    # Load user language.
+    user_language: str = db.get_user_language(user_id=message.from_user.id)
+    # Get wallet address from message.
     address: str = message.text
-    database.update_wallet(int(message.from_user.id), address)
+    # Update user wallet in database.
+    db.update_wallet(user_id=message.from_user.id, wallet=address)
     await message.answer(
-        text=u.translate_text(strings, "wallet_accepted", database.get_user_language(int(message.from_user.id)), int(message.from_user.id)),
-    )
+        text=txt.translate_text(s, "wait_wallet", user_language, message.from_user.id))
+    # Delete messages.
     await asyncio.sleep(2)
     await bot.delete_message(chat_id=message.from_user.id, message_id=message.message_id+1)
     await bot.delete_message(chat_id=message.from_user.id, message_id=message.message_id-1)
     await bot.delete_message(chat_id=message.from_user.id, message_id=message.message_id)
-    # Clear states.
+    # Clear all states.
     await state.clear()
 
 
 def ru_request_wallet(*args) -> str:
-    text: str = f"Отправьте адрес кошелька Ton Space, чтобы привязать его к профилю."
-    return text
+    return f"Отправьте адрес кошелька Ton Space, чтобы привязать его к профилю."
 
 
 def en_request_wallet(*args) -> str:
-    text: str = f"Send the Ton Space wallet address to link it to your profile."
-    return text
+    return f"Send the Ton Space wallet address to link it to your profile."
 
 
 def ru_wallet_accepted(*args) -> str:
-    text: str = f"Адрес кошелька успешно сохранён ✨ Обновите профиль."
-    return text
+    return f"Адрес кошелька успешно привязан ✨ Обновите профиль."
 
 
 def en_wallet_accepted(*args) -> str:
-    text: str = f"The wallet address has been successfully saved ✨ Update your profile."
-    return text
+    return f"The wallet address has been successfully linked ✨ Update your profile."
 
 
-strings: dict = {
-    "request_wallet": {
+s: dict = {
+    "wallet": {
         "ru": ru_request_wallet,
         "en": en_request_wallet
     },
-    "wallet_accepted": {
+    "wait_wallet": {
         "ru": ru_wallet_accepted,
         "en": en_wallet_accepted
     }

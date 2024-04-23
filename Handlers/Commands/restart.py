@@ -1,47 +1,49 @@
-from aiogram import F
 from aiogram.filters import Command, StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, CallbackQuery
 
-from Handlers.Commands.profile import profile
+from config import bot, dispatcher, database as db
 from Keyboards.Inline import check_subscribe_keyboard
-import Parse as p
-from config import bot, dispatcher, database
 from States.Default import DefaultStates
+import Text as txt
 import utils as u
 
 
 @dispatcher.message(Command("restart"))
 async def start(message: Message, state: FSMContext) -> None:
-    if not await u.check_subscribe(message):
+    # Update last user activity.
+    db.update_last_activity(user_id=message.from_user.id)
+    # Load user language.
+    user_language: str = db.get_user_language(user_id=message.from_user.id)
+    # Check subscribe.
+    if not await u.check_subscribe(user_id=message.from_user.id):
         # Send message with channels.
         await message.answer(
-            text=u.translate_text(strings, "not_subscribed", database.get_user_language(int(message.from_user.id))),
-            reply_markup=check_subscribe_keyboard(database.get_user_language(int(message.from_user.id)))
-        )
+            text=txt.translate_text(s, "not_subscribed", user_language),
+            reply_markup=check_subscribe_keyboard(user_language))
         # Set state for fetch callback from check button.
-        await state.set_state(DefaultStates.check_subscribe_state)
+        await state.set_state(DefaultStates.check_subscribe)
     else:
-        database.update_last_activity(int(message.from_user.id))
+        # Clear all states.
         await state.clear()
         await bot.send_message(
             chat_id=message.chat.id,
-            text=u.translate_text(strings, "restart", database.get_user_language(int(message.from_user.id)))
-        )
+            text=txt.translate_text(s, "restart", user_language))
         await bot.delete_message(chat_id=message.from_user.id, message_id=message.message_id)
+    return None
 
 
 def ru_restart(*args) -> str:
-    text: str = f"Бот перезапущен ♻️"
-    return text
+    return \
+        f"Бот перезапущен ♻️. Воспользуйтесь командой /start."
 
 
 def en_restart(*args) -> str:
-    text: str = f"Bot restarted ♻️"
-    return text
+    return \
+        f"Bot restarted ♻️ Use command /start."
 
 
-strings: dict = {
+s: dict = {
     "restart": {
         "ru": ru_restart,
         "en": en_restart
