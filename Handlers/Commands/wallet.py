@@ -13,21 +13,23 @@ import Text as txt
 
 @dispatcher.callback_query(F.data == "wallet")
 async def wallet(callback: CallbackQuery, state: FSMContext) -> None:
+    # Set state for get wallet address.
+    await state.set_state(DefaultStates.get_wallet)
     # Update last user activity.
     db.update_last_activity(user_id=callback.from_user.id)
     # Load user language.
     user_language: str = db.get_user_language(user_id=callback.from_user.id)
     # Callback answer.
-    await callback.answer(
-        text=txt.translate_text(s, "wallet", user_language, callback.from_user.id),
-        show_alert=True)
-    # Set state for get wallet address.
-    await state.set_state(DefaultStates.get_wallet)
+    await bot.send_message(
+        chat_id=callback.from_user.id,
+        text=txt.translate_text(s, "wallet", user_language, callback.from_user.id))
     return None
 
 
 @dispatcher.message(StateFilter(DefaultStates.get_wallet))
 async def wait_wallet(message: Message, state: FSMContext):
+    # Clear all states.
+    await state.clear()
     # Update last user activity.
     db.update_last_activity(user_id=message.from_user.id)
     # Load user language.
@@ -40,10 +42,11 @@ async def wait_wallet(message: Message, state: FSMContext):
         text=txt.translate_text(s, "wait_wallet", user_language, message.from_user.id))
     # Delete messages.
     await asyncio.sleep(2)
-    await bot.delete_message(chat_id=message.from_user.id, message_id=message.message_id+1)
-    await bot.delete_message(chat_id=message.from_user.id, message_id=message.message_id)
-    # Clear all states.
-    await state.clear()
+    message_id: int = message.message_id
+    await bot.delete_message(chat_id=message.from_user.id, message_id=message_id+1)
+    await bot.delete_message(chat_id=message.from_user.id, message_id=message_id)
+    await bot.delete_message(chat_id=message.from_user.id, message_id=message_id-1)
+    return None
 
 
 def ru_request_wallet(*args) -> str:
