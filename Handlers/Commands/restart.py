@@ -1,7 +1,7 @@
-from aiogram import F
-from aiogram.filters import Command, StateFilter
+import asyncio
+from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
-from aiogram.types import Message, CallbackQuery
+from aiogram.types import Message
 
 from config import bot, dispatcher, database as db
 from Keyboards.Inline import check_subscribe_keyboard
@@ -34,6 +34,7 @@ async def start(message: Message, state: FSMContext) -> None:
             while True:
                 try:
                     await bot.delete_message(chat_id=chat_id, message_id=message_id)
+                    await asyncio.sleep(0.5)
                 except:
                     pass
                 message_id -= 1
