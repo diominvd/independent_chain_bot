@@ -1,3 +1,4 @@
+from aiogram import F
 from aiogram.filters import Command, StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, CallbackQuery
@@ -17,12 +18,12 @@ async def start(message: Message, state: FSMContext) -> None:
     user_language: str = db.get_user_language(user_id=message.from_user.id)
     # Check subscribe.
     if not await u.check_subscribe(user_id=message.from_user.id):
-        # Send message with channels.
-        await message.answer(
-            text=txt.translate_text(s, "not_subscribed", user_language),
-            reply_markup=check_subscribe_keyboard(user_language))
         # Set state for fetch callback from check button.
         await state.set_state(DefaultStates.check_subscribe)
+        # Send message with channels.
+        await message.answer(
+            text=txt.translate_text(s, "alert", user_language),
+            reply_markup=check_subscribe_keyboard(user_language))
     else:
         # Clear all states.
         await state.clear()
@@ -39,3 +40,19 @@ async def start(message: Message, state: FSMContext) -> None:
         except:
             pass
     return None
+
+
+def ru_alert(*args) -> str:
+    return "Для использования бота подпишитесь на каналы проекта. После этого нажмите кнопку \"Проверить\"."
+
+
+def en_alert(*args) -> str:
+    return "To use the bot, subscribe to the project channels. After that, click \"Check\"."
+
+
+s: dict = {
+    "alert": {
+        "ru": ru_alert,
+        "en": en_alert
+    }
+}
