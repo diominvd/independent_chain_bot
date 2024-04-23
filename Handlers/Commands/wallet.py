@@ -17,9 +17,8 @@ async def wallet(callback: CallbackQuery, state: FSMContext) -> None:
     db.update_last_activity(user_id=callback.from_user.id)
     # Load user language.
     user_language: str = db.get_user_language(user_id=callback.from_user.id)
-    # Send message with wallet request.
-    await bot.send_message(
-        chat_id=callback.from_user.id,
+    # Callback answer.
+    await callback.answer(
         text=txt.translate_text(s, "wallet", user_language, callback.from_user.id))
     # Set state for get wallet address.
     await state.set_state(DefaultStates.get_wallet)
@@ -41,18 +40,17 @@ async def wait_wallet(message: Message, state: FSMContext):
     # Delete messages.
     await asyncio.sleep(2)
     await bot.delete_message(chat_id=message.from_user.id, message_id=message.message_id+1)
-    await bot.delete_message(chat_id=message.from_user.id, message_id=message.message_id-1)
     await bot.delete_message(chat_id=message.from_user.id, message_id=message.message_id)
     # Clear all states.
     await state.clear()
 
 
 def ru_request_wallet(*args) -> str:
-    return f"Отправьте адрес кошелька Ton Space, чтобы привязать его к профилю."
+    return f"Отправьте адрес кошелька в чат с ботом Ton Space, чтобы привязать его к профилю."
 
 
 def en_request_wallet(*args) -> str:
-    return f"Send the Ton Space wallet address to link it to your profile."
+    return f"Send the wallet address to the chat with the Ton Space bot to link it to your profile."
 
 
 def ru_wallet_accepted(*args) -> str:
