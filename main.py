@@ -15,7 +15,7 @@ import Handlers.Commands.support
 import Handlers.Commands.wallet
 
 # Comment down string for off logging.
-logging.basicConfig(level=logging.INFO)
+# logging.basicConfig(level=logging.INFO)
 
 
 async def main() -> None:

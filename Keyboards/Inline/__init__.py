@@ -84,7 +84,7 @@ def main_keyboard(user_id: int, language: str) -> InlineKeyboardMarkup:
             InlineKeyboardButton(text=txt.translate_button(s, "events", language), callback_data="events")
         ],
         [
-            InlineKeyboardButton(text=txt.translate_button(s, "share", language), switch_inline_query=f"\n{txt.translate_text(s, "share_text", language)}\nt.me/inch_coin_bot?start={user_id}")
+            InlineKeyboardButton(text=txt.translate_button(s, "share", language), switch_inline_query=f"\n{txt.translate_text(s, 'share_text', language)}\nt.me/inch_coin_bot?start={user_id}")
         ]
     ]
     keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
