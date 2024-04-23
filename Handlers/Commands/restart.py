@@ -26,6 +26,19 @@ async def start(message: Message, state: FSMContext) -> None:
     else:
         # Clear all states.
         await state.clear()
+        # Clear chat history.
+        try:
+            chat_id: int = message.from_user.id
+            message_id: int = message.message_id
+            while True:
+                try:
+                    await bot.delete_message(chat_id=chat_id, message_id=message_id)
+                except:
+                    pass
+                message_id -= 1
+        except:
+            pass
+        # Send success message.
         await bot.send_message(
             chat_id=message.chat.id,
             text=txt.translate_text(s, "restart", user_language))
