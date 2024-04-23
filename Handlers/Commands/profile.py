@@ -26,6 +26,8 @@ async def profile(message: Message) -> None:
 
 @dispatcher.callback_query(F.data == "profile")
 async def profile_call(callback: CallbackQuery) -> None:
+    # Stop callback.
+    await callback.answer(show_alert=False)
     # Update last user activity.
     db.update_last_activity(user_id=callback.from_user.id)
     # Load user language.

@@ -9,6 +9,8 @@ import Text as txt
 
 @dispatcher.callback_query(F.data == "information")
 async def information(callback: CallbackQuery) -> None:
+    # Stop callback.
+    await callback.answer(show_alert=False)
     # Update last user activity.
     db.update_last_activity(user_id=callback.from_user.id)
     # Load user language.
