@@ -9,7 +9,6 @@ import Handlers.Commands.admin
 import Handlers.Commands.events
 import Handlers.Commands.information
 import Handlers.Commands.profile
-import Handlers.Commands.restart
 import Handlers.Commands.start
 import Handlers.Commands.support
 import Handlers.Commands.wallet
