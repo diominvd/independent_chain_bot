@@ -4,6 +4,6 @@
 *.pyc
 .server
 
+Handlers/Admin
 secret.py
-Handlers/Commands/admin.py
 bot.service

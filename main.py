@@ -5,7 +5,7 @@ import logging
 from config import bot, dispatcher
 
 # Handlers. Comment for off.
-import Handlers.Commands.admin
+import Handlers.Admin.admin
 import Handlers.Commands.events
 import Handlers.Commands.information
 import Handlers.Commands.profile

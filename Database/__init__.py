@@ -53,10 +53,20 @@ class Database:
             self.connection.commit()
         return True
 
+    def get_user_id_by_username(self, username: str) -> int:
+        self.cursor.execute("""SELECT user_id FROM users WHERE username = %s""",
+                            (username, ))
+        return self.cursor.fetchall()[0][0]
+
     def get_user_language(self, user_id: int) -> str:
         self.cursor.execute("""SELECT language FROM users WHERE user_id = %s""",
                             (user_id, ))
         return self.cursor.fetchall()[0][0]
+
+    def get_user_wallet(self, user_id: int) -> list:
+        self.cursor.execute("""SELECT wallet FROM users WHERE user_id = %s""",
+                            (user_id, ))
+        return self.cursor.fetchall()
 
     def load_profile_data(self, user_id: int) -> list:
         self.cursor.execute("""SELECT username, project_id, balance, referals, wallet FROM users WHERE user_id = %s""",

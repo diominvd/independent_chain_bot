@@ -1,5 +1,5 @@
 from aiogram import F
-from aiogram.types import Message, CallbackQuery
+from aiogram.types import CallbackQuery
 
 from config import bot, dispatcher, database as db
 from Keyboards.Inline import main_keyboard

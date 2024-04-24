@@ -1,6 +1,5 @@
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-import Parse as parse
 import Text as txt
 
 
@@ -101,6 +100,69 @@ def mailing_keyboard(language: str) -> InlineKeyboardMarkup:
     buttons: list = [
         [
             InlineKeyboardButton(text=txt.translate_button(s, "channel", language), url="https://t.me/inch_coin"),
+        ]
+    ]
+    keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
+    return keyboard
+
+
+def information_keyboard(language: str) -> InlineKeyboardMarkup:
+    s: dict = {
+        "main_channel": {
+            "ru": "Канал проекта",
+            "en": "Project channel"
+        },
+        "dev_channel": {
+            "ru": "Канал разработки",
+            "en": "Dev channel"
+        },
+        "twitter": {
+            "ru": "Твиттер",
+            "en": "Twitter"
+        },
+        "whitepaper": {
+            "ru": "Whitepaper проекта",
+            "en": "Project whitepaper"
+        },
+        "tonscan": {
+            "ru": "TONSCAN",
+            "en": "TONSCAN"
+        },
+        "cancel": {
+            "ru": "◀️ Назад",
+            "en": "◀️ Back"
+        }
+    }
+    buttons: list = [
+        [
+            InlineKeyboardButton(text=txt.translate_button(s, "main_channel", language), url="https://t.me/inch_coin"),
+            InlineKeyboardButton(text=txt.translate_button(s, "dev_channel", language), url="https://t.me/diominvdev"),
+        ],
+        [
+            InlineKeyboardButton(text=txt.translate_button(s, "twitter", language), url="https://x.com/inch_coin"),
+            InlineKeyboardButton(text=txt.translate_button(s, "tonscan", language), url="https://tonscan.org/jetton/EQDRaPxN8MkJOJYX-adlBBFnhMlHfPzIgD7NtyM0dtiauCZL?clckid=e9ddf724"),
+        ],
+        [
+            InlineKeyboardButton(text=txt.translate_button(s, "whitepaper", language), url="https://github.com/diominvd/independent_chain"),
+        ],
+        [
+            InlineKeyboardButton(text=txt.translate_button(s, "cancel", language), callback_data="profile"),
+        ]
+    ]
+    keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
+    return keyboard
+
+
+def wallet_keyboard(language: str) -> InlineKeyboardMarkup:
+    s: dict = {
+        "cancel": {
+            "ru": "◀️ Назад",
+            "en": "◀️ Back"
+        }
+    }
+    buttons: list = [
+        [
+            InlineKeyboardButton(text=txt.translate_button(s, "cancel", language), callback_data="profile"),
         ]
     ]
     keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
