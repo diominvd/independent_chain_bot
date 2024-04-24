@@ -27,12 +27,12 @@ async def support(callback: CallbackQuery) -> None:
 
 def ru_support(*args) -> str:
     return \
-        f"В случае возникновения ошибок или каких-либо проблем с ботом просим написать вас в поддержку: @diominvdev.\n\nТекущая версия бота: 2.1 🤖"
+        f"В случае возникновения ошибок или каких-либо проблем с ботом просим написать вас в поддержку: @diominvdev.\n\nТекущая версия бота: 2.2 🤖"
 
 
 def en_support(*args) -> str:
     return \
-        f"In case of errors or any problems with the bot, please write to support: @diominvdev.\n\nThe current version of the bot is 2.1 🤖"
+        f"In case of errors or any problems with the bot, please write to support: @diominvdev.\n\nThe current version of the bot is 2.2 🤖"
 
 
 s: dict = {

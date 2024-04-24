@@ -6,6 +6,7 @@ from config import bot, dispatcher
 
 # Handlers. Comment for off.
 import Handlers.Admin.admin
+import Handlers.Admin.send
 import Handlers.Commands.events
 import Handlers.Commands.information
 import Handlers.Commands.profile
@@ -14,7 +15,7 @@ import Handlers.Commands.support
 import Handlers.Commands.wallet
 
 # Comment down string for off logging.
-logging.basicConfig(level=logging.INFO)
+# logging.basicConfig(level=logging.INFO)
 
 
 async def main() -> None:
