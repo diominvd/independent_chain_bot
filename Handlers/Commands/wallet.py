@@ -56,7 +56,7 @@ async def wait_wallet(event: Message, state: FSMContext):
         chat_id=event.from_user.id,
         message_id=message_id-1,
         text=txt.translate_text(s, "wallet_accepted", user_language, event.from_user.id))
-    await asyncio.sleep(2)
+    await asyncio.sleep(3)
     # Return profile.
     await bot.edit_message_text(
         chat_id=event.from_user.id,
