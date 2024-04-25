@@ -129,8 +129,8 @@ def information_keyboard(language: str) -> InlineKeyboardMarkup:
             "en": "TONSCAN"
         },
         "cancel": {
-            "ru": "◀️ Назад",
-            "en": "◀️ Back"
+            "ru": "Назад",
+            "en": "Back"
         }
     }
     buttons: list = [
@@ -156,8 +156,8 @@ def information_keyboard(language: str) -> InlineKeyboardMarkup:
 def wallet_keyboard(language: str) -> InlineKeyboardMarkup:
     s: dict = {
         "cancel": {
-            "ru": "◀️ Назад",
-            "en": "◀️ Back"
+            "ru": "Отмена",
+            "en": "Cancel"
         }
     }
     buttons: list = [

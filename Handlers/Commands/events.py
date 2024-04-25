@@ -1,6 +1,7 @@
 from aiogram import F
 from aiogram import types
 from aiogram.filters import Command, StateFilter
+from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, CallbackQuery
 
 from config import bot, dispatcher, database as db
@@ -10,12 +11,12 @@ import Text as txt
 
 @dispatcher.callback_query(F.data == "events")
 @dec.update_last_activity
-async def events(callback: CallbackQuery) -> None:
+async def events(event: CallbackQuery, state: FSMContext) -> None:
     # Load user language.
-    user_language: str = db.get_user_language(user_id=callback.from_user.id)
+    user_language: str = db.get_user_language(user_id=event.from_user.id)
     # Send callback.
-    await callback.answer(
-        text=txt.translate_text(s, "events", user_language, callback.from_user.id))
+    await event.answer(
+        text=txt.translate_text(s, "events", user_language, event.from_user.id))
     return None
 
 

@@ -2,6 +2,7 @@ import asyncio
 
 from aiogram import F
 from aiogram.filters import Command
+from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, CallbackQuery
 
 from config import bot, dispatcher, database as db
@@ -13,36 +14,40 @@ import Text as txt
 
 @dispatcher.message(Command("profile"))
 @dec.update_last_activity
-async def profile(message: Message) -> None:
+async def profile(event: Message, state: FSMContext) -> None:
+    # Clear all states.
+    await state.clear()
     # Load user language.
-    user_language: str = db.get_user_language(user_id=message.from_user.id)
+    user_language: str = db.get_user_language(user_id=event.from_user.id)
     # Delete message with /profile command.
-    await bot.delete_message(chat_id=message.from_user.id, message_id=message.message_id)
+    await bot.delete_message(chat_id=event.from_user.id, message_id=event.message_id)
     # Send main message with keyboard.
     await bot.send_message(
-        chat_id=message.from_user.id,
-        text=txt.translate_text(s, "profile", user_language, message.from_user.id),
-        reply_markup=main_keyboard(user_id=message.from_user.id, language=user_language))
+        chat_id=event.from_user.id,
+        text=txt.translate_text(s, "profile", user_language, event.from_user.id),
+        reply_markup=main_keyboard(user_id=event.from_user.id, language=user_language))
     return None
 
 
 @dispatcher.callback_query(F.data == "profile")
 @dec.update_last_activity
-async def profile_call(callback: CallbackQuery) -> None:
+async def profile_call(event: CallbackQuery, state: FSMContext) -> None:
+    # Clear all states.
+    await state.clear()
     # Stop callback.
-    await callback.answer(show_alert=False)
+    await event.answer(show_alert=False)
     # Load user language.
-    user_language: str = db.get_user_language(user_id=callback.from_user.id)
+    user_language: str = db.get_user_language(user_id=event.from_user.id)
     # Edit main message.
     await bot.edit_message_text(
-        text=txt.translate_text(s, "profile", user_language, callback.from_user.id),
-        chat_id=callback.from_user.id,
-        message_id=callback.message.message_id)
+        text=txt.translate_text(s, "profile", user_language, event.from_user.id),
+        chat_id=event.from_user.id,
+        message_id=event.message.message_id)
     # Add keyboard to message.
     await bot.edit_message_reply_markup(
-        chat_id=callback.from_user.id,
-        message_id=callback.message.message_id,
-        reply_markup=main_keyboard(user_id=callback.from_user.id, language=user_language))
+        chat_id=event.from_user.id,
+        message_id=event.message.message_id,
+        reply_markup=main_keyboard(user_id=event.from_user.id, language=user_language))
     return None
 
 

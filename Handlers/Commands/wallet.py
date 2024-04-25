@@ -14,24 +14,24 @@ import Text as txt
 
 @dispatcher.callback_query(F.data == "wallet")
 @dec.update_last_activity
-async def wallet(callback: CallbackQuery, state: FSMContext) -> None:
+async def wallet(event: CallbackQuery, state: FSMContext) -> None:
     # Set wallet wait state.
     await state.set_state(DefaultStates.get_wallet)
     # Stop callback.
-    await callback.answer(show_alert=False)
+    await event.answer(show_alert=False)
     # Load user language.
-    user_language: str = db.get_user_language(user_id=callback.from_user.id)
+    user_language: str = db.get_user_language(user_id=event.from_user.id)
     # Load user wallet.
-    wallet_address: str = db.get_user_wallet(user_id=callback.from_user.id)[0][0]
+    wallet_address: str = db.get_user_wallet(user_id=event.from_user.id)[0][0]
     # Check user wallet address exists.
     key = "no_wallet" if wallet_address == "" else "yes_wallet"
     # Delete old profile message.
     await bot.delete_message(
-        chat_id=callback.from_user.id,
-        message_id=callback.message.message_id)
+        chat_id=event.from_user.id,
+        message_id=event.message.message_id)
     # Send message with wallet request.
     await bot.send_message(
-        chat_id=callback.from_user.id,
+        chat_id=event.from_user.id,
         text=txt.translate_text(s, key, user_language),
         reply_markup=wallet_keyboard(user_language))
     return None
@@ -39,30 +39,30 @@ async def wallet(callback: CallbackQuery, state: FSMContext) -> None:
 
 @dispatcher.message(StateFilter(DefaultStates.get_wallet))
 @dec.update_last_activity
-async def wait_wallet(message: Message, state: FSMContext):
+async def wait_wallet(event: Message, state: FSMContext):
     # Clear all states.
     await state.clear()
     # Load user language.
-    user_language: str = db.get_user_language(user_id=message.from_user.id)
+    user_language: str = db.get_user_language(user_id=event.from_user.id)
     # Get wallet address from message.
-    address: str = message.text
+    address: str = event.text
     # Update user wallet in database.
-    db.update_wallet(user_id=message.from_user.id, wallet=address)
+    db.update_wallet(user_id=event.from_user.id, wallet=address)
     # Save message id for future deletes.
-    message_id: int = message.message_id
+    message_id: int = event.message_id
     # Delete wallet state messages.
-    await bot.delete_message(chat_id=message.from_user.id, message_id=message_id)
+    await bot.delete_message(chat_id=event.from_user.id, message_id=message_id)
     await bot.edit_message_text(
-        chat_id=message.from_user.id,
+        chat_id=event.from_user.id,
         message_id=message_id-1,
-        text=txt.translate_text(s, "wallet_accepted", user_language, message.from_user.id))
+        text=txt.translate_text(s, "wallet_accepted", user_language, event.from_user.id))
     await asyncio.sleep(2)
     # Return profile.
     await bot.edit_message_text(
-        chat_id=message.from_user.id,
+        chat_id=event.from_user.id,
         message_id=message_id-1,
-        text=txt.translate_text(s_profile, "profile", user_language, message.from_user.id),
-        reply_markup=main_keyboard(user_id=message.from_user.id, language=user_language))
+        text=txt.translate_text(s_profile, "profile", user_language, event.from_user.id),
+        reply_markup=main_keyboard(user_id=event.from_user.id, language=user_language))
     return None
 
 

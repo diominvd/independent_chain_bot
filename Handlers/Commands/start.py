@@ -44,22 +44,22 @@ async def start(message: Message, state: FSMContext) -> None:
 
 @dispatcher.callback_query(F.data == "check_subscribe", StateFilter(DefaultStates.check_subscribe))
 @dec.update_last_activity
-async def subscribe_callback(callback: CallbackQuery, state: FSMContext) -> None:
+async def subscribe_callback(event: CallbackQuery, state: FSMContext) -> None:
     # Load user language.
-    user_language: str = db.get_user_language(user_id=callback.from_user.id)
+    user_language: str = db.get_user_language(user_id=event.from_user.id)
     # Check user subscribe on channels.
-    if not await u.check_subscribe(user_id=callback.from_user.id):
-        await callback.answer(
+    if not await u.check_subscribe(user_id=event.from_user.id):
+        await event.answer(
             text=txt.translate_text(s, "check_error", user_language))
     else:
-        await callback.answer(
+        await event.answer(
             text=txt.translate_text(s, "check_success", user_language))
         # Delete /start message and message with channels.
-        await bot.delete_message(chat_id=callback.from_user.id, message_id=callback.message.message_id)
-        await bot.delete_message(chat_id=callback.from_user.id, message_id=callback.message.message_id - 1)
+        await bot.delete_message(chat_id=event.from_user.id, message_id=event.message.message_id)
+        await bot.delete_message(chat_id=event.from_user.id, message_id=event.message.message_id - 1)
         # Send start message.
         await bot.send_message(
-            chat_id=callback.from_user.id, text=txt.translate_text(s, "start", user_language))
+            chat_id=event.from_user.id, text=txt.translate_text(s, "start", user_language))
         # Clear states.
         await state.clear()
     return None

@@ -1,5 +1,6 @@
 from aiogram import F
 from aiogram.types import CallbackQuery
+from aiogram.fsm.context import FSMContext
 
 from config import bot, dispatcher, database as db
 import decorators as dec
@@ -9,19 +10,19 @@ import Text as txt
 
 @dispatcher.callback_query(F.data == "support")
 @dec.update_last_activity
-async def support(callback: CallbackQuery) -> None:
+async def support(event: CallbackQuery, state: FSMContext) -> None:
     # Stop callback.
-    await callback.answer(show_alert=False)
+    await event.answer(show_alert=False)
     # Load user language.
-    user_language: str = db.get_user_language(user_id=callback.from_user.id)
+    user_language: str = db.get_user_language(user_id=event.from_user.id)
     await bot.edit_message_text(
-        text=txt.translate_text(s, "support", user_language, callback.from_user.id),
-        chat_id=callback.from_user.id,
-        message_id=callback.message.message_id)
+        text=txt.translate_text(s, "support", user_language, event.from_user.id),
+        chat_id=event.from_user.id,
+        message_id=event.message.message_id)
     await bot.edit_message_reply_markup(
-        chat_id=callback.from_user.id,
-        message_id=callback.message.message_id,
-        reply_markup=main_keyboard(user_id=callback.from_user.id, language=user_language))
+        chat_id=event.from_user.id,
+        message_id=event.message.message_id,
+        reply_markup=main_keyboard(user_id=event.from_user.id, language=user_language))
     return None
 
 
