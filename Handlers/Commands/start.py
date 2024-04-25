@@ -4,6 +4,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, CallbackQuery
 
 from config import bot, dispatcher, database as db
+import decorators as dec
 from Keyboards.Inline import check_subscribe_keyboard
 import Parse as parse
 from States.Default import DefaultStates
@@ -12,11 +13,10 @@ import utils as u
 
 
 @dispatcher.message(Command("start"))
+@dec.update_last_activity
 async def start(message: Message, state: FSMContext) -> None:
     # Clear states.
     await state.clear()
-    # Update last user activity.
-    db.update_last_activity(user_id=message.from_user.id)
     # Check user existence in database.
     if not db.check_user_existence(message.from_user.id):
         db.add_new_user(user_data=u.pack_user_data(message))
@@ -43,6 +43,7 @@ async def start(message: Message, state: FSMContext) -> None:
 
 
 @dispatcher.callback_query(F.data == "check_subscribe", StateFilter(DefaultStates.check_subscribe))
+@dec.update_last_activity
 async def subscribe_callback(callback: CallbackQuery, state: FSMContext) -> None:
     # Load user language.
     user_language: str = db.get_user_language(user_id=callback.from_user.id)

@@ -2,16 +2,16 @@ from aiogram import F
 from aiogram.types import CallbackQuery
 
 from config import bot, dispatcher, database as db
+import decorators as dec
 from Keyboards.Inline import main_keyboard
 import Text as txt
 
 
 @dispatcher.callback_query(F.data == "support")
+@dec.update_last_activity
 async def support(callback: CallbackQuery) -> None:
     # Stop callback.
     await callback.answer(show_alert=False)
-    # Update last user activity.
-    db.update_last_activity(user_id=callback.from_user.id)
     # Load user language.
     user_language: str = db.get_user_language(user_id=callback.from_user.id)
     await bot.edit_message_text(

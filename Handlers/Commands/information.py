@@ -4,20 +4,19 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery
 
 from config import bot, dispatcher, database as db
-from Handlers.Commands.profile import s as s_profile
-from Keyboards.Inline import information_keyboard, main_keyboard
+import decorators as dec
+from Keyboards.Inline import information_keyboard
 from States.Default import DefaultStates
 import Text as txt
 
 
 @dispatcher.callback_query(F.data == "information")
+@dec.update_last_activity
 async def information(callback: CallbackQuery, state: FSMContext) -> None:
     # Set information state.
     await state.set_state(DefaultStates.information)
     # Stop callback.
     await callback.answer(show_alert=False)
-    # Update last user activity.
-    db.update_last_activity(user_id=callback.from_user.id)
     # Load user language.
     user_language: str = db.get_user_language(user_id=callback.from_user.id)
     # Edit menu message.

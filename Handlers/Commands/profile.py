@@ -5,15 +5,15 @@ from aiogram.filters import Command
 from aiogram.types import Message, CallbackQuery
 
 from config import bot, dispatcher, database as db
+import decorators as dec
 from Keyboards.Inline import main_keyboard
 import Parse as parse
 import Text as txt
 
 
 @dispatcher.message(Command("profile"))
+@dec.update_last_activity
 async def profile(message: Message) -> None:
-    # Update last user activity.
-    db.update_last_activity(user_id=message.from_user.id)
     # Load user language.
     user_language: str = db.get_user_language(user_id=message.from_user.id)
     # Delete message with /profile command.
@@ -27,11 +27,10 @@ async def profile(message: Message) -> None:
 
 
 @dispatcher.callback_query(F.data == "profile")
+@dec.update_last_activity
 async def profile_call(callback: CallbackQuery) -> None:
     # Stop callback.
     await callback.answer(show_alert=False)
-    # Update last user activity.
-    db.update_last_activity(user_id=callback.from_user.id)
     # Load user language.
     user_language: str = db.get_user_language(user_id=callback.from_user.id)
     # Edit main message.
