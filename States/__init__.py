@@ -7,3 +7,4 @@ class DefaultStates(StatesGroup):
     wallet = State()
     information = State()
     support = State()
+    events = State()
