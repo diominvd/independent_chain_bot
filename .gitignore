@@ -5,5 +5,6 @@
 .server
 
 Handlers/Admin
+Handlers/Send
 secret.py
 bot.service

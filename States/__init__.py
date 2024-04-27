@@ -3,5 +3,7 @@ from aiogram.filters.state import StatesGroup, State
 
 class DefaultStates(StatesGroup):
     check_subscribe = State()
-    get_wallet = State()
+    profile = State()
+    wallet = State()
     information = State()
+    support = State()
