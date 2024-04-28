@@ -4,9 +4,9 @@ from aiogram import F
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery
 
-import Text as txt
+import text
 import utils as u
-from Handlers.Events import strings
+from Handlers.Events.strings import strings
 from Keyboards.Inline.events import keyboard
 from States import DefaultStates
 from config import dispatcher, bot, database as db
@@ -15,11 +15,12 @@ from config import dispatcher, bot, database as db
 @dispatcher.callback_query(F.data == "events")
 @u.update_last_activity
 async def events(event: CallbackQuery, state: FSMContext) -> None:
-    await state.set_state(DefaultStates.events)
     user_language: str = db.get_user_language(user_id=event.from_user.id)
+    await state.set_state(DefaultStates.events)
     await event.message.edit_text(
-        text=txt.translate_text(strings, "events", user_language),
-        reply_markup=keyboard(user_language))
+        text=text.translate_text(strings, "events", user_language),
+        reply_markup=keyboard(language=user_language)
+    )
     return None
 
 
@@ -33,4 +34,4 @@ async def send_top() -> None:
             user_language: str = db.get_user_language(user_id=user)
             await bot.send_message(
                 chat_id=user,
-                text=txt.translate_text(strings, "top", user_language, top))
+                text=text.translate_text(strings, "top", user_language, top))

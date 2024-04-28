@@ -34,7 +34,7 @@ class Database:
         return False if not self.cursor.fetchall() else True
 
     def add_new_user(self, user_data: dict) -> bool:
-        self.cursor.execute("""INSERT INTO users (registration, last_activity, language, user_id, username,  balance, referals) VALUES (%s, %s, %s, %s, %s, %s, %s)""",
+        self.cursor.execute("""INSERT INTO users (registration, last_activity, language, user_id, username, balance, referals) VALUES (%s, %s, %s, %s, %s, %s, %s)""",
                             (user_data["registration"], user_data["last_activity"], user_data["language"], user_data["telegram_id"], user_data["username"], user_data["balance"], user_data["referals"],))
         self.connection.commit()
         return True

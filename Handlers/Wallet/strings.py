@@ -7,11 +7,13 @@ def en_request_wallet(*args) -> str:
 
 
 def ru_request_new_wallet(*args) -> str:
-    return f"К вашему профилю уже привязан адрес кошелька Ton Space. Чтобы привязать новый - отправьте адрес кошелька в чат с ботом Ton Space."
+    return (f"К вашему профилю уже привязан адрес кошелька Ton Space. Чтобы привязать новый - отправьте адрес кошелька "
+            f"Ton Space в чат с ботом.")
 
 
 def en_request_new_wallet(*args) -> str:
-    return f"The Ton Space wallet address is already linked to your profile. To link a new one, send the wallet address to the chat with the Ton Space bot."
+    return (f"The Ton Space wallet address is already linked to your profile. To link a new one, send the Ton Space "
+            f"wallet address to the chat with bot.")
 
 
 def ru_wallet_accepted(*args) -> str:

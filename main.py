@@ -12,7 +12,7 @@ from Handlers.Information import callback
 from Handlers.Profile import callback, command
 from Handlers.Send import command
 from Handlers.Start import command
-from Handlers.Subscribe import callback
+from Handlers.CheckSubscribe import callback
 from Handlers.Support import callback
 from Handlers.Wallet import callback, message
 
