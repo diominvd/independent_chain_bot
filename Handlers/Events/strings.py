@@ -24,22 +24,28 @@ def en_events(*args) -> str:
 
 def ru_top(*args) -> str:
     args = args[0]
-    return (f"Промежуточные результаты события ✨\n\n"
-            f"1️⃣ {args[0]} приглашённых\n"
-            f"2️⃣ {args[1]} приглашённых\n"
-            f"3️⃣ {args[2]} приглашённых\n"
-            f"4️⃣ {args[3]} приглашённых\n"
-            f"5️⃣ {args[4]} приглашённых")
+    try:
+        return (f"Промежуточные результаты события ✨\n\n"
+                f"1️⃣ {args[0]} приглашённых\n"
+                f"2️⃣ {args[1]} приглашённых\n"
+                f"3️⃣ {args[2]} приглашённых\n"
+                f"4️⃣ {args[3]} приглашённых\n"
+                f"5️⃣ {args[4]} приглашённых")
+    except:
+        return "Рейтинг еще не сформирован."
 
 
 def en_top(*args) -> str:
     args = args[0]
-    return (f"Interim results of the event ✨\n\n"
-            f"1️⃣ {args[0]} invited\n"
-            f"2️⃣ {args[1]} invited\n"
-            f"3️⃣ {args[2]} invited\n"
-            f"4️⃣ {args[3]} invited\n"
-            f"5️⃣ {args[4]} invited")
+    try:
+        return (f"Interim results of the event ✨\n\n"
+                f"1️⃣ {args[0]} invited\n"
+                f"2️⃣ {args[1]} invited\n"
+                f"3️⃣ {args[2]} invited\n"
+                f"4️⃣ {args[3]} invited\n"
+                f"5️⃣ {args[4]} invited")
+    except:
+        return "The rating has not been formed yet."
 
 
 strings: dict = {

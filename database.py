@@ -4,6 +4,27 @@ from mysql.connector import connect
 from secret import db_name, db_user, db_password
 
 
+class EventDatabase:
+    def __init__(self):
+        self.connection = connect(host="localhost", user=db_user, password=db_password, database=db_name)
+        self.cursor = self.connection.cursor()
+
+        self.cursor.execute("""
+                        CREATE TABLE IF NOT EXISTS nft_event(
+                            user_id BIGINT NOT NULL,
+                            referals INT)
+                    """)
+        self.connection.commit()
+
+    def update_event_referals(self, user_id: int, inviter_id: int):
+        self.cursor.execute("""SELECT user_id FROM nft_event WHERE user_id = %s""", (inviter_id,))
+        if self.cursor.fetchone() is None and user_id != inviter_id and inviter_id != 0:
+            self.cursor.execute("""INSERT INTO nft_event(user_id, referals) VALUES (%s, %s)""", (inviter_id, 0))
+            self.connection.commit()
+        self.cursor.execute("""UPDATE nft_event SET referals = referals + 1 WHERE user_id = %s""", (inviter_id,))
+        self.connection.commit()
+
+
 class Database:
     def __init__(self):
         self.connection = connect(host="localhost", user=db_user, password=db_password, database=db_name)

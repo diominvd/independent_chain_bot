@@ -27,7 +27,7 @@ async def events(event: CallbackQuery, state: FSMContext) -> None:
 async def send_top() -> None:
     while True:
         await asyncio.sleep(21600)
-        db.cursor.execute("""SELECT referals FROM users ORDER BY referals DESC LIMIT 5""")
+        db.cursor.execute("""SELECT referals FROM nft_event ORDER BY referals DESC LIMIT 5""")
         top = [i[0] for i in db.cursor.fetchall()]
         users: list = [i[0] for i in db.get_all_users_id()]
         for user in users:
