@@ -10,15 +10,15 @@ from utils.translator import translate
 
 
 @callback_router.callback_query(F.data == "check_subscribe")
-async def subscribe_callback(event: CallbackQuery, state: FSMContext) -> None:
+async def subscribe_callback(callback: CallbackQuery, state: FSMContext) -> None:
     strings: dict[str, dict] = {
         "check_success": {
             "ru": "Проверка пройдена.",
             "en": "The check is passed."
         }
     }
-    language: str = database.get_user_language(user_id=event.from_user.id)
-    if await check_subscribe(event, language):
-        await event.answer(text=translate(strings["check_success"], language))
-        await send_greeting(event, language)
+    language: str = database.get_user_language(user_id=callback.from_user.id)
+    if await check_subscribe(callback):
+        await callback.answer(text=translate(callback, strings["check_success"]))
+        await send_greeting(callback)
     return None

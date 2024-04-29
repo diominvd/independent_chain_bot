@@ -1,10 +1,11 @@
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import InlineKeyboardMarkup, CallbackQuery, Message
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
+from config import database
 from keyboards.button_constructor import button
 
 
-def information_kb(language: str) -> InlineKeyboardMarkup:
+def information_kb(event: Message | CallbackQuery) -> InlineKeyboardMarkup:
     buttons: dict[str, list] = {
         "ru": [button(signature="Основной канал", url="https://t.me/inch_ru"),
                button(signature="Канал разработки", url="https://t.me/diominvdev"),
@@ -19,6 +20,7 @@ def information_kb(language: str) -> InlineKeyboardMarkup:
                button(signature="Project whitepaper", url="https://github.com/diominvd/independent_chain"),
                button(signature="Back", callback="profile")]
     }
+    language: str = database.get_user_language(user_id=event.from_user.id)
     builder: InlineKeyboardBuilder = InlineKeyboardBuilder()
     builder.row(buttons[language][0], buttons[language][1])
     builder.row(buttons[language][2], buttons[language][3])

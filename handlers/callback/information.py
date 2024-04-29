@@ -28,10 +28,9 @@ async def information_callback(callback: CallbackQuery, state: FSMContext) -> No
         }
     }
 
-    language: str = database.get_user_language(user_id=callback.from_user.id)
     await callback.answer(show_alert=False)
     await callback.message.edit_text(
-        text=translate(strings["information"], language),
-        reply_markup=information_kb(language)
+        text=translate(callback, strings["information"]),
+        reply_markup=information_kb(callback)
     )
     return None

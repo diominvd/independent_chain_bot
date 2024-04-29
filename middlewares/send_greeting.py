@@ -5,7 +5,7 @@ from markdown import markdown
 from utils.translator import translate
 
 
-async def send_greeting(event: Message | CallbackQuery, language: str) -> None:
+async def send_greeting(event: Message | CallbackQuery) -> None:
     strings: dict[str, dict] = {
         "greeting": {
             "ru": f"Добро пожаловать в {markdown.bold('Independent Chain')} - амбициозный проект, "
@@ -25,7 +25,7 @@ async def send_greeting(event: Message | CallbackQuery, language: str) -> None:
     }
     await bot.send_message(
         chat_id=event.from_user.id,
-        text=translate(strings["greeting"], language)
+        text=translate(event, strings["greeting"])
     )
     await bot.delete_message(chat_id=event.from_user.id, message_id=event.message_id)
     return None

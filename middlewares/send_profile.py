@@ -6,7 +6,7 @@ from markdown import markdown
 from utils.translator import translate
 
 
-async def send_profile(event: Message | CallbackQuery, language: str) -> None:
+async def send_profile(event: Message | CallbackQuery) -> None:
     """
     profile_data structure:
         {
@@ -50,18 +50,18 @@ async def send_profile(event: Message | CallbackQuery, language: str) -> None:
 
     if type(event).__name__ == "Message":
         await event.answer(
-            text=translate(strings["profile"], language),
-            reply_markup=menu_kb(event.from_user.id, language),
+            text=translate(event, strings["profile"]),
+            reply_markup=menu_kb(event),
         )
         await bot.delete_message(chat_id=event.from_user.id, message_id=event.message_id)
     elif type(event).__name__ == "CallbackQuery":
         try:
             await event.message.edit_text(
-                text=translate(strings["profile"], language),
-                reply_markup=menu_kb(event.from_user.id, language)
+                text=translate(event, strings["profile"]),
+                reply_markup=menu_kb(event)
             )
         except Exception as exc:
-            await event.answer(text=translate(strings["update"], language))
+            await event.answer(text=translate(event, strings["update"]))
         else:
-            await event.answer(text=translate(strings["update"], language))
+            await event.answer(text=translate(event, strings["update"]))
     return None

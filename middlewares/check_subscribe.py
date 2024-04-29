@@ -1,11 +1,11 @@
 from aiogram.types import Message, CallbackQuery
 
-from config import bot
+from config import bot, database
 from keyboards.inline.subscribe_kb import subscribe_kb
 from utils.translator import translate
 
 
-async def check_subscribe(event: Message | CallbackQuery, language: str) -> bool:
+async def check_subscribe(event: Message | CallbackQuery) -> bool:
     strings: dict[str, dict] = {
         "alert": {
             "ru": "Для использования бота подпишитесь на каналы проекта. После этого нажмите кнопку \"Проверить\".",
@@ -16,6 +16,8 @@ async def check_subscribe(event: Message | CallbackQuery, language: str) -> bool
             "en": "Verification failed."
         }
     }
+
+    language: str = database.get_user_language(user_id=event.from_user.id)
     statuses: list = ["member", "administrator", "creator"]
 
     user_status = None
@@ -29,11 +31,11 @@ async def check_subscribe(event: Message | CallbackQuery, language: str) -> bool
         if type(event).__name__ != "CallbackQuery":
             await bot.send_message(
                 chat_id=event.from_user.id,
-                text=translate(strings["alert"], language),
-                reply_markup=subscribe_kb(language)
+                text=translate(event, strings["alert"]),
+                reply_markup=subscribe_kb(event)
             )
         elif type(event).__name__ == "CallbackQuery":
-            await event.answer(text=translate(strings["check_failed"], language))
+            await event.answer(text=translate(event, strings["check_failed"]))
         return False
     else:
         return True

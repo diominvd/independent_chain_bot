@@ -10,6 +10,7 @@ from middlewares.send_profile import send_profile
 @command_router.message(Command("profile"))
 @database.update_activity
 async def profile_command(message: Message, state: FSMContext) -> None:
+    await state.clear()
     language: str = database.get_user_language(user_id=message.from_user.id)
-    await send_profile(message, language)
+    await send_profile(message)
     return None

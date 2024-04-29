@@ -13,6 +13,7 @@ from utils.pack_user_data import pack_user_data
 @command_router.message(Command("start"))
 @database.update_activity
 async def start_command(message: Message, state: FSMContext) -> None:
+    await state.clear()
     # Verification of the user's existence.
     if database.check_user(user_id=message.from_user.id) is False:
         user_data: dict = pack_user_data(event=message)
@@ -22,6 +23,6 @@ async def start_command(message: Message, state: FSMContext) -> None:
     # Load user language.
     language: str = database.get_user_language(user_id=message.from_user.id)
     # Check subscribe in channel.
-    if await check_subscribe(message, language):
-        await send_greeting(message, language)
+    if await check_subscribe(message):
+        await send_greeting(message)
     return None
