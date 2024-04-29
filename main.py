@@ -1,30 +1,19 @@
 import asyncio
-from aiogram.methods import DeleteWebhook
 import logging
+from aiogram.methods import DeleteWebhook
 
 from config import bot, dispatcher
-from Handlers.Events.callback import send_top
+from handlers.command import start, profile
+from handlers.callback import check_subscribe, profile, information
 
-# Handlers. Comment for off.
-from Handlers.Admin import command
-from Handlers.Events import callback
-from Handlers.Information import callback
-from Handlers.Profile import callback, command
-from Handlers.Send import command
-from Handlers.Start import command
-from Handlers.CheckSubscribe import callback
-from Handlers.Support import callback
-from Handlers.Wallet import callback, message
 
-# Comment down string for off logging.
 logging.basicConfig(level=logging.INFO)
 
 
 async def main() -> None:
-    bot_task = asyncio.create_task(bot(DeleteWebhook(drop_pending_updates=True)))
-    dispatcher_task = asyncio.create_task(dispatcher.start_polling(bot))
-    timer = asyncio.create_task(send_top())
-    await asyncio.gather(bot_task, dispatcher_task, timer)
+    _bot = asyncio.create_task(bot(DeleteWebhook(drop_pending_updates=True)))
+    _dispatcher = asyncio.create_task(dispatcher.start_polling(bot))
+    await asyncio.gather(_bot, _dispatcher)
 
 
 if __name__ == "__main__":
