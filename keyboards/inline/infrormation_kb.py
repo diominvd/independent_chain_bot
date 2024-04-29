@@ -20,6 +20,7 @@ def information_kb(event: Message | CallbackQuery) -> InlineKeyboardMarkup:
                button(signature="Project whitepaper", url="https://github.com/diominvd/independent_chain"),
                button(signature="Back", callback="profile")]
     }
+
     language: str = database.get_user_language(user_id=event.from_user.id)
     builder: InlineKeyboardBuilder = InlineKeyboardBuilder()
     builder.row(buttons[language][0], buttons[language][1])

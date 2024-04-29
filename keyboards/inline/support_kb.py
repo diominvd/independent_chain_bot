@@ -14,6 +14,7 @@ def support_kb(event: Message | CallbackQuery) -> InlineKeyboardMarkup:
                button(signature="Source code", url="https://github.com/diominvd/independent_chain_bot"),
                button(signature="Back", callback="profile")]
     }
+
     language: str = database.get_user_language(user_id=event.from_user.id)
     builder: InlineKeyboardBuilder = InlineKeyboardBuilder()
     builder.row(buttons[language][0], buttons[language][1])

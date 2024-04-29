@@ -23,6 +23,7 @@ async def send_profile(event: Message | CallbackQuery) -> None:
         }
     """
     profile_data: dict = database.get_user(event.from_user.id)
+    referal_link: str = f"t.me/inch_coin_bot?start={profile_data['user_id']}"
     strings: dict[str, dict] = {
         "profile": {
             "ru": f"{markdown.bold('Привет,')} @{profile_data['username']} 👋\n"
@@ -31,7 +32,7 @@ async def send_profile(event: Message | CallbackQuery) -> None:
                   f"{markdown.bold('Друзья')}: {profile_data['referals']}\n"
                   f"{markdown.bold('Ton Space')}: {markdown.monospaced(profile_data['wallet'])}\n\n"
                   f"{markdown.bold('Реферальная ссылка')}:\n"
-                  f"{markdown.monospaced(f't.me/inch_coin_bot?start={profile_data['user_id']}')}\n"
+                  f"{markdown.monospaced(referal_link)}\n"
                   f"(Нажмите, чтобы скопировать)",
             "en": f"{markdown.bold('Hello,')} @{profile_data['username']} 👋\n"
                   f"{markdown.bold('Your UID')}: {profile_data['project_id']}\n"
@@ -39,7 +40,7 @@ async def send_profile(event: Message | CallbackQuery) -> None:
                   f"{markdown.bold('Friends')}: {profile_data['referals']}\n"
                   f"{markdown.bold('Ton Space')}: {markdown.monospaced(profile_data['wallet'])}\n\n"
                   f"{markdown.bold('Referal link')}:\n"
-                  f"{markdown.monospaced(f't.me/inch_coin_bot?start={profile_data['user_id']}')}\n"
+                  f"{markdown.monospaced(referal_link)}\n"
                   f"(Click to copy)"
         },
         "update": {

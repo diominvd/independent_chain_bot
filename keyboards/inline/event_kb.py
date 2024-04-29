@@ -10,6 +10,7 @@ def event_kb(event: Message | CallbackQuery) -> InlineKeyboardMarkup:
         "ru": [button(signature="Назад", callback="events_menu")],
         "en": [button(signature="Back", callback="events_menu")]
     }
+
     language: str = database.get_user_language(user_id=event.from_user.id)
     builder: InlineKeyboardBuilder = InlineKeyboardBuilder()
     builder.row(buttons[language][0])

@@ -12,6 +12,7 @@ def subscribe_kb(event: Message | CallbackQuery) -> InlineKeyboardMarkup:
         "en": [button(signature="Project channel", url="https://t.me/inch_en"),
                button(signature="Check", callback="check_subscribe")]
     }
+
     language: str = database.get_user_language(user_id=event.from_user.id)
     builder: InlineKeyboardBuilder = InlineKeyboardBuilder()
     builder.row(buttons[language][0])

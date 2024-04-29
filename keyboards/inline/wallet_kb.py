@@ -10,6 +10,7 @@ def wallet_kb(event: Message | CallbackQuery) -> InlineKeyboardMarkup:
         "ru": [button(signature="Отмена", callback="profile")],
         "en": [button(signature="Cancel", callback="profile")]
     }
+
     language: str = database.get_user_language(user_id=event.from_user.id)
     builder: InlineKeyboardBuilder = InlineKeyboardBuilder()
     builder.row(buttons[language][0])

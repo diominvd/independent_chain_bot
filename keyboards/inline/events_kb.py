@@ -12,6 +12,7 @@ def events_kb(event: Message | CallbackQuery) -> InlineKeyboardMarkup:
         "en": [button(signature="💎 Raffle NFT", callback="raffle_nft"),
                button(signature="Back", callback="profile")]
     }
+
     language: str = database.get_user_language(user_id=event.from_user.id)
     builder: InlineKeyboardBuilder = InlineKeyboardBuilder()
     builder.row(buttons[language][0])
