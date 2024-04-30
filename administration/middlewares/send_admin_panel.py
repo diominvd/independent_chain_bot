@@ -33,7 +33,6 @@ async def send_admin_panel(event: Message | CallbackQuery, state: FSMContext) ->
             text=translate(event, strings["description"]),
             reply_markup=admin_menu_kb(event),
         )
-        await bot.delete_message(chat_id=event.from_user.id, message_id=event.message_id)
     elif type(event).__name__ == "CallbackQuery":
         try:
             await event.message.edit_text(

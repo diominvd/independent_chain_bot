@@ -5,7 +5,7 @@ from aiogram.methods import DeleteWebhook
 from config import bot, dispatcher
 
 from handlers.command import start, profile
-from handlers.callback import check_subscribe, profile, information, support, wallet, events
+from handlers.callback import check_subscribe, profile, information, mining, support, wallet, events
 from handlers.message import wallet_address
 # Admin imports.
 from administration.handlers.command import admin
@@ -28,4 +28,7 @@ async def main() -> None:
 
 if __name__ == "__main__":
     while True:
-        asyncio.run(main())
+        try:
+            asyncio.run(main())
+        except:
+            pass

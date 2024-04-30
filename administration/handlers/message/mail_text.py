@@ -7,6 +7,7 @@ from administration.keyboards.mail_kb import mail_kb
 from administration.middlewares.send_admin_panel import send_admin_panel
 from administration.states import AdminStates
 from config import database, bot
+from markdown import markdown
 from utils.translator import translate
 
 
@@ -38,13 +39,6 @@ async def ru_mail(message: Message, state: FSMContext) -> None:
 
 @admin_router.message(StateFilter(AdminStates.mail_message))
 async def en_mail(message: Message, state: FSMContext) -> None:
-    strings: dict[str, dict] = {
-        "mail_result": {
-            "ru": f"Сообщение успешно отправлено.",
-            "en": f"The message has been sent successfully."
-        }
-    }
-
     await state.update_data(en=message.text)
 
     await bot.edit_message_reply_markup(
@@ -55,6 +49,17 @@ async def en_mail(message: Message, state: FSMContext) -> None:
 
     state_data: dict = await state.get_data()
     username: str = state_data["username"]
+
+    strings: dict[str, dict] = {
+        "mail_result": {
+            "ru": f"Сообщение успешно отправлено.\n"
+                  f"{markdown.bold('Получатель:')} @{username}\n"
+                  f"{markdown.bold('Текст сообщения:')} {message.text}",
+            "en": f"The message has been sent successfully.\n"
+                  f"{markdown.bold('Recipient:')} @{username}\n"
+                  f"{markdown.bold('The text of the message:')} {message.text}"
+        }
+    }
 
     await bot.send_message(
         chat_id=database.get_user_id(username),

@@ -21,12 +21,14 @@ def menu_kb(event: Message | CallbackQuery) -> InlineKeyboardMarkup:
                button(signature="💳 Кошелёк", callback="wallet"),
                button(signature="📚 Информация", callback="information"),
                button(signature="🛟 Поддержка", callback="support"),
+               button(signature="♻️ Добыча", callback="mining"),
                button(signature="🎉 События", callback="events_menu"),
                InlineKeyboardButton(text="Пригласить друга", switch_inline_query=referal_text)],
         "en": [button(signature="👤 Profile", callback="profile"),
                button(signature="💳 Wallet", callback="wallet"),
                button(signature="📚 Information", callback="information"),
                button(signature="🛟 Support", callback="support"),
+               button(signature="♻️ Mining", callback="mining"),
                button(signature="🎉 Events", callback="events_menu"),
                InlineKeyboardButton(text="Invite friend", switch_inline_query=referal_text)]
     }
@@ -34,6 +36,6 @@ def menu_kb(event: Message | CallbackQuery) -> InlineKeyboardMarkup:
     builder: InlineKeyboardBuilder = InlineKeyboardBuilder()
     builder.row(buttons[language][0], buttons[language][1])
     builder.row(buttons[language][2], buttons[language][3])
-    builder.row(buttons[language][4])
-    builder.row(buttons[language][5])
+    builder.row(buttons[language][4], buttons[language][5])
+    builder.row(buttons[language][6])
     return builder.as_markup()
