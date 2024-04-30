@@ -30,7 +30,7 @@ async def send_profile(event: Message | CallbackQuery) -> None:
                   f"{markdown.bold('Ваш UID')}: {profile_data['project_id']}\n"
                   f"{markdown.bold('Баланс')}: {profile_data['balance']} $tINCH\n"
                   f"{markdown.bold('Друзья')}: {profile_data['referals']}\n"
-                  f"{markdown.bold('Ton Space')}: {markdown.monospaced('Не привязан') if profile_data['wallet'] is None else profile_data['wallet']}\n\n"
+                  f"{markdown.bold('Ton Space')}: {markdown.monospaced('Не привязан') if profile_data['wallet'] is None else markdown.monospaced(profile_data['wallet'])}\n\n"
                   f"{markdown.bold('Реферальная ссылка')}:\n"
                   f"{markdown.monospaced(referal_link)}\n"
                   f"(Нажмите, чтобы скопировать)",
@@ -38,7 +38,7 @@ async def send_profile(event: Message | CallbackQuery) -> None:
                   f"{markdown.bold('Your UID')}: {profile_data['project_id']}\n"
                   f"{markdown.bold('Balance')}: {profile_data['balance']} $tINCH\n"
                   f"{markdown.bold('Friends')}: {profile_data['referals']}\n"
-                  f"{markdown.bold('Ton Space')}: {markdown.monospaced('Not linked') if profile_data['wallet'] is None else profile_data['wallet']}\n\n"
+                  f"{markdown.bold('Ton Space')}: {markdown.monospaced('Not linked') if profile_data['wallet'] is None else markdown.monospaced(profile_data['wallet'])}\n\n"
                   f"{markdown.bold('Referal link')}:\n"
                   f"{markdown.monospaced(referal_link)}\n"
                   f"(Click to copy)"

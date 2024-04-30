@@ -16,7 +16,7 @@ from handlers.events import raffle_nft
 from handlers.events.raffle_nft import timer
 
 # Comment on for disable logging.
-logging.basicConfig(level=logging.INFO)
+# logging.basicConfig(level=logging.INFO)
 
 
 async def main() -> None:

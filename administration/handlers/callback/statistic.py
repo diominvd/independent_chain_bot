@@ -25,16 +25,21 @@ async def mailing_ru(callback: CallbackQuery, state: FSMContext) -> None:
     database.cursor.execute("""SELECT SUM(referals) FROM users""")
     referals: int = database.cursor.fetchone()[0]
 
+    database.cursor.execute("""SELECT COUNT(*) FROM nft_event""")
+    event_users: list = database.cursor.fetchone()[0]
+
     strings: dict[str, dict] = {
         "statistics": {
             "ru": f"{markdown.bold('Статистика Independent Chain Bot.')}\n"
                   f"Всего пользователей: {users}\n"
                   f"Получено монет: {balances}\n"
-                  f"Приглашено: {referals}",
+                  f"Приглашено: {referals}\n\n"
+                  f"В конкурсе участвуют: {event_users}",
             "en": f"{markdown.bold('Independent Chain Bot statistics.')}\n"
                   f"Total users: {users}\n"
                   f"Coins received: {balances}\n"
-                  f"Invited: {referals}"
+                  f"Invited: {referals}\n\n"
+                  f"The competition involves: {event_users}"
         }
     }
 
