@@ -14,6 +14,8 @@ class Database:
         # Create table "users" in database.
         self.cursor.execute("""CREATE TABLE IF NOT EXISTS users (registration VARCHAR(20), last_activity VARCHAR(20), language VARCHAR(2), project_id INT AUTO_INCREMENT PRIMARY KEY, user_id BIGINT NOT NULL, inviter_id BIGINT, username VARCHAR(100), wallet VARCHAR(100), balance FLOAT, referals BIGINT)""")
         self.connection.commit()
+        # Create table "mining" in database.
+        self.cursor.execute("""CREATE TABLE IF NOT EXISTS mining (user_id BIGINT, last_claim DATETIME, total_claim FLOAT)""")
         # Create event table "nft_event" in database.
         self.cursor.execute("""CREATE TABLE IF NOT EXISTS nft_event(user_id BIGINT NOT NULL, referals INT)""")
         self.connection.commit()
@@ -130,6 +132,12 @@ class Database:
         else:
             return True
 
+    def get_referals(self, event: Message | CallbackQuery) -> int:
+        self.cursor.execute("""SELECT referals FROM users WhERE user_id = %s""",
+                            (event.from_user.id,))
+        referals: int = self.cursor.fetchone()[0]
+        return referals
+
     def update_activity(self, func) -> object:
         async def wrapper(event: Message | CallbackQuery, state: FSMContext):
             user_id = event.from_user.id
@@ -173,3 +181,49 @@ class EventTable(Database):
                                     (inviter_id,))
                 self.connection.commit()
             return None
+
+
+class MiningTable(Database):
+    def __init__(self):
+        super().__init__()
+
+    def check_miner_existence(self, event: Message | CallbackQuery) -> bool:
+        self.cursor.execute("""SELECT user_id FROM mining WHERE user_id = %s""",
+                            (event.from_user.id, ))
+        if len(self.cursor.fetchall()) == 0:
+            return False
+        else:
+            return True
+
+    def create_user(self, event: Message | CallbackQuery) -> None:
+        self.cursor.execute("""INSERT INTO mining VALUES(%s, %s, %s)""",
+                            (event.from_user.id, datetime.now(), 0))
+        self.connection.commit()
+        return None
+
+    def get_last_claim_time(self, event: Message | CallbackQuery) -> datetime:
+        self.cursor.execute("""SELECT last_claim FROM mining WHERE user_id = %s""",
+                            (event.from_user.id, ))
+        time = self.cursor.fetchone()[0]
+        return time
+
+    def get_total_claim(self, event: Message | CallbackQuery) -> float:
+        self.cursor.execute("""SELECT total_claim FROM mining WHERE user_id = %s""",
+                            (event.from_user.id, ))
+        try:
+            total: float = self.cursor.fetchone()[0]
+        except:
+            total = 0
+        return total
+
+    def claim(self, event: Message | CallbackQuery, profit: float) -> None:
+        self.cursor.execute("""UPDATE mining SET last_claim = %s WHERE user_id = %s""",
+                            (datetime.now(), event.from_user.id))
+        self.connection.commit()
+        self.cursor.execute("""UPDATE mining SET total_claim = total_claim + %s WHERE  user_id = %s""",
+                            (profit, event.from_user.id))
+        self.connection.commit()
+        self.cursor.execute("""UPDATE users SET balance = balance + %s WHERE user_id = %s""",
+                            (profit, event.from_user.id))
+        self.connection.commit()
+        return None

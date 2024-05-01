@@ -14,3 +14,4 @@ dispatcher.include_routers(command_router, callback_router, message_router, even
 
 database = database_file.Database()
 event_database = database_file.EventTable()
+mining_table = database_file.MiningTable()

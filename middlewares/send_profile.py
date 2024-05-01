@@ -1,6 +1,6 @@
 from aiogram.types import Message, CallbackQuery
 
-from config import database, bot
+from config import database, bot, mining_table
 from keyboards.inline.menu_kb import menu_kb
 from markdown import markdown
 from utils.translator import translate
@@ -23,12 +23,17 @@ async def send_profile(event: Message | CallbackQuery) -> None:
         }
     """
     profile_data: dict = database.get_user(event.from_user.id)
+
+    total_claim: float = mining_table.get_total_claim(event)
+    print(total_claim)
+
     referal_link: str = f"t.me/inch_coin_bot?start={profile_data['user_id']}"
     strings: dict[str, dict] = {
         "profile": {
             "ru": f"{markdown.bold('Привет,')} @{profile_data['username']} 👋\n"
                   f"{markdown.bold('Ваш UID')}: {profile_data['project_id']}\n"
                   f"{markdown.bold('Баланс')}: {profile_data['balance']} $tINCH\n"
+                  f"{markdown.bold('Добыча')}: {round(total_claim, 2)} $tINCH\n"
                   f"{markdown.bold('Друзья')}: {profile_data['referals']}\n"
                   f"{markdown.bold('Ton Space')}: {markdown.monospaced('Не привязан') if profile_data['wallet'] is None else markdown.monospaced(profile_data['wallet'])}\n\n"
                   f"{markdown.bold('Реферальная ссылка')}:\n"
@@ -37,6 +42,7 @@ async def send_profile(event: Message | CallbackQuery) -> None:
             "en": f"{markdown.bold('Hello,')} @{profile_data['username']} 👋\n"
                   f"{markdown.bold('Your UID')}: {profile_data['project_id']}\n"
                   f"{markdown.bold('Balance')}: {profile_data['balance']} $tINCH\n"
+                  f"{markdown.bold('Mining')}: {round(total_claim, 2)} $tINCH\n"
                   f"{markdown.bold('Friends')}: {profile_data['referals']}\n"
                   f"{markdown.bold('Ton Space')}: {markdown.monospaced('Not linked') if profile_data['wallet'] is None else markdown.monospaced(profile_data['wallet'])}\n\n"
                   f"{markdown.bold('Referal link')}:\n"
