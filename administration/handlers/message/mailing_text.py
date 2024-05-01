@@ -48,7 +48,7 @@ async def en_mail(message: Message, state: FSMContext) -> None:
     )
 
     state_data: dict = await state.get_data()
-    result: list = await send_mailing(state_data)
+    result: list = await send_mailing(message, state_data)
     strings: dict[str, dict] = {
         "mailing_result": {
             "ru": f"Рассылка успешно отправлена.\n"

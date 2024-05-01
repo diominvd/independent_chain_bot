@@ -1,7 +1,8 @@
+from administration.keyboards.mailing_kb import mailing_kb
 from config import database, bot
 
 
-async def send_mailing(text: dict) -> list:
+async def send_mailing(event, text: dict) -> list:
     counter: dict[str, int] = {
         "successfully": 0,
         "unsuccessfully": 0
@@ -10,7 +11,7 @@ async def send_mailing(text: dict) -> list:
     for user in users:
         language: str = database.get_user_language(user_id=user)
         try:
-            await bot.send_message(chat_id=user, text=text[language])
+            await bot.send_message(chat_id=user, text=text[language], reply_markup=mailing_kb(event))
         except:
             counter["unsuccessfully"] += 1
         else:
