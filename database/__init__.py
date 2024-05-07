@@ -97,6 +97,12 @@ class UsersTable(Database):
         response: list = [i[0] for i in self.select(query, values)]
         return response
 
+    def update_wallet(self, user_id: int, wallet: str) -> None:
+        query: str = "UPDATE users SET wallet = %s WHERE user_id = %s"
+        values: tuple = tuple([wallet, user_id])
+        self.update(query, values)
+        return None
+
     def update_last_activity(self, func) -> object:
         async def wrapper(*args, **kwargs):
             user_id: int = args[0].from_user.id

@@ -6,7 +6,7 @@ from pytonconnect import TonConnect
 from modules.main import MainModule
 from markdown import Markdown
 from core.config import users_table
-from utils import translate, wallet_connector
+from utils import translate
 
 
 @MainModule.router.message(Command("profile"))
@@ -34,21 +34,17 @@ async def profile(event: Message | CallbackQuery) -> None:
         }
     }
 
-    connector: TonConnect = TonConnect(manifest_url="https://raw.githubusercontent.com/XaBbl4/pytonconnect/main/pytonconnect-manifest.json")
-    wallets_list: dict = TonConnect.get_wallets()
-    wallet_connect: str = await connector.connect(wallets_list[0])
-
     match type(event).__name__:
         case "Message":
             await event.answer(
                 text=translate(event, strings, "profile"),
-                reply_markup=MainModule.modules["profile"].keyboard(event, wallet_connect)
+                reply_markup=MainModule.modules["profile"].keyboard(event)
             )
         case "CallbackQuery":
             try:
                 await event.message.edit_text(
                     text=translate(event, strings, "profile"),
-                    reply_markup=MainModule.modules["profile"].keyboard(event, wallet_connect)
+                    reply_markup=MainModule.modules["profile"].keyboard(event)
                 )
             except:
                 pass

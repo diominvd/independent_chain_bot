@@ -4,11 +4,11 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 from core.config import users_table
 
 
-def keyboard(event: Message | CallbackQuery, wallet_connect: str) -> InlineKeyboardMarkup:
+def keyboard(event: Message | CallbackQuery) -> InlineKeyboardMarkup:
     buttons: dict[str, list] = {
         "ru": [
-            InlineKeyboardButton(text="👤 Профиль", callback_data="profile"),
-            InlineKeyboardButton(text="💳 Кошелек", url=wallet_connect, callback_data="wallet"),
+            InlineKeyboardButton(text="👤 Профиль", callback_data="profile", ),
+            InlineKeyboardButton(text="💳 Кошелек", callback_data="wallet"),
             InlineKeyboardButton(text="🛟 Поддержка", callback_data="support"),
             InlineKeyboardButton(text="🔥 Добыча", callback_data="mining"),
             InlineKeyboardButton(text="🎉 События", callback_data="events"),
@@ -16,7 +16,7 @@ def keyboard(event: Message | CallbackQuery, wallet_connect: str) -> InlineKeybo
         ],
         "en": [
             InlineKeyboardButton(text="👤 Profile", callback_data="profile"),
-            InlineKeyboardButton(text="💳 Wallet", url=wallet_connect, callback_data="wallet"),
+            InlineKeyboardButton(text="💳 Wallet", callback_data="wallet"),
             InlineKeyboardButton(text="🛟 Support", callback_data="support"),
             InlineKeyboardButton(text="🔥 Mining", callback_data="mining"),
             InlineKeyboardButton(text="🎉 Events", callback_data="events"),

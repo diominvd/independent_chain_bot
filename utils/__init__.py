@@ -1,7 +1,6 @@
 import datetime
 
 from aiogram.types import Message, CallbackQuery
-from pytonconnect import TonConnect
 
 from core.config import users_table
 
