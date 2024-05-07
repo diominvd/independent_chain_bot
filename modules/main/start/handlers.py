@@ -4,7 +4,7 @@ from aiogram.types import Message
 from modules.main import MainModule
 from core.config import users_table
 from markdown import Markdown
-from utils import translate
+from utils import translate, pack_user_data
 
 
 @MainModule.router.message(Command("start"))
@@ -33,7 +33,7 @@ async def start(message: Message) -> None:
     # Check user existence in bot database.
     user_existence: bool = users_table.check_user(user_id=message.from_user.id)
     if not user_existence:
-        user_data: dict = MainModule.modules["start"].pack_user_data(message)
+        user_data: dict = pack_user_data(message)
         users_table.create_user(user_data)
 
     # Answer message.

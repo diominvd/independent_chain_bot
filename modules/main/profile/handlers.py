@@ -20,15 +20,15 @@ async def profile(event: Message | CallbackQuery) -> None:
                   f"{Markdown.bold('Баланс')}: {user_data['balance']} $tINCH\n"
                   f"{Markdown.bold('Друзья')}: {user_data['referals']}\n"
                   f"{Markdown.bold('Ton Space')}: {user_data['wallet']}\n\n"
-                  f"{Markdown.bold('Реферальная ссылка:')}:\n"
+                  f"{Markdown.bold('Реферальная ссылка')}:\n"
                   f"{Markdown.monospaced(f't.me/inch_coin_bot?start={event.from_user.id}')}\n"
                   f"(Нажмите, чтобы скопировать)",
             "en": f"Hello, @{user_data['username']} 👋\n"
                   f"{Markdown.bold('Your UID')}: {user_data['project_id']}\n"
                   f"{Markdown.bold('Balance')}: {user_data['balance']} $tINCH\n"
                   f"{Markdown.bold('Friends')}: {user_data['referals']}\n"
-                  f"{Markdown.bold('Ton Space')}: {user_data['wallet']}\n\n"
-                  f"{Markdown.bold('Referal link:')}:\n"
+                  f"{Markdown.bold('Ton Space')}: {Markdown.monospaced(user_data['wallet'])}\n\n"
+                  f"{Markdown.bold('Referal link')}:\n"
                   f"{Markdown.monospaced(f't.me/inch_coin_bot?start={event.from_user.id}')}\n"
                   f"(Click to copy)"
         }
