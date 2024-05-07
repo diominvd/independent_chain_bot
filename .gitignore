@@ -3,4 +3,5 @@
 **/__pycache__
 *.pyc
 
-secrets.py
+core/secrets.py
+scheme.drawio

@@ -2,33 +2,22 @@ import asyncio
 import logging
 from aiogram.methods import DeleteWebhook
 
-from config import bot, dispatcher
+from core.config import bot, dispatcher
+from modules.main import MainModule
+from modules.admin import AdminModule
 
-from handlers.command import start, profile
-from handlers.callback import check_subscribe, profile, information, mining, support, wallet, events
-from handlers.message import wallet_address
-# Admin imports.
-from administration.handlers.command import admin
-from administration.handlers.callback import admin, admin_exit, mail, mailing, statistic
-from administration.handlers.message import mailing_text, mail_text
-# Events imports.
-from handlers.events import raffle_nft
-from handlers.events.raffle_nft import timer
+# Comment down string for off logging.
+logging.basicConfig(level=logging.INFO)
 
-# Comment on for disable logging.
-# logging.basicConfig(level=logging.INFO)
+dispatcher.include_routers(MainModule.router, AdminModule.router)
 
 
 async def main() -> None:
-    _bot = asyncio.create_task(bot(DeleteWebhook(drop_pending_updates=True)))
-    _dispatcher = asyncio.create_task(dispatcher.start_polling(bot))
-    _timer = asyncio.create_task(timer())
-    await asyncio.gather(_bot, _dispatcher, _timer)
+    bot_task = asyncio.create_task(bot(DeleteWebhook(drop_pending_updates=True)))
+    dispatcher_task = asyncio.create_task(dispatcher.start_polling(bot))
+    await asyncio.gather(bot_task, dispatcher_task)
 
 
 if __name__ == "__main__":
     while True:
-        try:
-            asyncio.run(main())
-        except:
-            pass
+        asyncio.run(main())

@@ -6,6 +6,3 @@ class Markdown:
     @staticmethod
     def monospaced(text: str) -> str:
         return f"<code>{text}</code>"
-
-
-markdown = Markdown()
