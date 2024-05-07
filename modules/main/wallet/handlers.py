@@ -27,6 +27,9 @@ async def wallet(callback: CallbackQuery) -> None:
         }
     }
 
+    # Stop alert:
+    await callback.answer(show_alert=False)
+
     # Generate link for Ton Space connect.
     connector: TonConnect = TonConnect(manifest_url="https://raw.githubusercontent.com/diominvd/independent_chain_bot/main/modules/main/wallet/manifest.json")
     wallets_list: dict = TonConnect.get_wallets()

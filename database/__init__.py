@@ -45,7 +45,7 @@ class UsersTable(Database):
         self._create_table()
 
     def _create_table(self) -> None:
-        query: str = "CREATE TABLE IF NOT EXISTS users (registration DATETIME, last_activity DATETIME, language VARCHAR(2), project_id INT AUTO_INCREMENT PRIMARY KEY, user_id BIGINT NOT NULL, inviter_id BIGINT, username VARCHAR(100), wallet VARCHAR(100), balance FLOAT, referals BIGINT)"
+        query: str = "CREATE TABLE IF NOT EXISTS users (registration DATETIME, last_activity DATETIME, language VARCHAR(2), project_id INT AUTO_INCREMENT PRIMARY KEY, user_id BIGINT NOT NULL UNIQUE, inviter_id BIGINT, username VARCHAR(100), wallet VARCHAR(100), balance FLOAT, referals BIGINT)"
         self.create(query)
         return None
 
@@ -119,13 +119,13 @@ class MiningTable(Database):
         self._create_table()
 
     def _create_table(self) -> None:
-        query: str = "CREATE TABLE IF NOT EXISTS mining (user_id BIGINT NOT NULL, last_claim DATETIME, claims INT, amount FLOAT)"
+        query: str = "CREATE TABLE IF NOT EXISTS mining (user_id BIGINT NOT NULL, last_claim DATETIME, booster FLOAT, claims INT, amount FLOAT, FOREIGN KEY (user_id) REFERENCES users (user_id))"
         self.create(query)
         return None
 
     def create_user(self, user_id: int) -> None:
-        query: str = "INSERT INTO mining (user_id, last_claim, claims, amount) VALUES (%s, %s, %s, %s)"
-        values: tuple = tuple([user_id, datetime.datetime.now(), 0, 0])
+        query: str = "INSERT INTO mining (user_id, last_claim, booster, claims, amount) VALUES (%s, %s, %s, %s, %s)"
+        values: tuple = tuple([user_id, datetime.datetime.now(), 1, 0, 0])
         self.insert(query, values)
         return None
 
@@ -137,7 +137,7 @@ class MiningTable(Database):
         return response
 
     def get_user(self, user_id: int) -> list:
-        query: str = "SELECT claims, amount FROM mining WHERE user_id = %s"
+        query: str = "SELECT booster, claims, amount FROM mining WHERE user_id = %s"
         values: tuple = tuple([user_id])
         response: list = self.select(query, values)[0]
         return response
@@ -147,6 +147,12 @@ class MiningTable(Database):
         values: tuple = tuple([user_id])
         time: datetime = self.select(query, values)[0][0]
         return time
+
+    def update_booster(self, user_id: int, value: float) -> None:
+        query: str = "UPDATE mining SET booster = %s WHERE user_id = %s"
+        values: tuple = tuple([value, user_id])
+        self.update(query, values)
+        return None
 
     def claim(self, user_id: int, profit: float) -> None:
         query: str = "UPDATE mining SET claims = claims + 1, amount = amount + %s WHERE user_id = %s"

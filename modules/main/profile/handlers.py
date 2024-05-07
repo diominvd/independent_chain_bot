@@ -1,7 +1,6 @@
 from aiogram import F
 from aiogram.filters import Command
 from aiogram.types import Message, CallbackQuery
-from pytonconnect import TonConnect
 
 from modules.main import MainModule
 from markdown import Markdown
@@ -19,7 +18,7 @@ async def profile(event: Message | CallbackQuery) -> None:
                   f"{Markdown.bold('Ваш UID')}: {user_data['project_id']}\n"
                   f"{Markdown.bold('Баланс')}: {user_data['balance']} $tINCH\n"
                   f"{Markdown.bold('Друзья')}: {user_data['referals']}\n"
-                  f"{Markdown.bold('Ton Space')}: {user_data['wallet']}\n\n"
+                  f"{Markdown.bold('Ton Space')}: {Markdown.monospaced(user_data['wallet'])}\n\n"
                   f"{Markdown.bold('Реферальная ссылка')}:\n"
                   f"{Markdown.monospaced(f't.me/inch_coin_bot?start={event.from_user.id}')}\n"
                   f"(Нажмите, чтобы скопировать)",
