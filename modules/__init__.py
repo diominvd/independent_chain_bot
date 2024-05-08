@@ -19,7 +19,7 @@ class ModulesManager:
 
 
 class MainModuleStates(StatesGroup):
-    pass
+    slots = State()
 
 
 class AdminModuleStates(StatesGroup):
