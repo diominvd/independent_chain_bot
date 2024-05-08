@@ -3,9 +3,9 @@ from aiogram.filters import Command
 from aiogram.types import Message, CallbackQuery
 
 from modules.main import MainModule
-from markdown import Markdown
 from core.config import users_table
-from utils import translate
+from markdown import Markdown
+from translator import Translator
 
 
 @MainModule.router.message(Command("profile"))
@@ -36,15 +36,13 @@ async def profile(event: Message | CallbackQuery) -> None:
     match type(event).__name__:
         case "Message":
             await event.answer(
-                text=translate(event, strings, "profile"),
-                reply_markup=MainModule.modules["profile"].keyboard(event)
-            )
+                text=Translator.text(event, strings, "profile"),
+                reply_markup=MainModule.modules["profile"].keyboard(event))
         case "CallbackQuery":
             try:
                 await event.message.edit_text(
-                    text=translate(event, strings, "profile"),
-                    reply_markup=MainModule.modules["profile"].keyboard(event)
-                )
+                    text=Translator.text(event, strings, "profile"),
+                    reply_markup=MainModule.modules["profile"].keyboard(event))
             except:
                 pass
             finally:

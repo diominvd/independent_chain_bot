@@ -1,6 +1,4 @@
 import datetime
-from typing import Any
-
 from mysql.connector import connect
 
 from core.secrets import DATABASE
@@ -42,6 +40,8 @@ class Database:
 
 class UsersTable(Database):
     def __init__(self):
+        self.start_reward: float = 100.0
+        self.referal_reward: float = 50.0
         self._create_table()
 
     def _create_table(self) -> None:
@@ -55,8 +55,8 @@ class UsersTable(Database):
         self.insert(query, values)
         # A reward for the one who invited.
         if user_data["inviter_id"] != 0:
-            query: str = "UPDATE users SET balance = balance + 50, referals = referals + 1 WHERE user_id = %s"
-            values = tuple([user_data["inviter_id"]])
+            query: str = "UPDATE users SET balance = balance + %s, referals = referals + 1 WHERE user_id = %s"
+            values = tuple([self.referal_reward, user_data["inviter_id"]])
             self.insert(query, values)
         return None
 
@@ -116,6 +116,7 @@ class UsersTable(Database):
 
 class MiningTable(Database):
     def __init__(self):
+        self.global_booster: float = 1.0
         self._create_table()
 
     def _create_table(self) -> None:
@@ -142,6 +143,12 @@ class MiningTable(Database):
         response: list = self.select(query, values)[0]
         return response
 
+    def get_value(self, flag: str, condition: str, value: any) -> any:
+        query: str = f"SELECT {flag} FROM mining WHERE {condition} = %s"
+        values: tuple = tuple([value])
+        response: any = self.select(query, values)[0][0]
+        return response
+
     def get_last_claim(self, user_id: int) -> datetime:
         query: str = "SELECT last_claim FROM mining WHERE user_id = %s"
         values: tuple = tuple([user_id])
@@ -155,8 +162,8 @@ class MiningTable(Database):
         return None
 
     def claim(self, user_id: int, profit: float) -> None:
-        query: str = "UPDATE mining SET claims = claims + 1, amount = amount + %s WHERE user_id = %s"
-        values: tuple = tuple([profit, user_id])
+        query: str = "UPDATE mining SET claims = claims + 1, amount = amount + %s * %s WHERE user_id = %s"
+        values: tuple = tuple([profit, self.global_booster, user_id])
         self.update(query, values)
 
         query: str = "UPDATE mining SET last_claim = %s WHERE user_id = %s"

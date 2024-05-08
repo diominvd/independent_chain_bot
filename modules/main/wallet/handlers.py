@@ -1,13 +1,9 @@
-import asyncio
-
 from aiogram import F
 from aiogram.types import CallbackQuery
-from pytonconnect import TonConnect
-from pytoniq_core import Address
 
 from modules.main import MainModule
 from core.config import users_table
-from utils import translate
+from translator import Translator
 
 
 @MainModule.router.callback_query(F.data == "wallet")
@@ -31,37 +27,23 @@ async def wallet(callback: CallbackQuery) -> None:
     await callback.answer(show_alert=False)
 
     # Generate link for Ton Space connect.
-    connector: TonConnect = TonConnect(manifest_url="https://raw.githubusercontent.com/diominvd/independent_chain_bot/main/modules/main/wallet/manifest.json")
-    wallets_list: dict = TonConnect.get_wallets()
-    connect_url: str = await connector.connect(wallets_list[0])
+    connector, connect_url = MainModule.modules["wallet"].generate_wallet_connect_url()
 
     await callback.message.edit_text(
-        text=translate(callback, strings, "information"),
-        reply_markup=MainModule.modules["wallet"].keyboard_connect(callback, connect_url)
-    )
+        text=Translator.text(callback, strings, "information"),
+        reply_markup=MainModule.modules["wallet"].keyboard_connect(callback, connect_url))
 
     # Start connect timer.
-    time_limit: int = 600
-    for second in range(1, time_limit):
-        await asyncio.sleep(1)
-        if connector.connected:
-            if connector.account.address:
-                wallet_address = connector.account.address
-                wallet_address: str = Address(wallet_address).to_str(is_bounceable=False)
+    connect_result: str | bool = MainModule.modules["wallet"].connect_wallet_timer(connector, 600)
+    if connect_result:
+        wallet_address: str = connect_result
+        users_table.update_wallet(callback.from_user.id, wallet_address)
 
-                # Update user wallet in database.
-                users_table.update_wallet(callback.from_user.id, wallet_address)
-
-                await callback.message.edit_text(
-                    text=translate(callback, strings, "success"),
-                    reply_markup=MainModule.modules["wallet"].keyboard_finish(callback)
-                )
-
-                # Stop timer.
-                break
+        await callback.message.edit_text(
+            text=Translator.text(callback, strings, "success"),
+            reply_markup=MainModule.modules["wallet"].keyboard_finish(callback))
     else:
         await callback.message.edit_text(
-            text=translate(callback, strings, "failed"),
-            reply_markup=MainModule.modules["wallet"].keyboard_finish(callback)
-        )
+            text=Translator.text(callback, strings, "failed"),
+            reply_markup=MainModule.modules["wallet"].keyboard_finish(callback))
     return None

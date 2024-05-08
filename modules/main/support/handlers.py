@@ -2,7 +2,7 @@ from aiogram import F
 from aiogram.types import CallbackQuery
 
 from modules.main import MainModule
-from utils import translate
+from translator import Translator
 
 
 @MainModule.router.callback_query(F.data == "support")
@@ -19,6 +19,6 @@ async def support(callback: CallbackQuery) -> None:
     }
 
     await callback.message.edit_text(
-        text=translate(callback, strings, "support"),
-        reply_markup=MainModule.modules["support"].keyboard(callback)
-    )
+        text=Translator.text(callback, strings, "support"),
+        reply_markup=MainModule.modules["support"].keyboard(callback))
+    return None

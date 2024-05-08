@@ -1,4 +1,5 @@
 from aiogram import Router
+from aiogram.fsm.state import StatesGroup, State
 
 
 class ModulesManager:
@@ -15,3 +16,18 @@ class ModulesManager:
     def disconnect(self, name: str) -> None:
         del self.modules[name]
         return None
+
+
+class MainModuleStates(StatesGroup):
+    pass
+
+
+class AdminModuleStates(StatesGroup):
+    panel = State()
+    messages = State()
+    mail = State()
+    mailing = State()
+    database = State()
+    statistics = State()
+    get_values = State()
+    change_values = State()
