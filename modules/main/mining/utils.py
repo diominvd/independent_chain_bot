@@ -10,7 +10,7 @@ async def check_wallet_bind(callback: CallbackQuery) -> bool:
     strings: dict[str, dict] = {
         "check": {
             "ru": "Привяжите кошелёк Ton Space для доступа к функции добыче.",
-            "en": "Link a TOn Space wallet to access the mining function."
+            "en": "Link a Ton Space wallet to access the mining function."
         }
     }
 
@@ -18,8 +18,7 @@ async def check_wallet_bind(callback: CallbackQuery) -> bool:
     if address is None:
         await callback.answer(
             text=Translator.text(callback, strings, "check"),
-            show_alert=True
-        )
+            show_alert=True)
         return False
 
 

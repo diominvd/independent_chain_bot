@@ -118,7 +118,7 @@ async def mailing(callback: CallbackQuery, state: FSMContext) -> None:
 
     await callback.message.edit_text(
         text=Translator.text(callback, strings, "description"),
-        keyboard=AdminModule.modules["messages"].keyboard_cancel(callback))
+        reply_markup=AdminModule.modules["messages"].keyboard_cancel(callback))
     return None
 
 

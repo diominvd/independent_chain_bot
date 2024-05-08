@@ -16,9 +16,11 @@ async def database(callback: CallbackQuery, state: FSMContext) -> None:
         "description": {
             "ru": f"{Markdown.bold('Список функций')}:\n"
                   f"• Статистика - просмотр статистики бота.\n"
+                  f"• Получить значение - запрос к базе данных.\n"
                   f"• Изменить значение - изменить внутреннее значение бота.",
             "en": f"{Markdown.bold('List of functions')}:\n"
                   f"• Statistics - view the statistics of the bot.\n"
+                  f"• Get a value - query the database.\n"
                   f"• Change value - change the internal value of the bot."
         }
     }

@@ -8,16 +8,18 @@ def keyboard(event: Message | CallbackQuery) -> InlineKeyboardMarkup:
     buttons: dict[str, list] = {
         "ru": [
             InlineKeyboardButton(text="Собрать", callback_data="claim"),
+            InlineKeyboardButton(text="Усилители", url="https://getgems.io/collection/EQCwKU6XtfzfiT-7-tbzZI1zjkt1PBmYshkUQ05QPLDviMPG?filter=%7B%22saleType%22%3A%22fix_price%22%7D"),
             InlineKeyboardButton(text="Назад", callback_data="profile")
         ],
         "en": [
             InlineKeyboardButton(text="Claim", callback_data="claim"),
+            InlineKeyboardButton(text="Boosters", url="https://getgems.io/collection/EQCwKU6XtfzfiT-7-tbzZI1zjkt1PBmYshkUQ05QPLDviMPG?filter=%7B%22saleType%22%3A%22fix_price%22%7D"),
             InlineKeyboardButton(text="Back", callback_data="profile")
         ]
     }
 
     user_language: str = users_table.get_value("language", "user_id", event.from_user.id)
     builder: InlineKeyboardBuilder = InlineKeyboardBuilder()
-    builder.row(buttons[user_language][0])
-    builder.row(buttons[user_language][1])
+    builder.row(buttons[user_language][0], buttons[user_language][1])
+    builder.row(buttons[user_language][2])
     return builder.as_markup()

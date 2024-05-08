@@ -15,15 +15,13 @@ async def mining(callback: CallbackQuery) -> None:
     if await MainModule.modules["mining"].check_wallet_bind(callback) is False:
         return None
 
+
     # Stop alert.
     await callback.answer(show_alert=False)
 
     # Check user existence in mining table.
     if not mining_table.check_user(callback.from_user.id):
         mining_table.create_user(callback.from_user.id)
-
-    # Load total boosters value from user wallet.
-    MainModule.modules["mining"].update_boosters(callback.from_user.id)
 
     user_data: list = mining_table.get_user(callback.from_user.id)
     strings: dict[str, dict] = {
@@ -32,6 +30,11 @@ async def mining(callback: CallbackQuery) -> None:
                   f"Время заполнения хранилища - 4 часа. Чтобы собрать добычу нажмите соответствующую кнопку. "
                   f"После заполнения хранилища у вас будет 2 часа, чтобы собрать $tINCH. "
                   f"В противном случае добыча будет утеряна.\n\n"
+                  f"{Markdown.bold('Виды усилителей')}:\n"
+                  f"🥉 Бронзовый - x1.1\n"
+                  f"🥈 Серебрянный - x1.2\n"
+                  f"🥇 Золотой - x1.3\n\n"
+                  f"При наличии нескольких усилителей значения множителей перемножаются.\n\n"
                   f"{Markdown.bold('Усилитель')}: x{round(user_data[0], 4)}\n"
                   f"{Markdown.bold('Количество сборов')}: {user_data[1]}\n"
                   f"{Markdown.bold('Ваша добыча')}: {user_data[2]} $tINCH",
@@ -39,6 +42,11 @@ async def mining(callback: CallbackQuery) -> None:
                   f"The storage time is 4 hours. To collect the loot, click the appropriate button. "
                   f" After filling the vault, you will have 2 hours to collect $tINCH. "
                   f" Otherwise, the loot will be lost.\n\n"
+                  f"{Markdown.bold('Types of amplifiers')}:\n"
+                  f"🥉 Bronze - x1.1\n"
+                  f"🥈 Silver - 1.2\n"
+                  f"🥇 Gold - x1.3\n\n"
+                  f"If there are several amplifiers, the multiplier values are multiplied.\n\n"
                   f"{Markdown.bold('Booster')}: x{round(user_data[0], 4)}\n"
                   f"Number of fees: {user_data[1]}\n"
                   f"Your loot: {user_data[2]} $tINCH"
@@ -53,6 +61,9 @@ async def mining(callback: CallbackQuery) -> None:
 
 @MainModule.router.callback_query(F.data == "claim")
 async def claim(callback: CallbackQuery) -> None:
+    # Update total boosters value from user wallet.
+    MainModule.modules["mining"].update_boosters(callback.from_user.id)
+
     user_data: list = mining_table.get_user(callback.from_user.id)
     current_time: datetime = datetime.datetime.now()
     last_claim_time: datetime = mining_table.get_last_claim(callback.from_user.id)

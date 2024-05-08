@@ -1,5 +1,6 @@
 from aiogram import F
 from aiogram.filters import Command
+from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, CallbackQuery
 
 from modules.main import MainModule
@@ -10,7 +11,7 @@ from translator import Translator
 
 @MainModule.router.message(Command("profile"))
 @MainModule.router.callback_query(F.data == "profile")
-async def profile(event: Message | CallbackQuery) -> None:
+async def profile(event: Message | CallbackQuery, state: FSMContext) -> None:
     user_data: dict = users_table.get_user(event.from_user.id)
     strings: dict[str, dict] = {
         "profile": {
@@ -32,6 +33,8 @@ async def profile(event: Message | CallbackQuery) -> None:
                   f"(Click to copy)"
         }
     }
+
+    await state.clear()
 
     match type(event).__name__:
         case "Message":

@@ -120,7 +120,7 @@ class MiningTable(Database):
         self._create_table()
 
     def _create_table(self) -> None:
-        query: str = "CREATE TABLE IF NOT EXISTS mining (user_id BIGINT NOT NULL, last_claim DATETIME, booster FLOAT, claims INT, amount FLOAT, FOREIGN KEY (user_id) REFERENCES users (user_id))"
+        query: str = "CREATE TABLE IF NOT EXISTS mining (user_id BIGINT NOT NULL, last_claim DATETIME, booster FLOAT, claims INT, amount FLOAT, FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE)"
         self.create(query)
         return None
 

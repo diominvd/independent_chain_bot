@@ -27,14 +27,14 @@ async def wallet(callback: CallbackQuery) -> None:
     await callback.answer(show_alert=False)
 
     # Generate link for Ton Space connect.
-    connector, connect_url = MainModule.modules["wallet"].generate_wallet_connect_url()
+    connector, connect_url = await MainModule.modules["wallet"].generate_wallet_connect_url()
 
     await callback.message.edit_text(
         text=Translator.text(callback, strings, "information"),
         reply_markup=MainModule.modules["wallet"].keyboard_connect(callback, connect_url))
 
     # Start connect timer.
-    connect_result: str | bool = MainModule.modules["wallet"].connect_wallet_timer(connector, 600)
+    connect_result: str | bool = await MainModule.modules["wallet"].connect_wallet_timer(connector, 600)
     if connect_result:
         wallet_address: str = connect_result
         users_table.update_wallet(callback.from_user.id, wallet_address)
