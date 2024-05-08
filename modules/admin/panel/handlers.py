@@ -3,10 +3,10 @@ from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, CallbackQuery
 
+from core.config import bot
+from markdown import Markdown
 from modules import AdminModuleStates
 from modules.admin import AdminModule
-from core.config import users_table, bot
-from markdown import Markdown
 from translator import Translator
 
 

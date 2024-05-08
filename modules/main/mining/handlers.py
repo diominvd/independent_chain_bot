@@ -1,11 +1,11 @@
+import datetime
+
 from aiogram import F
 from aiogram.types import CallbackQuery
 
-import datetime
-
-from modules.main import MainModule
 from core.config import mining_table
 from markdown import Markdown
+from modules.main import MainModule
 from translator import Translator
 
 
@@ -14,7 +14,6 @@ async def mining(callback: CallbackQuery) -> None:
     # Check the wallet binding.
     if await MainModule.modules["mining"].check_wallet_bind(callback) is False:
         return None
-
 
     # Stop alert.
     await callback.answer(show_alert=False)
@@ -37,7 +36,7 @@ async def mining(callback: CallbackQuery) -> None:
                   f"При наличии нескольких усилителей значения множителей перемножаются.\n\n"
                   f"{Markdown.bold('Усилитель')}: x{round(user_data[0], 4)}\n"
                   f"{Markdown.bold('Количество сборов')}: {user_data[1]}\n"
-                  f"{Markdown.bold('Ваша добыча')}: {user_data[2]} $tINCH",
+                  f"{Markdown.bold('Ваша добыча')}: {round(user_data[2], 4)} $tINCH",
             "en": f"Mining {Markdown.bold('$tINCH')} is open 🔥\n\n"
                   f"The storage time is 4 hours. To collect the loot, click the appropriate button. "
                   f" After filling the vault, you will have 2 hours to collect $tINCH. "
@@ -48,8 +47,8 @@ async def mining(callback: CallbackQuery) -> None:
                   f"🥇 Gold - x1.3\n\n"
                   f"If there are several amplifiers, the multiplier values are multiplied.\n\n"
                   f"{Markdown.bold('Booster')}: x{round(user_data[0], 4)}\n"
-                  f"Number of fees: {user_data[1]}\n"
-                  f"Your loot: {user_data[2]} $tINCH"
+                  f"{Markdown.bold('Number of fees')}: {user_data[1]}\n"
+                  f"{Markdown.bold('Your loot')}: {round(user_data[2], 4)} $tINCH"
         }
     }
 
@@ -80,8 +79,8 @@ async def claim(callback: CallbackQuery) -> None:
 
         strings: dict[str, dict] = {
             "claim_success": {
-                "ru": f"Получено {round(reward, 2)} $tINCH",
-                "en": f"Received {round(reward, 2)} $tINCH"
+                "ru": f"Получено {round(reward, 4)} $tINCH",
+                "en": f"Received {round(reward, 4)} $tINCH"
             }
         }
 

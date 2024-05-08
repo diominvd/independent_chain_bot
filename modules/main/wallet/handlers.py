@@ -1,8 +1,8 @@
 from aiogram import F
 from aiogram.types import CallbackQuery
 
-from modules.main import MainModule
 from core.config import users_table
+from modules.main import MainModule
 from translator import Translator
 
 

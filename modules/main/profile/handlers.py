@@ -3,9 +3,9 @@ from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, CallbackQuery
 
-from modules.main import MainModule
 from core.config import users_table
 from markdown import Markdown
+from modules.main import MainModule
 from translator import Translator
 
 
@@ -17,7 +17,7 @@ async def profile(event: Message | CallbackQuery, state: FSMContext) -> None:
         "profile": {
             "ru": f"Привет, @{user_data['username']} 👋\n"
                   f"{Markdown.bold('Ваш UID')}: {user_data['project_id']}\n"
-                  f"{Markdown.bold('Баланс')}: {user_data['balance']} $tINCH\n"
+                  f"{Markdown.bold('Баланс')}: {round(user_data['balance'], 4)} $tINCH\n"
                   f"{Markdown.bold('Друзья')}: {user_data['referals']}\n"
                   f"{Markdown.bold('Ton Space')}: {Markdown.monospaced(user_data['wallet'])}\n\n"
                   f"{Markdown.bold('Реферальная ссылка')}:\n"
@@ -25,7 +25,7 @@ async def profile(event: Message | CallbackQuery, state: FSMContext) -> None:
                   f"(Нажмите, чтобы скопировать)",
             "en": f"Hello, @{user_data['username']} 👋\n"
                   f"{Markdown.bold('Your UID')}: {user_data['project_id']}\n"
-                  f"{Markdown.bold('Balance')}: {user_data['balance']} $tINCH\n"
+                  f"{Markdown.bold('Balance')}: {round(user_data['balance'], 4)} $tINCH\n"
                   f"{Markdown.bold('Friends')}: {user_data['referals']}\n"
                   f"{Markdown.bold('Ton Space')}: {Markdown.monospaced(user_data['wallet'])}\n\n"
                   f"{Markdown.bold('Referal link')}:\n"

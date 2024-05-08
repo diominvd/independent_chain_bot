@@ -5,10 +5,10 @@ from aiogram.filters import StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, Message
 
-from modules.admin import AdminModule
-from modules import AdminModuleStates
 from core.config import bot, users_table
 from markdown import Markdown
+from modules import AdminModuleStates
+from modules.admin import AdminModule
 from translator import Translator
 
 

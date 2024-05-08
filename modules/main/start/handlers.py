@@ -1,9 +1,9 @@
 from aiogram.filters import Command
 from aiogram.types import Message
 
-from modules.main import MainModule
 from core.config import users_table
 from markdown import Markdown
+from modules.main import MainModule
 from translator import Translator
 
 
