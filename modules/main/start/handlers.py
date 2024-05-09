@@ -36,8 +36,8 @@ async def start(message: Message) -> None:
         user_data: dict = MainModule.modules["start"].pack_user_data(message)
         users_table.create_user(user_data)
 
-    await message.answer_document(
-        document=FSInputFile("image.jpg"),
+    await message.answer_photo(
+        photo="https://github.com/diominvd/independent_chain_bot/blob/main/modules/main/start/image.jpg?raw=true",
         caption=Translator.text(message, strings, "greeting"),
         reply_markup=MainModule.modules["start"].keyboard(message))
     return None
