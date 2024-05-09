@@ -64,12 +64,13 @@ async def database(callback: CallbackQuery, state: FSMContext) -> None:
 
     await callback.message.edit_text(
         text=Translator.text(callback, strings, "statistics"),
-        reply_markup=AdminModule.modules["database"].keyboard_cancel(callback))
+        reply_markup=AdminModule.modules["database"].keyboard_back(callback, "database"))
     return None
 
 
 # Get Values -> ...
-@AdminModule.router.callback_query(StateFilter(AdminModuleStates.database), F.data == "get_values")
+@AdminModule.router.callback_query(StateFilter(AdminModuleStates.database, AdminModuleStates.get_values),
+                                   F.data == "get_values")
 async def get_values(callback: CallbackQuery, state: FSMContext) -> None:
     strings: dict[str, dict] = {
         "information": {
@@ -137,27 +138,28 @@ async def get_values_handler(message: Message, state: FSMContext) -> None:
                   f"{Markdown.bold('Параметр')}: {content[1]}\n"
                   f"{Markdown.bold('Фильтр')}: {content[2]}\n"
                   f"{Markdown.bold('Значение фильтра')}: {content[3]}\n"
-                  f"{Markdown.bold('Ответ')}: {value}\n\n"
-                  f"Открыть панель управления: /admin",
+                  f"{Markdown.bold('Ответ')}: {value}",
             "en": f"{Markdown.bold('Report on request')} 📥\n\n"
                   f"{Markdown.bold('Table')}: {content[0]}\n"
                   f"{Markdown.bold('Parameter')}: {content[1]}\n"
                   f"{Markdown.bold('Filter')}: {content[2]}\n"
                   f"{Markdown.bold('Filter value')}: {content[3]}\n"
-                  f"{Markdown.bold('Response')}: {value}\n\n"
-                  f"Open the control panel: /admin",
+                  f"{Markdown.bold('Response')}: {value}",
         }
     }
-
-    await state.clear()
 
     await bot.delete_message(
         chat_id=message.from_user.id,
         message_id=message.message_id)
 
-    await bot.send_message(
+    data: dict = await state.get_data()
+    panel_id: int = data["panel_id"]
+
+    await bot.edit_message_text(
+        text=Translator.text(message, strings, "response"),
         chat_id=message.from_user.id,
-        text=Translator.text(message, strings, "response"), )
+        message_id=panel_id,
+        reply_markup=AdminModule.modules["database"].keyboard_close(message, "get_values"))
     return None
 
 
@@ -188,14 +190,14 @@ async def change_values(callback: CallbackQuery, state: FSMContext) -> None:
     try:
         await callback.message.edit_text(
             text=Translator.text(callback, strings, "information"),
-            reply_markup=AdminModule.modules["database"].keyboard_change_values(callback))
-    except:
-        pass
+            reply_markup=AdminModule.modules["database"].keyboard_back(callback, "database"))
+    except Exception as e:
+        print(e)
     return None
 
 
 @AdminModule.router.message(StateFilter(AdminModuleStates.change_values))
-async def values_handler(message: Message, state: FSMContext) -> None:
+async def change_values_handler(message: Message, state: FSMContext) -> None:
     content: list = message.text.split("=")
     name: str = content[0]
     value: float = float(content[1])
@@ -215,13 +217,16 @@ async def values_handler(message: Message, state: FSMContext) -> None:
         }
     }
 
-    await state.clear()
-
     await bot.delete_message(
         chat_id=message.from_user.id,
         message_id=message.message_id)
 
-    await bot.send_message(
+    data: dict = await state.get_data()
+    panel_id: int = data["panel_id"]
+
+    await bot.edit_message_text(
+        text=Translator.text(message, strings, "response"),
         chat_id=message.from_user.id,
-        text=Translator.text(message, strings, "response"))
+        message_id=panel_id,
+        reply_markup=AdminModule.modules["database"].keyboard_close(message, "change_values"))
     return None

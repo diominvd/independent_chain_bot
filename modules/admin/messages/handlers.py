@@ -52,7 +52,7 @@ async def mail(callback: CallbackQuery, state: FSMContext) -> None:
 
     await callback.message.edit_text(
         text=Translator.text(callback, strings, "description"),
-        reply_markup=AdminModule.modules["messages"].keyboard_cancel(callback))
+        reply_markup=AdminModule.modules["messages"].keyboard_cancel(callback, "messages"))
     return None
 
 
@@ -68,7 +68,7 @@ async def mail_content_handler(message: Message, state: FSMContext) -> None:
     await bot.send_message(
         chat_id=users_table.get_value("user_id", "username", username),
         text=mail_text,
-        reply_markup=AdminModule.modules["messages"].keyboard_constructor(button_name, button_url))
+        reply_markup=AdminModule.modules["messages"].keyboard_mail_constructor(button_name, button_url))
 
     # Notify admin about send message.
     strings: dict[str, dict] = {
@@ -90,11 +90,19 @@ async def mail_content_handler(message: Message, state: FSMContext) -> None:
         }
     }
 
-    await state.clear()
-
-    await bot.send_message(
+    await bot.delete_message(
         chat_id=message.from_user.id,
-        text=Translator.text(message, strings, "notify"))
+        message_id=message.message_id
+    )
+
+    data: dict = await state.get_data()
+    panel_id: int = data["panel_id"]
+
+    await bot.edit_message_text(
+        text=Translator.text(message, strings, "notify"),
+        chat_id=message.from_user.id,
+        message_id=panel_id,
+        reply_markup=AdminModule.modules["messages"].keyboard_close(message, "messages"))
     return None
 
 
@@ -118,7 +126,7 @@ async def mailing(callback: CallbackQuery, state: FSMContext) -> None:
 
     await callback.message.edit_text(
         text=Translator.text(callback, strings, "description"),
-        reply_markup=AdminModule.modules["messages"].keyboard_cancel(callback))
+        reply_markup=AdminModule.modules["messages"].keyboard_cancel(callback, "messages"))
     return None
 
 
@@ -139,12 +147,12 @@ async def mailing_content_handler(message: Message, state: FSMContext) -> None:
                 await bot.send_message(
                     chat_id=user,
                     text=ru_content[0],
-                    reply_markup=AdminModule.modules["messages"].keyboard_constructor(ru_content[1], ru_content[2]))
+                    reply_markup=AdminModule.modules["messages"].keyboard_mail_constructor(ru_content[1], ru_content[2]))
             else:
                 await bot.send_message(
                     chat_id=user,
                     text=en_content[0],
-                    reply_markup=AdminModule.modules["messages"].keyboard_constructor(en_content[1], en_content[2]))
+                    reply_markup=AdminModule.modules["messages"].keyboard_mail_constructor(en_content[1], en_content[2]))
         except:
             counter["fail"] += 1
         else:
@@ -158,20 +166,26 @@ async def mailing_content_handler(message: Message, state: FSMContext) -> None:
                   f"{Markdown.bold('Всего пользователей')}: {len(users)}\n"
                   f"{Markdown.bold('Успешно отправлено')}: {counter['success']}\n"
                   f"{Markdown.bold('Не отправлено')}: {counter['fail']}\n"
-                  f"{Markdown.bold('Время рассылки')}: {(end_mailing_time - start_mailing_time).total_seconds()} секунд\n\n"
-                  f"Для открытия панели управления воспользуйтесь командой /admin.",
+                  f"{Markdown.bold('Время рассылки')}: {(end_mailing_time - start_mailing_time).total_seconds()} секунд.",
             "en": f"Newsletter successfully sent ✉️\n"
                   f"{Markdown.bold('Total users')}: {len(users)}\n"
                   f"{Markdown.bold('Successfully sent')}: {counter['success']}\n"
                   f"{Markdown.bold('Not sent')}: {counter['fail']}\n"
-                  f"{Markdown.bold('Mailing time')}: {(end_mailing_time - start_mailing_time).total_seconds()} seconds\n\n"
-                  f"To open the control panel, use the /admin command.",
+                  f"{Markdown.bold('Mailing time')}: {(end_mailing_time - start_mailing_time).total_seconds()} seconds.",
         }
     }
 
-    await state.clear()
-
-    await bot.send_message(
+    await bot.delete_message(
         chat_id=message.from_user.id,
-        text=Translator.text(message, strings, "notify"))
+        message_id=message.message_id
+    )
+
+    data: dict = await state.get_data()
+    panel_id: int = data["panel_id"]
+
+    await bot.edit_message_text(
+        text=Translator.text(message, strings, "notify"),
+        chat_id=message.from_user.id,
+        message_id=panel_id,
+        reply_markup=AdminModule.modules["messages"].keyboard_close(message, "messages"))
     return None

@@ -29,14 +29,13 @@ def keyboard(event: Message | CallbackQuery) -> InlineKeyboardMarkup:
     return builder.as_markup()
 
 
-def keyboard_cancel(event: Message | CallbackQuery) -> InlineKeyboardMarkup:
+def keyboard_close(event: Message | CallbackQuery, callback_data: str) -> InlineKeyboardMarkup:
     buttons: dict[str, list] = {
         "ru": [
-            InlineKeyboardButton(text="Назад", callback_data="database"),
-
+            InlineKeyboardButton(text="Закрыть", callback_data=callback_data),
         ],
         "en": [
-            InlineKeyboardButton(text="Back", callback_data="database"),
+            InlineKeyboardButton(text="Close", callback_data=callback_data),
         ]
     }
 
@@ -46,21 +45,18 @@ def keyboard_cancel(event: Message | CallbackQuery) -> InlineKeyboardMarkup:
     return builder.as_markup()
 
 
-def keyboard_change_values(event: Message | CallbackQuery) -> InlineKeyboardMarkup:
+def keyboard_back(event: Message | CallbackQuery, callback_data: str) -> InlineKeyboardMarkup:
     buttons: dict[str, list] = {
         "ru": [
-            InlineKeyboardButton(text="Обновить", callback_data="change_values"),
-            InlineKeyboardButton(text="Назад", callback_data="database"),
+            InlineKeyboardButton(text="Назад", callback_data=callback_data),
 
         ],
         "en": [
-            InlineKeyboardButton(text="Refresh", callback_data="values"),
-            InlineKeyboardButton(text="Back", callback_data="database"),
+            InlineKeyboardButton(text="Back", callback_data=callback_data),
         ]
     }
 
     user_language: str = users_table.get_value("language", "user_id", event.from_user.id)
     builder: InlineKeyboardBuilder = InlineKeyboardBuilder()
     builder.row(buttons[user_language][0])
-    builder.row(buttons[user_language][1])
     return builder.as_markup()

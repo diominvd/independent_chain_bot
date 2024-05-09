@@ -1,11 +1,8 @@
-import asyncio
-
 from aiogram import F
-from aiogram.filters import StateFilter
 from aiogram.fsm.context import FSMContext
-from aiogram.types import CallbackQuery, Message
+from aiogram.types import CallbackQuery
 
-from core.config import bot, users_table
+from core.config import users_table
 from markdown import Markdown
 from modules import MainModuleStates
 from modules.main import MainModule

@@ -38,7 +38,12 @@ async def panel(event: Message | CallbackQuery, state: FSMContext) -> None:
                 text=Translator.text(event, strings, "description"),
                 reply_markup=AdminModule.modules["panel"].keyboard(event))
 
+            await state.update_data(panel_id=event.message_id + 1)
         case "CallbackQuery":
+            await event.answer(show_alert=False)
+
+            await state.update_data(panel_id=event.message.message_id)
+
             await event.message.edit_text(
                 text=Translator.text(event, strings, "description"),
                 reply_markup=AdminModule.modules["panel"].keyboard(event))
