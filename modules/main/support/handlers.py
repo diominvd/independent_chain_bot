@@ -1,12 +1,15 @@
 from aiogram import F
+from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery
 
+from core.config import users_table
 from modules.main import MainModule
 from translator import Translator
 
 
 @MainModule.router.callback_query(F.data == "support")
-async def support(callback: CallbackQuery) -> None:
+@users_table.update_last_activity
+async def support(callback: CallbackQuery, state: FSMContext) -> None:
     strings: dict[str, dict] = {
         "support": {
             "ru": f"В случае возникновения ошибок или каких-либо проблем с ботом просим написать вас в поддержку.\n\n"

@@ -110,13 +110,14 @@ class UsersTable(Database):
         return None
 
     def update_last_activity(self, func) -> object:
-        async def wrapper(*args, **kwargs):
-            user_id: int = args[0].from_user.id
+        async def wrapper(event, state=None):
+            user_id = event.from_user.id
             time: datetime = datetime.datetime.now()
             query: str = "UPDATE users SET last_activity = %s WHERE user_id = %s"
             values: tuple = tuple([time, user_id])
             self.update(query, values)
-            return await func(*args, **kwargs)
+            return await func(event, state)
+
         return wrapper
 
 

@@ -1,14 +1,15 @@
 from aiogram.filters import Command
-from aiogram.types import Message, InputFile, FSInputFile
+from aiogram.fsm.context import FSMContext
+from aiogram.types import Message
 
-from core.config import users_table, bot
+from core.config import users_table
 from markdown import Markdown
 from modules.main import MainModule
 from translator import Translator
 
 
 @MainModule.router.message(Command("start"))
-async def start(message: Message) -> None:
+async def start(message: Message, state: FSMContext) -> None:
     strings: dict[str, dict] = {
         "greeting": {
             "ru": f"Добро пожаловать в {Markdown.bold('INCH Project')} - крипто-проект, запущенный группой энтузиастов.\n\n"

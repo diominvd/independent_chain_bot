@@ -11,6 +11,7 @@ from translator import Translator
 
 @MainModule.router.message(Command("profile"))
 @MainModule.router.callback_query(F.data == "profile")
+@users_table.update_last_activity
 async def profile(event: Message | CallbackQuery, state: FSMContext) -> None:
     user_data: dict = users_table.get_user(event.from_user.id)
     strings: dict[str, dict] = {

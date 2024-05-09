@@ -1,16 +1,18 @@
 import datetime
 
 from aiogram import F
+from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery
 
-from core.config import mining_table
+from core.config import mining_table, users_table
 from markdown import Markdown
 from modules.main import MainModule
 from translator import Translator
 
 
 @MainModule.router.callback_query(F.data == "mining")
-async def mining(callback: CallbackQuery) -> None:
+@users_table.update_last_activity
+async def mining(callback: CallbackQuery, state: FSMContext) -> None:
     # Check the wallet binding.
     if await MainModule.modules["mining"].check_wallet_bind(callback) is False:
         return None
@@ -59,7 +61,8 @@ async def mining(callback: CallbackQuery) -> None:
 
 
 @MainModule.router.callback_query(F.data == "claim")
-async def claim(callback: CallbackQuery) -> None:
+@users_table.update_last_activity
+async def claim(callback: CallbackQuery, state: FSMContext) -> None:
     # Update total boosters value from user wallet.
     MainModule.modules["mining"].update_boosters(callback.from_user.id)
 

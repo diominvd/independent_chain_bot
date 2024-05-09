@@ -1,4 +1,5 @@
 from aiogram import F
+from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery
 
 from core.config import users_table
@@ -7,7 +8,8 @@ from translator import Translator
 
 
 @MainModule.router.callback_query(F.data == "wallet")
-async def wallet(callback: CallbackQuery) -> None:
+@users_table.update_last_activity
+async def wallet(callback: CallbackQuery, state: FSMContext) -> None:
     strings: dict[str, dict] = {
         "information": {
             "ru": "Подключите ваш кошелёк Ton Space с помощью специальной кнопки 🔗",

@@ -10,7 +10,8 @@ from translator import Translator
 
 
 @MainModule.router.callback_query(F.data == "events")
-async def support(callback: CallbackQuery) -> None:
+@users_table.update_last_activity
+async def support(callback: CallbackQuery, state: FSMContext) -> None:
     strings: dict[str, dict] = {
         "events": {
             "ru": f"В данном разделе находятся актуальные события и активности 🥳\n\n"
@@ -32,6 +33,7 @@ async def support(callback: CallbackQuery) -> None:
 
 # Slots -> ...
 @MainModule.router.callback_query(F.data == "slots")
+@users_table.update_last_activity
 async def slots(callback: CallbackQuery, state: FSMContext) -> None:
     strings: dict[str, dict] = {
         "slots": {
@@ -56,7 +58,8 @@ async def slots(callback: CallbackQuery, state: FSMContext) -> None:
 
 
 @MainModule.router.callback_query(F.data == "spin")
-async def spin(callback: CallbackQuery) -> None:
+@users_table.update_last_activity
+async def spin(callback: CallbackQuery, state: FSMContext) -> None:
     if users_table.get_value("balance", "user_id", callback.from_user.id) > 10:
         users_table.update_balance(callback.from_user.id, "-", 10)
 
