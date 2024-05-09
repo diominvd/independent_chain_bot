@@ -36,7 +36,7 @@ async def mining(callback: CallbackQuery, state: FSMContext) -> None:
                    f"🥈 Серебрянный - x1.2\n"
                    f"🥇 Золотой - x1.3\n\n"
                    f"При наличии нескольких усилителей значения множителей перемножаются.\n\n"
-                   f"{Markdown.bold('Усилитель')}: x{round(user_data[0], 4)}\n"
+                   f"{Markdown.bold('Усилитель')}: x{round(user_data[0]*mining_table.global_booster, 4)}\n"
                    f"{Markdown.bold('Количество сборов')}: {user_data[1]}\n"
                    f"{Markdown.bold('Ваша добыча')}: {round(user_data[2], 4)} $tINCH"),
             "en": (f"Mining {Markdown.bold('$tINCH')} is open 🔥\n\n"
@@ -48,7 +48,7 @@ async def mining(callback: CallbackQuery, state: FSMContext) -> None:
                    f"🥈 Silver - 1.2\n"
                    f"🥇 Gold - x1.3\n\n"
                    f"If there are several amplifiers, the multiplier values are multiplied.\n\n"
-                   f"{Markdown.bold('Booster')}: x{round(user_data[0], 4)}\n"
+                   f"{Markdown.bold('Booster')}: x{round(user_data[0]*mining_table.global_booster, 4)}\n"
                    f"{Markdown.bold('Number of fees')}: {user_data[1]}\n"
                    f"{Markdown.bold('Your loot')}: {round(user_data[2], 4)} $tINCH")
         }
