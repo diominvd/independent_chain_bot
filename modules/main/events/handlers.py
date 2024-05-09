@@ -11,7 +11,6 @@ from translator import Translator
 
 @MainModule.router.callback_query(F.data == "events")
 async def support(callback: CallbackQuery) -> None:
-    events: list = []
     strings: dict[str, dict] = {
         "events": {
             "ru": f"В данном разделе находятся актуальные события и активности 🥳\n\n"

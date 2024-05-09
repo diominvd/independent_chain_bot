@@ -1,7 +1,7 @@
 from aiogram.filters import Command
-from aiogram.types import Message
+from aiogram.types import Message, InputFile, FSInputFile
 
-from core.config import users_table
+from core.config import users_table, bot
 from markdown import Markdown
 from modules.main import MainModule
 from translator import Translator
@@ -36,8 +36,8 @@ async def start(message: Message) -> None:
         user_data: dict = MainModule.modules["start"].pack_user_data(message)
         users_table.create_user(user_data)
 
-    # Answer message.
-    await message.answer(
-        text=Translator.text(message, strings, "greeting"),
+    await message.answer_document(
+        document=FSInputFile("image.jpg"),
+        caption=Translator.text(message, strings, "greeting"),
         reply_markup=MainModule.modules["start"].keyboard(message))
     return None
