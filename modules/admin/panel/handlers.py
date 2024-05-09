@@ -15,16 +15,16 @@ from translator import Translator
 async def panel(event: Message | CallbackQuery, state: FSMContext) -> None:
     strings: dict[str, dict] = {
         "description": {
-            "ru": f"{Markdown.bold('Администратор')}: @{event.from_user.username}\n"
-                  f"Список разделов:\n"
-                  f"• Сообщения - отправка сообщения пользователю, массовая рассылка.\n"
-                  f"• База данных - статистика, получение значения, изменение значения\n\n"
-                  f"Для закрытия панели нажмите соответсвующую кнопку.",
-            "en": f"{Markdown.bold('Administrator')}: @{event.from_user.username}\n"
-                  f"List of sections:\n"
-                  f"• Messages - sending a message to the user, mass mailing.\n"
-                  f"• Database - statistics, getting a value, changing a value\n\n"
-                  f"To close the panel, press the corresponding button.",
+            "ru": (f"{Markdown.bold('Администратор')}: @{event.from_user.username}\n"
+                   f"Список разделов:\n"
+                   f"• Сообщения - отправка сообщения пользователю, массовая рассылка.\n"
+                   f"• База данных - статистика, получение значения, изменение значения\n\n"
+                   f"Для закрытия панели нажмите соответсвующую кнопку."),
+            "en": (f"{Markdown.bold('Administrator')}: @{event.from_user.username}\n"
+                   f"List of sections:\n"
+                   f"• Messages - sending a message to the user, mass mailing.\n"
+                   f"• Database - statistics, getting a value, changing a value\n\n"
+                   f"To close the panel, press the corresponding button.")
         }
     }
 

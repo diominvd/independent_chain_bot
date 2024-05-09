@@ -74,46 +74,46 @@ async def database(callback: CallbackQuery, state: FSMContext) -> None:
 async def get_values(callback: CallbackQuery, state: FSMContext) -> None:
     strings: dict[str, dict] = {
         "information": {
-            "ru": f"{Markdown.bold('Список доступных таблиц и полей')} 🗂\n\n"
-                  f"• users - Основная таблица с данными пользователей.\n"
-                  f"-- registration\n"
-                  f"-- last_activity\n"
-                  f"-- language\n"
-                  f"-- project_id\n"
-                  f"-- user_id\n"
-                  f"-- user_id\n"
-                  f"-- inviter_id\n"
-                  f"-- username\n"
-                  f"-- balance\n"
-                  f"-- referals\n\n"
-                  f"• mining - Таблица с данными майнеров.\n"
-                  f"-- user_id\n"
-                  f"-- last_claim\n"
-                  f"-- booster\n"
-                  f"-- claims\n"
-                  f"-- amount\n\n"
-                  f"Для получения значения отправьте заполненный шаблон по данному примеру:\n\n"
-                  f"{Markdown.monospaced('название таблицы:параметр:название фильтра:значение фильтра:тип значения (str, int, float)')}",
-            "en": f"{Markdown.bold('List of available tables and fields')} 🗂\n\n"
-                  f"• users - The main table with user data.\n"
-                  f"-- registration\n"
-                  f"-- last_activity\n"
-                  f"-- language\n"
-                  f"-- project_id\n"
-                  f"-- user_id\n"
-                  f"-- user_id\n"
-                  f"-- inviter_id\n"
-                  f"-- username\n"
-                  f"-- balance\n"
-                  f"-- referals\n\n"
-                  f"• mining - A table with miner data.\n"
-                  f"-- user_id\n"
-                  f"-- last_claim\n"
-                  f"-- booster\n"
-                  f"-- claims\n"
-                  f"-- amount\n\n"
-                  f"To get the value, send the completed template according to this example:\n\n"
-                  f"{Markdown.monospaced('table name:parameter:name of the filter:filter value:value type (str, int, float)')}"
+            "ru": (f"{Markdown.bold('Список доступных таблиц и полей')} 🗂\n\n"
+                   f"• users - Основная таблица с данными пользователей.\n"
+                   f"-- registration\n"
+                   f"-- last_activity\n"
+                   f"-- language\n"
+                   f"-- project_id\n"
+                   f"-- user_id\n"
+                   f"-- user_id\n"
+                   f"-- inviter_id\n"
+                   f"-- username\n"
+                   f"-- balance\n"
+                   f"-- referals\n\n"
+                   f"• mining - Таблица с данными майнеров.\n"
+                   f"-- user_id\n"
+                   f"-- last_claim\n"
+                   f"-- booster\n"
+                   f"-- claims\n"
+                   f"-- amount\n\n"
+                   f"Для получения значения отправьте заполненный шаблон по данному примеру:\n\n"
+                   f"{Markdown.monospaced('название таблицы:параметр:название фильтра:значение фильтра:тип значения (str, int, float)')}"),
+            "en": (f"{Markdown.bold('List of available tables and fields')} 🗂\n\n"
+                   f"• users - The main table with user data.\n"
+                   f"-- registration\n"
+                   f"-- last_activity\n"
+                   f"-- language\n"
+                   f"-- project_id\n"
+                   f"-- user_id\n"
+                   f"-- user_id\n"
+                   f"-- inviter_id\n"
+                   f"-- username\n"
+                   f"-- balance\n"
+                   f"-- referals\n\n"
+                   f"• mining - A table with miner data.\n"
+                   f"-- user_id\n"
+                   f"-- last_claim\n"
+                   f"-- booster\n"
+                   f"-- claims\n"
+                   f"-- amount\n\n"
+                   f"To get the value, send the completed template according to this example:\n\n"
+                   f"{Markdown.monospaced('table name:parameter:name of the filter:filter value:value type (str, int, float)')}")
         }
     }
 
@@ -122,7 +122,7 @@ async def get_values(callback: CallbackQuery, state: FSMContext) -> None:
 
     await callback.message.edit_text(
         text=Translator.text(callback, strings, "information"),
-        reply_markup=AdminModule.modules["database"].keyboard_cancel(callback))
+        reply_markup=AdminModule.modules["database"].keyboard_back(callback, "database"))
     return None
 
 
@@ -133,18 +133,18 @@ async def get_values_handler(message: Message, state: FSMContext) -> None:
 
     strings: dict[str, dict] = {
         "response": {
-            "ru": f"{Markdown.bold('Отчёт по запросу')} 📥\n\n"
-                  f"{Markdown.bold('Таблица')}: {content[0]}\n"
-                  f"{Markdown.bold('Параметр')}: {content[1]}\n"
-                  f"{Markdown.bold('Фильтр')}: {content[2]}\n"
-                  f"{Markdown.bold('Значение фильтра')}: {content[3]}\n"
-                  f"{Markdown.bold('Ответ')}: {value}",
-            "en": f"{Markdown.bold('Report on request')} 📥\n\n"
-                  f"{Markdown.bold('Table')}: {content[0]}\n"
-                  f"{Markdown.bold('Parameter')}: {content[1]}\n"
-                  f"{Markdown.bold('Filter')}: {content[2]}\n"
-                  f"{Markdown.bold('Filter value')}: {content[3]}\n"
-                  f"{Markdown.bold('Response')}: {value}",
+            "ru": (f"{Markdown.bold('Отчёт по запросу')} 📥\n\n"
+                   f"{Markdown.bold('Таблица')}: {content[0]}\n"
+                   f"{Markdown.bold('Параметр')}: {content[1]}\n"
+                   f"{Markdown.bold('Фильтр')}: {content[2]}\n"
+                   f"{Markdown.bold('Значение фильтра')}: {content[3]}\n"
+                   f"{Markdown.bold('Ответ')}: {value}"),
+            "en": (f"{Markdown.bold('Report on request')} 📥\n\n"
+                   f"{Markdown.bold('Table')}: {content[0]}\n"
+                   f"{Markdown.bold('Parameter')}: {content[1]}\n"
+                   f"{Markdown.bold('Filter')}: {content[2]}\n"
+                   f"{Markdown.bold('Filter value')}: {content[3]}\n"
+                   f"{Markdown.bold('Response')}: {value}"),
         }
     }
 
@@ -169,18 +169,18 @@ async def get_values_handler(message: Message, state: FSMContext) -> None:
 async def change_values(callback: CallbackQuery, state: FSMContext) -> None:
     strings: dict[str, dict] = {
         "information": {
-            "ru": f"{Markdown.bold('Список доступных значений')} 🔢\n\n"
-                  f"• start_reward ({users_table.start_reward}) - Награда за регистрацию в боте.\n"
-                  f"• referal_reward ({users_table.referal_reward}) - Награда за приглашённого пользователя.\n"
-                  f"• global_booster ({mining_table.global_booster}) - Общий усилитель добычи.\n\n"
-                  f"Для изменения значения отправьте заполненный шаблон по данному примеру:\n"
-                  f"{Markdown.monospaced('название=значение')}",
-            "en": f"{Markdown.bold('List of available values')} 🔢\n\n"
-                  f"• start_reward - Reward for registering in the bot.\n"
-                  f"• referal_reward - Reward for the invited user.\n"
-                  f"• global_booster is a general mining booster.\n\n"
-                  f"To change the value, send the completed template according to this example:\n"
-                  f"{Markdown.monospaced('name=value')}",
+            "ru": (f"{Markdown.bold('Список доступных значений')} 🔢\n\n"
+                   f"• start_reward ({users_table.start_reward}) - Награда за регистрацию в боте.\n"
+                   f"• referal_reward ({users_table.referal_reward}) - Награда за приглашённого пользователя.\n"
+                   f"• global_booster ({mining_table.global_booster}) - Общий усилитель добычи.\n\n"
+                   f"Для изменения значения отправьте заполненный шаблон по данному примеру:\n"
+                   f"{Markdown.monospaced('название=значение')}"),
+            "en": (f"{Markdown.bold('List of available values')} 🔢\n\n"
+                   f"• start_reward - Reward for registering in the bot.\n"
+                   f"• referal_reward - Reward for the invited user.\n"
+                   f"• global_booster is a general mining booster.\n\n"
+                   f"To change the value, send the completed template according to this example:\n"
+                   f"{Markdown.monospaced('name=value')}")
         }
     }
 
@@ -206,14 +206,14 @@ async def change_values_handler(message: Message, state: FSMContext) -> None:
 
     strings: dict[str, dict] = {
         "response": {
-            "ru": f"{Markdown.bold('Значение изменено')} 📤\n\n"
-                  f"{Markdown.bold('Имя значения')}: {name}\n"
-                  f"{Markdown.bold('Значение')}: {value}\n\n"
-                  f"Открыть панель управления: /admin",
-            "en": f"{Markdown.bold('Value changed')} 📤\n\n"
-                  f"{Markdown.bold('Value Name')}: {name}\n"
-                  f"{Markdown.bold('Value')}: {value}\n\n"
-                  f"Open the control panel: /admin"
+            "ru": (f"{Markdown.bold('Значение изменено')} 📤\n\n"
+                   f"{Markdown.bold('Имя значения')}: {name}\n"
+                   f"{Markdown.bold('Значение')}: {value}\n\n"
+                   f"Открыть панель управления: /admin"),
+            "en": (f"{Markdown.bold('Value changed')} 📤\n\n"
+                   f"{Markdown.bold('Value Name')}: {name}\n"
+                   f"{Markdown.bold('Value')}: {value}\n\n"
+                   f"Open the control panel: /admin")
         }
     }
 

@@ -38,12 +38,12 @@ async def messages(callback: CallbackQuery, state: FSMContext) -> None:
 async def mail(callback: CallbackQuery, state: FSMContext) -> None:
     strings: dict[str, dict] = {
         "description": {
-            "ru": f"Для отправки сообщения пользователю отправьте заполненный шаблон по данному примеру:\n\n"
-                  f"{Markdown.monospaced('Имя пользователя # Текст сообщения # Текст кнопки # URL-адрес кнопки')}\n\n"
-                  f"Если нет необходимости прикреплять кнопку к сообщению укажите последние два элемента как None.",
-            "en": f"To send a message to the user, send the completed template according to this example:\n\n"
-                  f"{Markdown.monospaced('Username # The text of the message # Button text # Button url')}\n\n"
-                  f"If there is no need to attach a button to a message, specify the last two elements as None.",
+            "ru": (f"Для отправки сообщения пользователю отправьте заполненный шаблон по данному примеру:\n\n"
+                   f"{Markdown.monospaced('Имя пользователя # Текст сообщения # Текст кнопки # URL-адрес кнопки')}\n\n"
+                   f"Если нет необходимости прикреплять кнопку к сообщению укажите последние два элемента как None."),
+            "en": (f"To send a message to the user, send the completed template according to this example:\n\n"
+                   f"{Markdown.monospaced('Username # The text of the message # Button text # Button url')}\n\n"
+                   f"If there is no need to attach a button to a message, specify the last two elements as None.")
         }
     }
 
@@ -73,20 +73,20 @@ async def mail_content_handler(message: Message, state: FSMContext) -> None:
     # Notify admin about send message.
     strings: dict[str, dict] = {
         "notify": {
-            "ru": f"Сообщение успешно отправлено ✉️\n"
-                  f"{Markdown.bold('Получатель')}: @{username}\n"
-                  f"{Markdown.bold('Текст сообщения')}: {mail_text}\n"
-                  f"{Markdown.bold('Текст кнопки')}: {button_name}\n"
-                  f"{Markdown.bold('URL кнопки')}: {button_url}\n"
-                  f"{Markdown.bold('Время отправки')}: {datetime.datetime.now()}\n\n"
-                  f"Для открытия панели управления воспользуйтесь командой /admin.",
-            "en": f"The message was sent successfully ✉️\n"
-                  f"{Markdown.bold('Recipient')}: @{username}\n"
-                  f"{Markdown.bold('Message text')}: {mail_text}\n"
-                  f"{Markdown.bold('Button text')}: {button_name}\n"
-                  f"{Markdown.bold('Button URL')}: {button_url}\n"
-                  f"{Markdown.bold('Time of sending')}: {datetime.datetime.now()}\n\n"
-                  f"To open the control panel, use the /admin command."
+            "ru": (f"Сообщение успешно отправлено ✉️\n"
+                   f"{Markdown.bold('Получатель')}: @{username}\n"
+                   f"{Markdown.bold('Текст сообщения')}: {mail_text}\n"
+                   f"{Markdown.bold('Текст кнопки')}: {button_name}\n"
+                   f"{Markdown.bold('URL кнопки')}: {button_url}\n"
+                   f"{Markdown.bold('Время отправки')}: {datetime.datetime.now()}\n\n"
+                   f"Для открытия панели управления воспользуйтесь командой /admin."),
+            "en": (f"The message was sent successfully ✉️\n"
+                   f"{Markdown.bold('Recipient')}: @{username}\n"
+                   f"{Markdown.bold('Message text')}: {mail_text}\n"
+                   f"{Markdown.bold('Button text')}: {button_name}\n"
+                   f"{Markdown.bold('Button URL')}: {button_url}\n"
+                   f"{Markdown.bold('Time of sending')}: {datetime.datetime.now()}\n\n"
+                   f"To open the control panel, use the /admin command.")
         }
     }
 
@@ -110,14 +110,12 @@ async def mail_content_handler(message: Message, state: FSMContext) -> None:
 async def mailing(callback: CallbackQuery, state: FSMContext) -> None:
     strings: dict[str, dict] = {
         "description": {
-            "ru": f"Для отправки рассылки отправьте заполненный шаблон по данному примеру:\n\n"
-                  f"{Markdown.monospaced('Текст на русском языке # Текст RU кнопки # URL-адрес RU кнопки '
-                                         '# Текст на английском языке # Текст EN кнопки # URL-адрес EN кнопки')}\n\n"
-                  f"Если нет необходимости прикреплять кнопку к сообщению укажите текст кнопки и URL как None.",
-            "en": f"To send the mailing list, send the completed template according to this example:\n\n"
-                  f"{Markdown.monospaced('Text in Russian # RU button text # RU button URL '
-                                         '# English text # EN button text # EN button URL')}\n\n"
-                  f"If there is no need to attach the button to the message, specify the button text and URL as None.",
+            "ru": (f"Для отправки рассылки отправьте заполненный шаблон по данному примеру:\n\n"
+                   f"{Markdown.monospaced('Текст на русском языке # Текст RU кнопки # URL-адрес RU кнопки # Текст на английском языке # Текст EN кнопки # URL-адрес EN кнопки')}\n\n"
+                   f"Если нет необходимости прикреплять кнопку к сообщению укажите текст кнопки и URL как None."),
+            "en": (f"To send the mailing list, send the completed template according to this example:\n\n"
+                   f"{Markdown.monospaced('Text in Russian # RU button text # RU button URL # English text # EN button text # EN button URL')}\n\n"
+                   f"If there is no need to attach the button to the message, specify the button text and URL as None.")
         }
     }
 
@@ -147,12 +145,14 @@ async def mailing_content_handler(message: Message, state: FSMContext) -> None:
                 await bot.send_message(
                     chat_id=user,
                     text=ru_content[0],
-                    reply_markup=AdminModule.modules["messages"].keyboard_mail_constructor(ru_content[1], ru_content[2]))
+                    reply_markup=AdminModule.modules["messages"].keyboard_mail_constructor(ru_content[1],
+                                                                                           ru_content[2]))
             else:
                 await bot.send_message(
                     chat_id=user,
                     text=en_content[0],
-                    reply_markup=AdminModule.modules["messages"].keyboard_mail_constructor(en_content[1], en_content[2]))
+                    reply_markup=AdminModule.modules["messages"].keyboard_mail_constructor(en_content[1],
+                                                                                           en_content[2]))
         except:
             counter["fail"] += 1
         else:
@@ -162,16 +162,16 @@ async def mailing_content_handler(message: Message, state: FSMContext) -> None:
     end_mailing_time: datetime = datetime.datetime.now()
     strings: dict[str, dict] = {
         "notify": {
-            "ru": f"Рассылка успешно отправлено ✉️\n"
-                  f"{Markdown.bold('Всего пользователей')}: {len(users)}\n"
-                  f"{Markdown.bold('Успешно отправлено')}: {counter['success']}\n"
-                  f"{Markdown.bold('Не отправлено')}: {counter['fail']}\n"
-                  f"{Markdown.bold('Время рассылки')}: {(end_mailing_time - start_mailing_time).total_seconds()} секунд.",
-            "en": f"Newsletter successfully sent ✉️\n"
-                  f"{Markdown.bold('Total users')}: {len(users)}\n"
-                  f"{Markdown.bold('Successfully sent')}: {counter['success']}\n"
-                  f"{Markdown.bold('Not sent')}: {counter['fail']}\n"
-                  f"{Markdown.bold('Mailing time')}: {(end_mailing_time - start_mailing_time).total_seconds()} seconds.",
+            "ru": (f"Рассылка успешно отправлено ✉️\n"
+                   f"{Markdown.bold('Всего пользователей')}: {len(users)}\n"
+                   f"{Markdown.bold('Успешно отправлено')}: {counter['success']}\n"
+                   f"{Markdown.bold('Не отправлено')}: {counter['fail']}\n"
+                   f"{Markdown.bold('Время рассылки')}: {(end_mailing_time - start_mailing_time).total_seconds()} секунд."),
+            "en": (f"Newsletter successfully sent ✉️\n"
+                   f"{Markdown.bold('Total users')}: {len(users)}\n"
+                   f"{Markdown.bold('Successfully sent')}: {counter['success']}\n"
+                   f"{Markdown.bold('Not sent')}: {counter['fail']}\n"
+                   f"{Markdown.bold('Mailing time')}: {(end_mailing_time - start_mailing_time).total_seconds()} seconds.")
         }
     }
 

@@ -16,22 +16,22 @@ async def profile(event: Message | CallbackQuery, state: FSMContext) -> None:
     user_data: dict = users_table.get_user(event.from_user.id)
     strings: dict[str, dict] = {
         "profile": {
-            "ru": f"Привет, @{user_data['username']} 👋\n"
-                  f"{Markdown.bold('Ваш UID')}: {user_data['project_id']}\n"
-                  f"{Markdown.bold('Баланс')}: {round(user_data['balance'], 4)} $tINCH\n"
-                  f"{Markdown.bold('Друзья')}: {user_data['referals']}\n"
-                  f"{Markdown.bold('Ton Space')}: {Markdown.monospaced(user_data['wallet'])}\n\n"
-                  f"{Markdown.bold('Реферальная ссылка')}:\n"
-                  f"{Markdown.monospaced(f't.me/inch_coin_bot?start={event.from_user.id}')}\n"
-                  f"(Нажмите, чтобы скопировать)",
-            "en": f"Hello, @{user_data['username']} 👋\n"
-                  f"{Markdown.bold('Your UID')}: {user_data['project_id']}\n"
-                  f"{Markdown.bold('Balance')}: {round(user_data['balance'], 4)} $tINCH\n"
-                  f"{Markdown.bold('Friends')}: {user_data['referals']}\n"
-                  f"{Markdown.bold('Ton Space')}: {Markdown.monospaced(user_data['wallet'])}\n\n"
-                  f"{Markdown.bold('Referal link')}:\n"
-                  f"{Markdown.monospaced(f't.me/inch_coin_bot?start={event.from_user.id}')}\n"
-                  f"(Click to copy)"
+            "ru": (f"Привет, @{user_data['username']} 👋\n"
+                   f"{Markdown.bold('Ваш UID')}: {user_data['project_id']}\n"
+                   f"{Markdown.bold('Баланс')}: {round(user_data['balance'], 4)} $tINCH\n"
+                   f"{Markdown.bold('Друзья')}: {user_data['referals']}\n"
+                   f"{Markdown.bold('Ton Space')}: {Markdown.monospaced(user_data['wallet'])}\n\n"
+                   f"{Markdown.bold('Реферальная ссылка')}:\n"
+                   f"{Markdown.monospaced(f't.me/inch_coin_bot?start={event.from_user.id}')}\n"
+                   f"(Нажмите, чтобы скопировать)"),
+            "en": (f"Hello, @{user_data['username']} 👋\n"
+                   f"{Markdown.bold('Your UID')}: {user_data['project_id']}\n"
+                   f"{Markdown.bold('Balance')}: {round(user_data['balance'], 4)} $tINCH\n"
+                   f"{Markdown.bold('Friends')}: {user_data['referals']}\n"
+                   f"{Markdown.bold('Ton Space')}: {Markdown.monospaced(user_data['wallet'])}\n\n"
+                   f"{Markdown.bold('Referal link')}:\n"
+                   f"{Markdown.monospaced(f't.me/inch_coin_bot?start={event.from_user.id}')}\n"
+                   f"(Click to copy)")
         }
     }
 

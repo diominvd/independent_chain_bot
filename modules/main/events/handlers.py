@@ -14,14 +14,14 @@ from translator import Translator
 async def support(callback: CallbackQuery, state: FSMContext) -> None:
     strings: dict[str, dict] = {
         "events": {
-            "ru": f"В данном разделе находятся актуальные события и активности 🥳\n\n"
-                  f"Для просмотра конкретного события выберите соответствующую кнопку.\n\n"
-                  f"{Markdown.bold('Текущие события')}:\n"
-                  f"• Слоты - испытай свою удачу и заработай $tINCH.",
-            "en": f"This section contains current events and activities 🥳\n\n"
-                  f"To view a specific event, select the appropriate button.\n\n"
-                  f"{Markdown.bold('Current Events')}:\n"
-                  f"• Slots - try your luck and earn $tINCH."
+            "ru": (f"В данном разделе находятся актуальные события и активности 🥳\n\n"
+                   f"Для просмотра конкретного события выберите соответствующую кнопку.\n\n"
+                   f"{Markdown.bold('Текущие события')}:\n"
+                   f"• Слоты - испытай свою удачу и заработай $tINCH."),
+            "en": (f"This section contains current events and activities 🥳\n\n"
+                   f"To view a specific event, select the appropriate button.\n\n"
+                   f"{Markdown.bold('Current Events')}:\n"
+                   f"• Slots - try your luck and earn $tINCH.")
         }
     }
 
@@ -37,14 +37,14 @@ async def support(callback: CallbackQuery, state: FSMContext) -> None:
 async def slots(callback: CallbackQuery, state: FSMContext) -> None:
     strings: dict[str, dict] = {
         "slots": {
-            "ru": f"{Markdown.bold('Добро пожаловать в слоты')} 🎰\n\n"
-                  f"{Markdown.bold('Ставка по умолчанию')}: 10 $tINCH\n\n"
-                  f"В случае выпадения трёх одинаковых слотов вы получаете выйгрыш в размере x15 от начальной ставки.\n\n"
-                  f"Если на слотах выпадет три бриллианта - ваш выйгрыш составит х20 от начальной ставки 🤑",
-            "en": f"{Markdown.bold('Welcome to Slots')} 🎰\n\n"
-                  f"{Markdown.bold('Default bet')}: 10$tINCH\n\n"
-                  f" If three identical slots fall out, you get a win of x15 of the initial bet.\n\n"
-                  f" If three brilliants appear on the slots - you winnings will be to x20 of the initial bet 🤑",
+            "ru": (f"{Markdown.bold('Добро пожаловать в слоты')} 🎰\n\n"
+                   f"{Markdown.bold('Ставка по умолчанию')}: 10 $tINCH\n\n"
+                   f"В случае выпадения трёх одинаковых слотов вы получаете выйгрыш в размере x15 от начальной ставки.\n\n"
+                   f"Если на слотах выпадет три бриллианта - ваш выйгрыш составит х20 от начальной ставки 🤑"),
+            "en": (f"{Markdown.bold('Welcome to Slots')} 🎰\n\n"
+                   f"{Markdown.bold('Default bet')}: 10$tINCH\n\n"
+                   f" If three identical slots fall out, you get a win of x15 of the initial bet.\n\n"
+                   f" If three brilliants appear on the slots - you winnings will be to x20 of the initial bet 🤑")
         }
     }
 
@@ -67,16 +67,16 @@ async def spin(callback: CallbackQuery, state: FSMContext) -> None:
 
         strings: dict[str, dict] = {
             "win_alert": {
-                "ru": f"{result}\n\n"
-                      f"Поздравляем! Вы выйграли {reward} $tINCH.",
-                "en": f"{result}\n\n"
-                      f"Congratulations! You have won {reward} $tINCH.",
+                "ru": (f"{result}\n\n"
+                       f"Поздравляем! Вы выйграли {reward} $tINCH."),
+                "en": (f"{result}\n\n"
+                       f"Congratulations! You have won {reward} $tINCH."),
             },
             "lose_alert": {
-                "ru": f"{result}\n\n"
-                      "Вы проиграли 10 $tINCH. Попробуйте ещё раз!",
-                "en": f"{result}\n\n"
-                      "You've lost 10 $tINCH. Try again!"
+                "ru": (f"{result}\n\n"
+                       "Вы проиграли 10 $tINCH. Попробуйте ещё раз!"),
+                "en": (f"{result}\n\n"
+                       "You've lost 10 $tINCH. Try again!")
             }
         }
 
