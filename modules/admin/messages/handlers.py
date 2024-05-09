@@ -78,15 +78,13 @@ async def mail_content_handler(message: Message, state: FSMContext) -> None:
                    f"{Markdown.bold('Текст сообщения')}: {mail_text}\n"
                    f"{Markdown.bold('Текст кнопки')}: {button_name}\n"
                    f"{Markdown.bold('URL кнопки')}: {button_url}\n"
-                   f"{Markdown.bold('Время отправки')}: {datetime.datetime.now()}\n\n"
-                   f"Для открытия панели управления воспользуйтесь командой /admin."),
+                   f"{Markdown.bold('Время отправки')}: {datetime.datetime.now()}"),
             "en": (f"The message was sent successfully ✉️\n"
                    f"{Markdown.bold('Recipient')}: @{username}\n"
                    f"{Markdown.bold('Message text')}: {mail_text}\n"
                    f"{Markdown.bold('Button text')}: {button_name}\n"
                    f"{Markdown.bold('Button URL')}: {button_url}\n"
-                   f"{Markdown.bold('Time of sending')}: {datetime.datetime.now()}\n\n"
-                   f"To open the control panel, use the /admin command.")
+                   f"{Markdown.bold('Time of sending')}: {datetime.datetime.now()}")
         }
     }
 

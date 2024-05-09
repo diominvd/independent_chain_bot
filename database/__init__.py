@@ -177,8 +177,8 @@ class MiningTable(Database):
         values: tuple = tuple([datetime.datetime.now(), user_id])
         self.update(query, values)
 
-        query: str = "UPDATE users SET balance = balance + %s WHERE user_id = %s"
-        values: tuple = tuple([profit, user_id])
+        query: str = "UPDATE users SET balance = balance + %s * %s WHERE user_id = %s"
+        values: tuple = tuple([profit, self.global_booster, user_id])
         self.update(query, values)
 
         return None
