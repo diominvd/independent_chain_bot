@@ -26,6 +26,7 @@ def pack_user_data(message: Message) -> dict:
         "inviter_id": check_inviter(message),
         "username": message.from_user.username,
         "balance": users_table.start_reward,
-        "referals": 0
+        "referals": 0,
+        "codes": 0
     }
     return user_data

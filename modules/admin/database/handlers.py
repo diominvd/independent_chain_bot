@@ -3,7 +3,7 @@ from aiogram.filters import StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, Message
 
-from core.config import users_table, mining_table, bot
+from core.config import users_table, mining_table, bot, codes_table
 from markdown import Markdown
 from modules import AdminModuleStates
 from modules.admin import AdminModule
@@ -46,16 +46,21 @@ async def database(callback: CallbackQuery, state: FSMContext) -> None:
     query: str = "SELECT SUM(balance) FROM users"
     balances: float = round(users_table.select(query, ())[0][0], 4)
 
+    query: str = "SELECT SUM(codes) FROM users"
+    codes: float = users_table.select(query, ())[0][0]
+
     strings: dict[str, dict] = {
         "statistics": {
             "ru": f"{Markdown.bold('Статистика Independent Chain Bot')} 📊\n\n"
                   f"{Markdown.bold('Всего пользователей')}: {users}\n"
                   f"{Markdown.bold('Всего майнеров')}: {miners}\n"
-                  f"{Markdown.bold('Добыто монет')}: {balances}\n",
+                  f"{Markdown.bold('Добыто монет')}: {balances}\n"
+                  f"{Markdown.bold('Активировано промокодов')}: {codes}",
             "en": f"{Markdown.bold('Independent Chain Bot statistics')} 📊\n\n"
                   f"{Markdown.bold('Total users')}: {users}\n"
                   f"{Markdown.bold('Total miners')}: {miners}\n"
-                  f"{Markdown.bold('Coins mined')}: {balances}\n",
+                  f"{Markdown.bold('Coins mined')}: {balances}\n"
+                  f"{Markdown.bold('Promo codes activated')}: {codes}"
         }
     }
 
@@ -65,6 +70,107 @@ async def database(callback: CallbackQuery, state: FSMContext) -> None:
     await callback.message.edit_text(
         text=Translator.text(callback, strings, "statistics"),
         reply_markup=AdminModule.modules["database"].keyboard_back(callback, "database"))
+    return None
+
+
+# Codes -> ...
+@AdminModule.router.callback_query(F.data == "_codes")
+async def codes(callback: CallbackQuery, state: FSMContext) -> None:
+    query: str = "SELECT COUNT(code) FROM codes"
+    codes: int = codes_table.select(query, ())[0][0]
+
+    strings: dict[str, dict] = {
+        "information": {
+            "ru": (f"{Markdown.bold('Работа с промокодами')} 🔠\n\n"
+                   f"{Markdown.bold('Доступно промокодов')}: {codes}\n\n"
+                   f"{Markdown.bold('Список функций')}:\n"
+                   f"• Сгенерировать - сгенерировать промокоды.\n"
+                   f"• Получить - получить промокоды."),
+            "en": (f"{Markdown.bold('Working with promo codes')} 🔠\n\n"
+                   f"{Markdown.bold('Promo codes available')}: {codes}\n\n"
+                   f"{Markdown.bold('List of functions')}:\n"
+                   f"• Generate - generate promo codes.\n"
+                   f"• Get - get promo codes.")
+        }
+    }
+
+    await callback.answer(show_alert=False)
+    await state.set_state(AdminModuleStates.codes)
+
+    await callback.message.edit_text(
+        text=Translator.text(callback, strings, "information"),
+        reply_markup=AdminModule.modules["database"].keyboard_codes(callback))
+    return None
+
+
+@AdminModule.router.callback_query(StateFilter(AdminModuleStates.codes), F.data == "generate_codes")
+async def generate_codes(callback: CallbackQuery, state: FSMContext) -> None:
+    strings: dict[str, dict] = {
+        "information": {
+            "ru": (f"Для генерации промокодов отправьте заполненный шаблон по данному примеру:\n\n"
+                   f"{Markdown.monospaced('количество:значение')}"),
+            "en": (f"To generate promo codes, send the completed template according to this example:\n\n"
+                   f"{Markdown.monospaced('quantity:value')}"),
+        }
+    }
+
+    await callback.answer(show_alert=False)
+    await state.set_state(AdminModuleStates.generate_codes)
+
+    await callback.message.edit_text(
+        text=Translator.text(callback, strings, "information"),
+        reply_markup=AdminModule.modules["database"].keyboard_back(callback, "_codes"))
+    return None
+
+
+@AdminModule.router.message(StateFilter(AdminModuleStates.generate_codes))
+async def generate_codes_handler(message: Message, state: FSMContext) -> None:
+    await bot.delete_message(
+        chat_id=message.from_user.id,
+        message_id=message.message_id)
+
+    data: list = message.text.split(":")
+    codes_list: list = codes_table.generate(int(data[0]), float(data[1]))
+
+    await message.answer(
+        text="\n".join(codes_list))
+    return None
+
+
+@AdminModule.router.callback_query(StateFilter(AdminModuleStates.codes), F.data == "get_codes")
+async def get_codes(callback: CallbackQuery, state: FSMContext) -> None:
+    strings: dict[str, dict] = {
+        "information": {
+            "ru": (f"Для получения промокодов отправьте заполненный шаблон по данному примеру:\n\n"
+                   f"{Markdown.monospaced('количество:значение')}"),
+            "en": (f"To get promo codes, send the completed template according to this example:\n\n"
+                   f"{Markdown.monospaced('quantity:value')}"),
+        }
+    }
+
+    await callback.answer(show_alert=False)
+    await state.set_state(AdminModuleStates.get_codes)
+
+    await callback.message.edit_text(
+        text=Translator.text(callback, strings, "information"),
+        reply_markup=AdminModule.modules["database"].keyboard_back(callback, "_codes"))
+    return None
+
+
+@AdminModule.router.message(StateFilter(AdminModuleStates.get_codes))
+async def get_codes_handler(message: Message, state: FSMContext) -> None:
+    await bot.delete_message(
+        chat_id=message.from_user.id,
+        message_id=message.message_id)
+
+    data: list = message.text.split(":")
+
+    query: str = "SELECT * FROM codes WHERE value = %s LIMIT %s"
+    values: tuple = tuple([float(data[1]), int(data[0])])
+    response: list = codes_table.select(query, values)
+
+    await message.answer(
+        text="\n".join([response[i][1] for i in range(len(response))]))
     return None
 
 
@@ -208,12 +314,10 @@ async def change_values_handler(message: Message, state: FSMContext) -> None:
         "response": {
             "ru": (f"{Markdown.bold('Значение изменено')} 📤\n\n"
                    f"{Markdown.bold('Имя значения')}: {name}\n"
-                   f"{Markdown.bold('Значение')}: {value}\n\n"
-                   f"Открыть панель управления: /admin"),
+                   f"{Markdown.bold('Значение')}: {value}\n\n"),
             "en": (f"{Markdown.bold('Value changed')} 📤\n\n"
                    f"{Markdown.bold('Value Name')}: {name}\n"
-                   f"{Markdown.bold('Value')}: {value}\n\n"
-                   f"Open the control panel: /admin")
+                   f"{Markdown.bold('Value')}: {value}\n\n")
         }
     }
 

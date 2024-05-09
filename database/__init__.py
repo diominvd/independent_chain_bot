@@ -1,4 +1,6 @@
 import datetime
+import random
+
 from mysql.connector import connect
 
 from core.secrets import DATABASE
@@ -37,6 +39,12 @@ class Database:
         cls.connection.commit()
         return None
 
+    @classmethod
+    def delete(cls, query: str, values: tuple) -> None:
+        cls.cursor.execute(query, values)
+        cls.connection.commit()
+        return None
+
 
 class UsersTable(Database):
     def __init__(self):
@@ -45,12 +53,12 @@ class UsersTable(Database):
         self._create_table()
 
     def _create_table(self) -> None:
-        query: str = "CREATE TABLE IF NOT EXISTS users (registration DATETIME, last_activity DATETIME, language VARCHAR(2), project_id INT AUTO_INCREMENT PRIMARY KEY, user_id BIGINT NOT NULL UNIQUE, inviter_id BIGINT, username VARCHAR(100), wallet VARCHAR(100), balance FLOAT, referals BIGINT)"
+        query: str = "CREATE TABLE IF NOT EXISTS users (registration DATETIME, last_activity DATETIME, language VARCHAR(2), project_id INT AUTO_INCREMENT PRIMARY KEY, user_id BIGINT NOT NULL UNIQUE, inviter_id BIGINT, username VARCHAR(100), wallet VARCHAR(100), balance FLOAT, referals BIGINT, codes INT NOT NULL)"
         self.create(query)
         return None
 
     def create_user(self, user_data: dict) -> None:
-        query: str = "INSERT INTO users (registration, last_activity, language, user_id, inviter_id, username, balance, referals) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+        query: str = "INSERT INTO users (registration, last_activity, language, user_id, inviter_id, username, balance, referals, codes) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
         values: tuple = tuple(key for key in user_data.values())
         self.insert(query, values)
         # A reward for the one who invited.
@@ -106,6 +114,12 @@ class UsersTable(Database):
     def update_wallet(self, user_id: int, wallet: str) -> None:
         query: str = "UPDATE users SET wallet = %s WHERE user_id = %s"
         values: tuple = tuple([wallet, user_id])
+        self.update(query, values)
+        return None
+
+    def activate_code(self, user_id: int, value: float) -> None:
+        query: str = "UPDATE users SET codes = codes + 1, balance = balance + %s WHERE user_id = %s"
+        values: tuple = tuple([value, user_id])
         self.update(query, values)
         return None
 
@@ -181,4 +195,35 @@ class MiningTable(Database):
         values: tuple = tuple([profit, self.global_booster, user_id])
         self.update(query, values)
 
+        return None
+
+
+class CodesTable(Database):
+    def __init__(self):
+        self.symbols: str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz"
+        self._create_table()
+
+    def _create_table(self) -> None:
+        query: str = "CREATE TABLE IF NOT EXISTS codes (code_id BIGINT PRIMARY KEY AUTO_INCREMENT, code VARCHAR(20), value FLOAT)"
+        self.create(query)
+        return None
+
+    def generate(self, number: int, value: float) -> list:
+        codes: list = ["".join([random.choice(self.symbols) for i in range(16)]) for i in range(number)]
+        for code in codes:
+            query: str = "INSERT INTO codes (code, value) VALUES (%s, %s)"
+            values: tuple = tuple([code, value])
+            self.insert(query, values)
+        return codes
+
+    def load_code(self, code: str) -> list:
+        query: str = "SELECT * FROM codes WHERE code = %s"
+        values: tuple = tuple([code])
+        code_data: list = self.select(query, values)
+        return code_data
+
+    def delete_code(self, code: str) -> None:
+        query: str = "DELETE FROM codes WHERE code = %s"
+        values: tuple = tuple([code])
+        self.delete(query, values)
         return None

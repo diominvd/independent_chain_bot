@@ -19,6 +19,7 @@ class ModulesManager:
 
 
 class MainModuleStates(StatesGroup):
+    codes = State()
     slots = State()
 
 
@@ -28,6 +29,9 @@ class AdminModuleStates(StatesGroup):
     mail = State()
     mailing = State()
     database = State()
+    codes = State()
+    generate_codes = State()
+    get_codes = State()
     statistics = State()
     get_values = State()
     change_values = State()

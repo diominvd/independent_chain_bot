@@ -1,8 +1,11 @@
-from aiogram import F
-from aiogram.fsm.context import FSMContext
-from aiogram.types import CallbackQuery
+import asyncio
 
-from core.config import users_table
+from aiogram import F
+from aiogram.filters import StateFilter
+from aiogram.fsm.context import FSMContext
+from aiogram.types import CallbackQuery, Message
+
+from core.config import users_table, bot, codes_table
 from markdown import Markdown
 from modules import MainModuleStates
 from modules.main import MainModule
@@ -17,10 +20,12 @@ async def support(callback: CallbackQuery, state: FSMContext) -> None:
             "ru": (f"В данном разделе находятся актуальные события и активности 🥳\n\n"
                    f"Для просмотра конкретного события выберите соответствующую кнопку.\n\n"
                    f"{Markdown.bold('Текущие события')}:\n"
+                   f"• Промокоды - активируйте промокод и получите награду.\n"
                    f"• Слоты - испытай свою удачу и заработай $tINCH."),
             "en": (f"This section contains current events and activities 🥳\n\n"
                    f"To view a specific event, select the appropriate button.\n\n"
                    f"{Markdown.bold('Current Events')}:\n"
+                   f"• Promo codes - activate the promo code and receive a reward.\n"
                    f"• Slots - try your luck and earn $tINCH.")
         }
     }
@@ -28,6 +33,75 @@ async def support(callback: CallbackQuery, state: FSMContext) -> None:
     await callback.message.edit_text(
         text=Translator.text(callback, strings, "events"),
         reply_markup=MainModule.modules["events"].keyboard(callback))
+    return None
+
+
+# Promo codes -> ...
+@MainModule.router.callback_query(F.data == "codes")
+@users_table.update_last_activity
+async def codes(callback: CallbackQuery, state: FSMContext) -> None:
+    strings: dict[str, dict] = {
+        "codes": {
+            "ru": "Отправьте 16-ти значный код для его активации 🔠",
+            "en": "Send a 16-digit code to activate it 🔠"
+        }
+    }
+
+    await callback.answer(show_alert=False)
+    await state.set_state(MainModuleStates.codes)
+
+    await callback.message.edit_text(
+        text=Translator.text(callback, strings, "codes"),
+        reply_markup=MainModule.modules["events"].keyboard_back(callback, "events"))
+    return None
+
+
+@MainModule.router.message(StateFilter(MainModuleStates.codes))
+@users_table.update_last_activity
+async def code_handler(message: Message, state: FSMContext) -> None:
+    await bot.delete_message(
+        chat_id=message.from_user.id,
+        message_id=message.message_id)
+
+    code: list = codes_table.load_code(message.text)
+
+    if len(code) != 0:
+        strings: dict[str, dict] = {
+            "success": {
+                "ru": (f"Промокод успешно активирован ✅\n"
+                       f"Вам начислено {code[0][2]} $tINCH."),
+                "en": (f"Promo code successfully activated ✅\n"
+                       f"You are credited with {code[0][2]} $tINCH.")
+            }
+        }
+
+        users_table.activate_code(message.from_user.id, code[0][2])
+        codes_table.delete_code(code[0][1])
+
+        await message.answer(
+            text=Translator.text(message, strings, "success"))
+
+        await asyncio.sleep(3)
+
+        await bot.delete_message(
+            chat_id=message.from_user.id,
+            message_id=message.message_id + 1)
+    else:
+        strings: dict[str, dict] = {
+            "fail": {
+                "ru": "Недействительный промокод 🚫\n",
+                "en": "Invalid promo code 🚫\n",
+            }
+        }
+
+        await message.answer(
+            text=Translator.text(message, strings, "fail"))
+
+        await asyncio.sleep(3)
+
+        await bot.delete_message(
+            chat_id=message.from_user.id,
+            message_id=message.message_id+1)
     return None
 
 
@@ -53,8 +127,8 @@ async def slots(callback: CallbackQuery, state: FSMContext) -> None:
 
     await callback.message.edit_text(
         text=Translator.text(callback, strings, "slots"),
-        reply_markup=MainModule.modules["events"].keyboard_slots(callback)
-    )
+        reply_markup=MainModule.modules["events"].keyboard_slots(callback))
+    return None
 
 
 @MainModule.router.callback_query(F.data == "spin")

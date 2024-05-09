@@ -53,5 +53,6 @@ async def panel(event: Message | CallbackQuery, state: FSMContext) -> None:
 @AdminModule.router.callback_query(F.data == "close_panel")
 async def start(callback: CallbackQuery, state: FSMContext) -> None:
     await state.clear()
+    await callback.answer(show_alert=False)
     await callback.message.delete()
     return None
