@@ -132,8 +132,12 @@ async def generate_codes_handler(message: Message, state: FSMContext) -> None:
     data: list = message.text.split(":")
     codes_list: list = codes_table.generate(int(data[0]), float(data[1]))
 
+    codes_message: str = f""
+    for code in codes_list:
+        codes_message += f"{Markdown.monospaced(code)}\n"
+
     await message.answer(
-        text="\n".join(codes_list))
+        text=codes_message)
     return None
 
 

@@ -53,7 +53,7 @@ class UsersTable(Database):
         self._create_table()
 
     def _create_table(self) -> None:
-        query: str = "CREATE TABLE IF NOT EXISTS users (registration DATETIME, last_activity DATETIME, language VARCHAR(2), project_id INT AUTO_INCREMENT PRIMARY KEY, user_id BIGINT NOT NULL UNIQUE, inviter_id BIGINT, username VARCHAR(100), wallet VARCHAR(100), balance FLOAT, referals BIGINT, codes INT NOT NULL)"
+        query: str = "CREATE TABLE IF NOT EXISTS users (registration DATETIME, last_activity DATETIME, language VARCHAR(2), project_id INT AUTO_INCREMENT PRIMARY KEY, user_id BIGINT NOT NULL UNIQUE, inviter_id BIGINT, username VARCHAR(100), wallet VARCHAR(100), balance FLOAT, referals BIGINT, codes INT NOT NULL, last_code_activate DATETIME)"
         self.create(query)
         return None
 
@@ -121,7 +121,17 @@ class UsersTable(Database):
         query: str = "UPDATE users SET codes = codes + 1, balance = balance + %s WHERE user_id = %s"
         values: tuple = tuple([value, user_id])
         self.update(query, values)
+
+        query: str = "UPDATE users SET last_code_activate = %s WHERE user_id = %s"
+        values: tuple = tuple([datetime.datetime.now(), user_id])
+        self.update(query, values)
         return None
+
+    def get_last_activate(self, user_id: int) -> tuple:
+        query: str = "SELECT last_code_activate FROM users WHERE user_id = %s"
+        values: tuple = tuple([user_id])
+        response: tuple = self.select(query, values)[0]
+        return response
 
     def update_last_activity(self, func) -> object:
         async def wrapper(event, state=None):

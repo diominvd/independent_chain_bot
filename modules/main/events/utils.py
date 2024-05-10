@@ -2,13 +2,15 @@ import random
 
 
 def spin() -> tuple:
-    values: list = ["🍋", "🍒", "💎"]
+    values: list = ["🍋", "🍒", "🦎", "💎", "😈"]
     result: list = [random.choice(values) for i in range(3)]
 
     match result:
         case ["🍋", "🍋", "🍋"]:
             reward: float = 150.0
         case ["🍒", "🍒", "🍒"]:
+            reward: float = 150.0
+        case ["🦎", "🦎", "🦎"]:
             reward: float = 150.0
         case ["💎", "💎", "💎"]:
             reward: float = 200.0

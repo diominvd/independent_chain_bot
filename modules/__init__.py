@@ -19,6 +19,7 @@ class ModulesManager:
 
 
 class MainModuleStates(StatesGroup):
+    wallet = State()
     codes = State()
     slots = State()
 

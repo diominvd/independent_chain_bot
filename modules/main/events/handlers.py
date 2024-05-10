@@ -1,4 +1,5 @@
 import asyncio
+import datetime
 
 from aiogram import F
 from aiogram.filters import StateFilter
@@ -14,7 +15,7 @@ from translator import Translator
 
 @MainModule.router.callback_query(F.data == "events")
 @users_table.update_last_activity
-async def support(callback: CallbackQuery, state: FSMContext) -> None:
+async def events(callback: CallbackQuery, state: FSMContext) -> None:
     strings: dict[str, dict] = {
         "events": {
             "ru": (f"В данном разделе находятся актуальные события и активности 🥳\n\n"
@@ -30,6 +31,9 @@ async def support(callback: CallbackQuery, state: FSMContext) -> None:
         }
     }
 
+    await callback.answer(show_alert=False)
+    await state.update_data(events_message=callback.message.message_id)
+
     await callback.message.edit_text(
         text=Translator.text(callback, strings, "events"),
         reply_markup=MainModule.modules["events"].keyboard(callback))
@@ -44,16 +48,31 @@ async def codes(callback: CallbackQuery, state: FSMContext) -> None:
         "codes": {
             "ru": "Отправьте 16-ти значный код для его активации 🔠",
             "en": "Send a 16-digit code to activate it 🔠"
+        },
+        "limit": {
+            "ru": "Доступна только одна активация в сутки.",
+            "en": "Only one activation per day is available."
         }
     }
 
-    await callback.answer(show_alert=False)
-    await state.set_state(MainModuleStates.codes)
+    current_time: datetime = datetime.datetime.now()
+    last_activate_time: datetime = users_table.get_last_activate(callback.from_user.id)[0]
+    time_difference: datetime = 0 if last_activate_time is None else (current_time - last_activate_time).total_seconds()
 
-    await callback.message.edit_text(
-        text=Translator.text(callback, strings, "codes"),
-        reply_markup=MainModule.modules["events"].keyboard_back(callback, "events"))
-    return None
+    # Check last activate time.
+    if time_difference > 86400:
+        await callback.answer(show_alert=False)
+        await state.set_state(MainModuleStates.codes)
+
+        await callback.message.edit_text(
+            text=Translator.text(callback, strings, "codes"),
+            reply_markup=MainModule.modules["events"].keyboard_back(callback, "events"))
+        return None
+    else:
+        await callback.answer(
+            text=Translator.text(callback, strings, "limit"),
+            show_alert=True)
+        return None
 
 
 @MainModule.router.message(StateFilter(MainModuleStates.codes))
@@ -75,17 +94,17 @@ async def code_handler(message: Message, state: FSMContext) -> None:
             }
         }
 
+        data: dict = await state.get_data()
+        await state.clear()
+
         users_table.activate_code(message.from_user.id, code[0][2])
         codes_table.delete_code(code[0][1])
 
-        await message.answer(
-            text=Translator.text(message, strings, "success"))
-
-        await asyncio.sleep(3)
-
-        await bot.delete_message(
+        await bot.edit_message_text(
             chat_id=message.from_user.id,
-            message_id=message.message_id + 1)
+            message_id=data["events_message"],
+            text=Translator.text(message, strings, "success"),
+            reply_markup=MainModule.modules["events"].keyboard_close(message, "events"))
     else:
         strings: dict[str, dict] = {
             "fail": {
