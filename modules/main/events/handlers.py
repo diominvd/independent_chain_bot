@@ -32,7 +32,7 @@ async def events(callback: CallbackQuery, state: FSMContext) -> None:
     }
 
     await callback.answer(show_alert=False)
-    await state.update_data(events_message=callback.message.message_id)
+    await state.update_data(data={"events_message": callback.message.message_id})
 
     await callback.message.edit_text(
         text=Translator.text(callback, strings, "events"),
@@ -57,7 +57,8 @@ async def codes(callback: CallbackQuery, state: FSMContext) -> None:
 
     current_time: datetime = datetime.datetime.now()
     last_activate_time: datetime = users_table.get_last_activate(callback.from_user.id)[0]
-    time_difference: datetime = 0 if last_activate_time is None else (current_time - last_activate_time).total_seconds()
+    # 86401 - Заглушка для тех кто никогда не использовал промокоды.
+    time_difference: datetime = 86401 if last_activate_time is None else (current_time - last_activate_time).total_seconds()
 
     # Check last activate time.
     if time_difference > 86400:
