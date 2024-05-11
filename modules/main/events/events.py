@@ -16,13 +16,13 @@ async def events(callback: CallbackQuery, state: FSMContext) -> None:
             "ru": (f"В данном разделе находятся актуальные события и активности 🥳\n\n"
                    f"Для просмотра конкретного события выберите соответствующую кнопку.\n\n"
                    f"{Markdown.bold('Текущие события')}:\n"
-                   f"• Промокоды - активируйте промокод и получите награду.\n"
-                   f"• Слоты - испытай свою удачу и заработай $tINCH."),
+                   f"• Слоты - испытай свою удачу и заработай $tINCH.\n"
+                   f"• Geckoshi - получи награду за подписку на канал партнёров."),
             "en": (f"This section contains current events and activities 🥳\n\n"
                    f"To view a specific event, select the appropriate button.\n\n"
                    f"{Markdown.bold('Current Events')}:\n"
-                   f"• Promo codes - activate the promo code and receive a reward.\n"
-                   f"• Slots - try your luck and earn $tINCH.")
+                   f"• Slots - try your luck and earn $tINCH.\n"
+                   f"• Geckoshi - get a reward for subscribing to the partner channel.")
         }
     }
 

@@ -2,7 +2,7 @@ import random
 
 
 def spin() -> tuple:
-    values: list = ["🍋", "🍒", "🦎", "💎", "😈"]
+    values: list = ["🍋", "🍋", "🍒", "🦎", "💎", "😈"]
     result: list = [random.choice(values) for i in range(3)]
 
     match result:

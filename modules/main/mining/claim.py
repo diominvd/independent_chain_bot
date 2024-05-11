@@ -26,7 +26,7 @@ async def claim(callback: CallbackQuery, state: FSMContext) -> None:
             time_difference = 14400
 
         booster: float = user_data[0]
-        reward: float = time_difference * 0.001 * booster
+        reward: float = time_difference * 0.002 * booster
         mining_table.claim(callback.from_user.id, reward)
 
         strings: dict[str, dict] = {

@@ -19,8 +19,8 @@ async def codes(callback: CallbackQuery, state: FSMContext) -> None:
             "en": "Send a 16-digit code to activate it 🔠"
         },
         "limit": {
-            "ru": "Доступна только одна активация в сутки.",
-            "en": "Only one activation per day is available."
+            "ru": "Доступна только одна активация промокода в сутки 🕒",
+            "en": "Only one promo code activation per day is available 🕒"
         }
     }
 

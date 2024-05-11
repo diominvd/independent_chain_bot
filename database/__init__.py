@@ -244,3 +244,25 @@ class CodesTable(Database):
         values: tuple = tuple([code])
         self.delete(query, values)
         return None
+
+
+class GeckoshiTable(Database):
+    def __init__(self):
+        self._create_table()
+
+    def _create_table(self) -> None:
+        query: str = "CREATE TABLE IF NOT EXISTS geckoshi (user_id BIGINT)"
+        self.create(query)
+        return None
+
+    def create_user(self, user_id: int) -> None:
+        query: str = "INSERT INTO geckoshi (user_id) VALUES (%s)"
+        values: tuple = tuple([user_id])
+        self.insert(query, values)
+        return None
+
+    def check_user(self, user_id: int) -> bool:
+        query: str = "SELECT user_id FROM geckoshi WHERE user_id = %s"
+        values: tuple = tuple([user_id])
+        response: bool = True if len(self.select(query, values)) > 0 else False
+        return response
