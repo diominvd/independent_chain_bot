@@ -7,19 +7,19 @@ from core.config import users_table
 def keyboard(event: Message | CallbackQuery) -> InlineKeyboardMarkup:
     buttons: dict[str, list] = {
         "ru": [
-            InlineKeyboardButton(text="👤 Профиль", callback_data="profile", ),
-            InlineKeyboardButton(text="💳 Кошелек", callback_data="wallet"),
-            InlineKeyboardButton(text="🛟 Поддержка", callback_data="support"),
             InlineKeyboardButton(text="🔥 Добыча", callback_data="mining"),
+            InlineKeyboardButton(text="💳 Кошелек", callback_data="wallet"),
+            InlineKeyboardButton(text="♻️ Промокоды", callback_data="codes"),
             InlineKeyboardButton(text="🎉 События", callback_data="events"),
+            InlineKeyboardButton(text="🛟 Поддержка", callback_data="support"),
             InlineKeyboardButton(text="Пригласить друга", switch_inline_query=f"\nПрисоединяйся к Independent Chain.\nНам важен каждый ⚡️\nhttps://t.me/inch_coin_bot?start={event.from_user.id}"),
         ],
         "en": [
-            InlineKeyboardButton(text="👤 Profile", callback_data="profile"),
-            InlineKeyboardButton(text="💳 Wallet", callback_data="wallet"),
-            InlineKeyboardButton(text="🛟 Support", callback_data="support"),
             InlineKeyboardButton(text="🔥 Mining", callback_data="mining"),
+            InlineKeyboardButton(text="💳 Wallet", callback_data="wallet"),
+            InlineKeyboardButton(text="♻️ Промокоды", callback_data="codes"),
             InlineKeyboardButton(text="🎉 Events", callback_data="events"),
+            InlineKeyboardButton(text="🛟 Support", callback_data="support"),
             InlineKeyboardButton(text="Invite friend", switch_inline_query=f"\nJoin the Independent Chain.\nEveryone is important to us ⚡️\nhttps://t.me/inch_coin_bot?start={event.from_user.id}"),
         ]
     }

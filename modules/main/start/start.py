@@ -34,7 +34,7 @@ async def start(message: Message, state: FSMContext) -> None:
     }
 
     # Check user existence in bot database.
-    user_existence: bool = users_table.check_user(user_id=message.from_user.id)
+    user_existence: bool = users_table.check_user_existence(user_id=message.from_user.id)
     if not user_existence:
         user_data: dict = MainModule.modules["start"].pack_user_data(message)
         users_table.create_user(user_data)

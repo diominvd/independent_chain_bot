@@ -32,4 +32,4 @@ def update_boosters(user_id: int) -> None:
         if nft.metadata["name"] in ["BRONZE INCH", "SILVER INCH", "GOLD INCH"]:
             boosters_value = boosters_value * float(nft.metadata["attributes"][0]["value"])
     mining_table.update_booster(user_id, boosters_value)
-    return None
+    return

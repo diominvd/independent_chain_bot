@@ -135,7 +135,7 @@ async def mailing_content_handler(message: Message, state: FSMContext) -> None:
 
     start_mailing_time: datetime = datetime.datetime.now()
     counter: dict = {"success": 0, "fail": 0}
-    users: list = users_table.get_all_users_id()
+    users: list = users_table.get_users_id()
     for user in users:
         try:
             user_language: str = users_table.get_value("language", "user_id", user)

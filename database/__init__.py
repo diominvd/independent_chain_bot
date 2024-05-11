@@ -58,7 +58,7 @@ class UsersTable(Database):
         return None
 
     def create_user(self, user_data: dict) -> None:
-        query: str = "INSERT INTO users (registration, last_activity, language, user_id, inviter_id, username, balance, referals, codes) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        query: str = "INSERT INTO users (registration, last_activity, language, user_id, inviter_id, username, balance, referals, codes, last_code_activate) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
         values: tuple = tuple(key for key in user_data.values())
         self.insert(query, values)
         # A reward for the one who invited.
@@ -68,17 +68,11 @@ class UsersTable(Database):
             self.insert(query, values)
         return None
 
-    def check_user(self, user_id: int) -> bool:
-        query: str = "SELECT user_id FROM users WHERE user_id = %s"
-        values: tuple = tuple([user_id])
-        response = True if len(self.select(query, values)) > 0 else False
-        return response
-
     def get_user(self, user_id: int) -> dict:
         query: str = "SELECT * FROM users WHERE user_id = %s"
         values: tuple = tuple([user_id])
         response: list = self.select(query, values)
-        # Packing data into a dictionary.
+
         user_data: dict[str, any] = {
             "registration": response[0][0],
             "last_activity": response[0][1],
@@ -89,21 +83,44 @@ class UsersTable(Database):
             "username": response[0][6],
             "wallet": response[0][7],
             "balance": response[0][8],
-            "referals": response[0][9]
+            "referals": response[0][9],
+            "codes": response[0][10],
+            "last_code_activate": response[0][11]
         }
         return user_data
 
-    def get_value(self, flag: str, condition: str, value: any) -> any:
-        query: str = f"SELECT {flag} FROM users WHERE {condition} = %s"
-        values: tuple = tuple([value])
-        response: any = self.select(query, values)[0][0]
-        return response
-
-    def get_all_users_id(self) -> list:
+    def get_users_id(self) -> list:
         query: str = "SELECT user_id FROM users"
         values: tuple = ()
         response: list = [i[0] for i in self.select(query, values)]
         return response
+
+    def get_last_code_activate(self, user_id: int) -> tuple:
+        query: str = "SELECT last_code_activate FROM users WHERE user_id = %s"
+        values: tuple = tuple([user_id])
+        response: tuple = self.select(query, values)[0]
+        return response
+
+    def get_value(self, flag: str, condition: str, value: any) -> any:
+        query: str = f"SELECT {flag} FROM users WHERE {condition} = %s"
+        values: tuple = tuple([value])
+
+        response: any = self.select(query, values)
+        if len(response) != 0:
+            response: list = [list(row) for row in response]
+            return response[0][0]
+        else:
+            return False
+
+    def check_user_existence(self, user_id: int) -> bool:
+        query: str = "SELECT user_id FROM users WHERE user_id = %s"
+        values: tuple = tuple([user_id])
+
+        response = self.select(query, values)
+        if len(response) != 0:
+            return True
+        else:
+            return False
 
     def update_balance(self, user_id: int, operation: str, value: float) -> None:
         query: str = f"UPDATE users SET balance = balance {operation} %s WHERE user_id = %s"
@@ -118,20 +135,10 @@ class UsersTable(Database):
         return None
 
     def activate_code(self, user_id: int, value: float) -> None:
-        query: str = "UPDATE users SET codes = codes + 1, balance = balance + %s WHERE user_id = %s"
-        values: tuple = tuple([value, user_id])
-        self.update(query, values)
-
-        query: str = "UPDATE users SET last_code_activate = %s WHERE user_id = %s"
-        values: tuple = tuple([datetime.datetime.now(), user_id])
+        query: str = "UPDATE users SET codes = codes + 1, last_code_activate = %s, balance = balance + %s WHERE user_id = %s"
+        values: tuple = tuple([datetime.datetime.now(), value, user_id])
         self.update(query, values)
         return None
-
-    def get_last_activate(self, user_id: int) -> tuple:
-        query: str = "SELECT last_code_activate FROM users WHERE user_id = %s"
-        values: tuple = tuple([user_id])
-        response: tuple = self.select(query, values)[0]
-        return response
 
     def update_last_activity(self, func) -> object:
         async def wrapper(event, state=None):

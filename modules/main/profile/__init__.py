@@ -1,2 +1,2 @@
-from .handlers import *
+from .profile import *
 from .keyboard import *
