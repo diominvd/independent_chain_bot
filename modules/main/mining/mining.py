@@ -1,3 +1,5 @@
+import datetime
+
 from aiogram import F
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery
@@ -23,6 +25,7 @@ async def mining(callback: CallbackQuery, state: FSMContext) -> None:
         mining_table.create_user(callback.from_user.id)
 
     user_data: list = mining_table.get_user(callback.from_user.id)
+    last_claim: datetime = mining_table.get_last_claim(callback.from_user.id)
     strings: dict[str, dict] = {
         "mining": {
             "ru": (f"Добыча {Markdown.bold('$tINCH')} открыта 🔥\n\n"
@@ -37,6 +40,7 @@ async def mining(callback: CallbackQuery, state: FSMContext) -> None:
                    f"Купленные усилители должны храниться на кошельке {Markdown.monospaced('Ton Space')}. "
                    f"При наличии нескольких усилителей значения множителей перемножаются.\n\n"
                    f"{Markdown.bold('Ваша статистика')} 📊\n"
+                   f"{Markdown.bold('Последний сбор')}: {last_claim.strftime("%d.%m %H:%M")}\n"
                    f"{Markdown.bold('Усилитель')}: x{round(user_data[0]*mining_table.global_booster, 4)}\n"
                    f"{Markdown.bold('Количество сборов')}: {user_data[1]}\n"
                    f"{Markdown.bold('Ваша добыча')}: {round(user_data[2], 4)} $tINCH\n\n"),
@@ -52,6 +56,7 @@ async def mining(callback: CallbackQuery, state: FSMContext) -> None:
                    f"The purchased amplifiers must be stored on the {Markdown.monospaced('Ton Space')} wallet. "
                    f"If there are several amplifiers, the multiplier values are multiplied.\n\n"
                    f"{Markdown.bold('Your stats')} 📊\n"
+                   f"{Markdown.bold('Last claim')}: {last_claim.strftime("%d.%m %H:%M")}\n"
                    f"{Markdown.bold('Booster')}: x{round(user_data[0]*mining_table.global_booster, 4)}\n"
                    f"{Markdown.bold('Number of fees')}: {user_data[1]}\n"
                    f"{Markdown.bold('Your loot')}: {round(user_data[2], 4)} $tINCH")

@@ -35,7 +35,7 @@ async def codes(callback: CallbackQuery, state: FSMContext) -> None:
 
         await callback.message.edit_text(
             text=Translator.text(callback, strings, "codes"),
-            reply_markup=MainModule.modules["codes"].keyboard_back(callback, "events"))
+            reply_markup=MainModule.modules["codes"].keyboard_back(callback, "profile"))
         return None
     else:
         await callback.answer(
