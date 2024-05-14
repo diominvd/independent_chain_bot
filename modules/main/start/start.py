@@ -9,7 +9,7 @@ from translator import Translator
 
 
 @MainModule.router.message(Command("start"))
-async def start(message: Message, state: FSMContext) -> None:
+async def start_(message: Message, state: FSMContext) -> None:
     strings: dict[str, dict] = {
         "greeting": {
             "ru": (
@@ -32,6 +32,8 @@ async def start(message: Message, state: FSMContext) -> None:
                 f"To view the profile, use the /profile command.")
         }
     }
+
+    await state.clear()
 
     # Check user existence in bot database.
     user_existence: bool = users_table.check_user_existence(user_id=message.from_user.id)

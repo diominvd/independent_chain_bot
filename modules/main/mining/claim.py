@@ -1,3 +1,4 @@
+import asyncio
 import datetime
 
 from aiogram import F
@@ -15,19 +16,24 @@ async def claim(callback: CallbackQuery, state: FSMContext) -> None:
     # Update total boosters value from user wallet.
     MainModule.modules["mining"].update_boosters(callback.from_user.id)
 
-    user_data: list = mining_table.get_user(callback.from_user.id)
+    user_mining_data: list = mining_table.get_user(callback.from_user.id)
     current_time: datetime = datetime.datetime.now()
     last_claim_time: datetime = mining_table.get_last_claim(callback.from_user.id)
     time_difference: datetime = (current_time - last_claim_time).total_seconds()
 
-    # Calculate reward.
-    if 0 < time_difference < 21600:
-        if time_difference > 14400:
-            time_difference = 14400
+    reactor: int = user_mining_data[0]
+    storage: int = user_mining_data[1]
+    booster: int = user_mining_data[3]
 
-        booster: float = user_data[0]
-        reward: float = time_difference * 0.002 * booster
+    # Calculate reward.
+    if time_difference < storage * 3600 + 7200:
+        if time_difference > storage * 3600:
+            time_difference = storage * 3600
+
+        reward: float = time_difference * reactor * 0.001 * booster
         mining_table.claim(callback.from_user.id, reward)
+
+        await asyncio.sleep(0.5)
 
         strings: dict[str, dict] = {
             "claim_success": {
@@ -41,7 +47,7 @@ async def claim(callback: CallbackQuery, state: FSMContext) -> None:
             show_alert=True)
 
         # Refresh data of callback message.
-        await MainModule.modules["mining"].mining(callback)
+        await MainModule.modules["mining"].mining_(callback, state)
     else:
         strings: dict[str, dict] = {
             "claim_failed": {

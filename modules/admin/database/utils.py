@@ -9,6 +9,8 @@ def change_value(name: str, value: float) -> None:
             users_table.referal_reward = value
         case "global_booster":
             mining_table.global_booster = value
+        case "upgrade_discount":
+            mining_table.upgrade_discount = value
     return None
 
 

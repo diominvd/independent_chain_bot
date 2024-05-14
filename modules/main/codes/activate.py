@@ -37,9 +37,9 @@ async def code_handler(message: Message, state: FSMContext) -> None:
 
         await bot.edit_message_text(
             chat_id=message.from_user.id,
-            message_id=data["events_message"],
+            message_id=data["codes_message"],
             text=Translator.text(message, strings, "success"),
-            reply_markup=MainModule.modules["codes"].keyboard_close(message, "events"))
+            reply_markup=MainModule.modules["codes"].keyboard_close(message, "profile"))
     else:
         strings: dict[str, dict] = {
             "fail": {

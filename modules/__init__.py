@@ -19,6 +19,8 @@ class ModulesManager:
 
 
 class MainModuleStates(StatesGroup):
+    mining = State()
+    upgrades = State()
     wallet = State()
     codes = State()
     geckoshi = State()

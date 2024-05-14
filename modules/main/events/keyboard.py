@@ -8,12 +8,10 @@ def keyboard(event: Message | CallbackQuery) -> InlineKeyboardMarkup:
     buttons: dict[str, list] = {
         "ru": [
             InlineKeyboardButton(text="🎰 Слоты", callback_data="slots"),
-            InlineKeyboardButton(text="🦎 Geckoshi", callback_data="geckoshi"),
             InlineKeyboardButton(text="Назад", callback_data="profile"),
         ],
         "en": [
             InlineKeyboardButton(text="🎰 Slots", callback_data="slots"),
-            InlineKeyboardButton(text="🦎 Geckoshi", callback_data="geckoshi"),
             InlineKeyboardButton(text="Back", callback_data="profile")
         ]
     }
@@ -22,7 +20,6 @@ def keyboard(event: Message | CallbackQuery) -> InlineKeyboardMarkup:
     builder: InlineKeyboardBuilder = InlineKeyboardBuilder()
     builder.row(buttons[user_language][0])
     builder.row(buttons[user_language][1])
-    builder.row(buttons[user_language][2])
     return builder.as_markup()
 
 

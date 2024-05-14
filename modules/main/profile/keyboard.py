@@ -17,7 +17,7 @@ def keyboard(event: Message | CallbackQuery) -> InlineKeyboardMarkup:
         "en": [
             InlineKeyboardButton(text="🔥 Mining", callback_data="mining"),
             InlineKeyboardButton(text="💳 Wallet", callback_data="wallet"),
-            InlineKeyboardButton(text="♻️ Промокоды", callback_data="codes"),
+            InlineKeyboardButton(text="♻️ Promo codes", callback_data="codes"),
             InlineKeyboardButton(text="🎉 Events", callback_data="events"),
             InlineKeyboardButton(text="🛟 Support", callback_data="support"),
             InlineKeyboardButton(text="Invite friend", switch_inline_query=f"\nJoin the Independent Chain.\nEveryone is important to us ⚡️\nhttps://t.me/inch_coin_bot?start={event.from_user.id}"),

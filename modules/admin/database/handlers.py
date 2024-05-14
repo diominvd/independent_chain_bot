@@ -174,7 +174,7 @@ async def get_codes_handler(message: Message, state: FSMContext) -> None:
     response: list = codes_table.select(query, values)
 
     await message.answer(
-        text="\n".join([response[i][1] for i in range(len(response))]))
+        text="\n".join([Markdown.monospaced(response[i][1]) for i in range(len(response))]))
     return None
 
 
@@ -283,12 +283,14 @@ async def change_values(callback: CallbackQuery, state: FSMContext) -> None:
                    f"• start_reward ({users_table.start_reward}) - Награда за регистрацию в боте.\n"
                    f"• referal_reward ({users_table.referal_reward}) - Награда за приглашённого пользователя.\n"
                    f"• global_booster ({mining_table.global_booster}) - Общий усилитель добычи.\n\n"
+                   f"• upgrade_discount ({mining_table.global_booster}) - Скидка на прокачку (0.1-1).\n\n"
                    f"Для изменения значения отправьте заполненный шаблон по данному примеру:\n"
                    f"{Markdown.monospaced('название=значение')}"),
             "en": (f"{Markdown.bold('List of available values')} 🔢\n\n"
-                   f"• start_reward - Reward for registering in the bot.\n"
-                   f"• referal_reward - Reward for the invited user.\n"
-                   f"• global_booster is a general mining booster.\n\n"
+                   f"• start_reward ({users_table.start_reward}) - Reward for registering in the bot.\n"
+                   f"• referal_reward ({users_table.referal_reward}) - Reward for the invited user.\n"
+                   f"• global_booster ({mining_table.global_booster}) - general mining booster.\n\n"
+                   f"• upgrade_discount ({mining_table.upgrade_discount}) - Discount on pumping (0.1-1).\n\n"
                    f"To change the value, send the completed template according to this example:\n"
                    f"{Markdown.monospaced('name=value')}")
         }
