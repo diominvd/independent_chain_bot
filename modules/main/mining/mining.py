@@ -10,6 +10,8 @@ from modules import MainModuleStates
 from modules.main import MainModule
 from translator import Translator
 
+from database import MiningTableUsers
+
 
 @MainModule.router.callback_query(F.data == "mining")
 @users_table.update_last_activity
@@ -35,7 +37,7 @@ async def mining_(callback: CallbackQuery, state: FSMContext) -> None:
     if not mining_table.check_user(callback.from_user.id):
         mining_table.create_user(callback.from_user.id)
 
-    user_mining_data: list = mining_table.get_user(callback.from_user.id)
+    user_mining_data: MiningTableUsers = mining_table.get_user(callback.from_user.id)
 
     last_claim_time: datetime = mining_table.get_last_claim(callback.from_user.id)
     last_claim_formated = MainModule.modules['mining'].calculate_last_claim_time(callback, last_claim_time)
@@ -55,9 +57,9 @@ async def mining_(callback: CallbackQuery, state: FSMContext) -> None:
                    f"Купленные усилители должны храниться на кошельке {Markdown.monospaced('Ton Space')}. "
                    f"При наличии нескольких усилителей значения множителей перемножаются.\n\n"
                    f"{Markdown.bold('Последний сбор')}: {last_claim_formated}\n"
-                   f"{Markdown.bold('Усилитель')}: x{round(user_mining_data[3]*mining_table.global_booster, 4)}\n"
-                   f"{Markdown.bold('Количество сборов')}: {user_mining_data[4]}\n"
-                   f"{Markdown.bold('Ваша добыча')}: {round(user_mining_data[5], 4)} $tINCH\n\n"),
+                   f"{Markdown.bold('Усилитель')}: x{round(user_mining_data["ищ"]*mining_table.global_booster, 4)}\n"
+                   f"{Markdown.bold('Количество сборов')}: {user_mining_data["claims"]}\n"
+                   f"{Markdown.bold('Ваша добыча')}: {round(user_mining_data["amount"], 4)} $tINCH\n\n"),
             "en": (f"Mining {Markdown.bold('$tINCH')} is open 🔥\n\n"
                    f"The storage fill time is determined by its level. To collect the loot, click the appropriate button. "
                    f" After filling the vault, you will have 2 hours to collect $tINCH. "
@@ -71,9 +73,9 @@ async def mining_(callback: CallbackQuery, state: FSMContext) -> None:
                    f"The purchased amplifiers must be stored on the {Markdown.monospaced('Ton Space')} wallet. "
                    f"If there are several amplifiers, the multiplier values are multiplied.\n\n"
                    f"{Markdown.bold('Last claim')}: {last_claim_formated}\n"
-                   f"{Markdown.bold('Booster')}: x{round(user_mining_data[3]*mining_table.global_booster, 4)}\n"
-                   f"{Markdown.bold('Number of fees')}: {user_mining_data[4]}\n"
-                   f"{Markdown.bold('Your loot')}: {round(user_mining_data[5], 4)} $tINCH")
+                   f"{Markdown.bold('Booster')}: x{round(user_mining_data["booster"]*mining_table.global_booster, 4)}\n"
+                   f"{Markdown.bold('Number of fees')}: {user_mining_data["claims"]}\n"
+                   f"{Markdown.bold('Your loot')}: {round(user_mining_data["amount"], 4)} $tINCH")
         }
     }
     try:

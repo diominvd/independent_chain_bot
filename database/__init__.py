@@ -1,9 +1,19 @@
 import datetime
 import random
+from typing import Dict, Any, TypedDict
 
 from mysql.connector import connect
 
 from core.secrets import DATABASE
+
+
+class MiningTableUsers(TypedDict):
+    reactor: int
+    storage: int
+    bot: int
+    booster: float
+    claims: int
+    amount: float
 
 
 class Database:
@@ -176,11 +186,19 @@ class MiningTable(Database):
         response: bool = True if len(self.select(query, values)) > 0 else False
         return response
 
-    def get_user(self, user_id: int) -> list:
+    def get_user(self, user_id: int) -> MiningTableUsers:
         query: str = "SELECT reactor, storage, bot, booster, claims, amount FROM mining WHERE user_id = %s"
         values: tuple = tuple([user_id])
-        response: list = self.select(query, values)[0]
-        return response
+        response: list = self.select(query, values)
+
+        return MiningTableUsers(**{
+            "reactor": response[0][0],
+            "storage": response[0][1],
+            "bot": response[0][2],
+            "booster": response[0][3],
+            "claims": response[0][4],
+            "amount": response[0][5]
+        })
 
     def get_value(self, flag: str, condition: str, value: any) -> any:
         query: str = f"SELECT {flag} FROM mining WHERE {condition} = %s"
