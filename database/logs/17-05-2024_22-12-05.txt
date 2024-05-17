@@ -1,0 +1,6 @@
+2024-05-17 22:12:05.156398
+Error: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'project_id INT AUTO_INCREMENT PRIMARY KEY, user_id BIGINT NOT NULL UNIQUE, invit' at line 1
+
+Arguments:
+table_name: users
+columns: ['registration DATETIME', 'last_activity DATETIME', 'language VARCHAR(3)', 'project_id project_id INT AUTO_INCREMENT PRIMARY KEY', 'user_id BIGINT NOT NULL UNIQUE', 'inviter_id BIGINT', 'username VARCHAR(100)', 'wallet VARCHAR(100)', 'balance FLOAT', 'referals BIGINT', 'codes INT NOT NULL', 'last_code_activate DATETIME']

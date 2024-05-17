@@ -148,7 +148,6 @@ class UsersTable(Database):
             values: tuple = tuple([time, user_id])
             self.update(query, values)
             return await func(event, state)
-
         return wrapper
 
 
