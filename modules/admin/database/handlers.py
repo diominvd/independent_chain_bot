@@ -108,9 +108,9 @@ async def generate_codes(callback: CallbackQuery, state: FSMContext) -> None:
     strings: dict[str, dict] = {
         "information": {
             "ru": (f"Для генерации промокодов отправьте заполненный шаблон по данному примеру:\n\n"
-                   f"{Markdown.monospaced('количество:значение')}"),
+                   f"{Markdown.monospaced('количество активаций:значение')}"),
             "en": (f"To generate promo codes, send the completed template according to this example:\n\n"
-                   f"{Markdown.monospaced('quantity:value')}"),
+                   f"{Markdown.monospaced('number of activations:value')}"),
         }
     }
 
@@ -130,14 +130,9 @@ async def generate_codes_handler(message: Message, state: FSMContext) -> None:
         message_id=message.message_id)
 
     data: list = message.text.split(":")
-    codes_list: list = codes_table.generate(int(data[0]), float(data[1]))
+    code: str = codes_table.generate(int(data[0]), float(data[1]))
 
-    codes_message: str = f""
-    for code in codes_list:
-        codes_message += f"{Markdown.monospaced(code)}\n"
-
-    await message.answer(
-        text=codes_message)
+    await message.answer(text=code)
     return None
 
 

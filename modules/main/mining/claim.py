@@ -60,4 +60,7 @@ async def claim(callback: CallbackQuery, state: FSMContext) -> None:
             text=Translator.text(callback, strings, "claim_failed"),
             show_alert=True)
         mining_table.claim(callback.from_user.id, 0)
+
+        # Refresh data of callback message.
+        await MainModule.modules["mining"].mining_(callback, state)
     return None

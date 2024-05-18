@@ -1,3 +1,5 @@
+from aiogram import F
+from aiogram.enums import ChatType
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
@@ -8,7 +10,7 @@ from modules.main import MainModule
 from translator import Translator
 
 
-@MainModule.router.message(Command("start"))
+@MainModule.router.message(F.chat.type == ChatType.PRIVATE, Command("start"))
 async def start_(message: Message, state: FSMContext) -> None:
     strings: dict[str, dict] = {
         "greeting": {

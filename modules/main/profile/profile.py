@@ -1,4 +1,5 @@
 from aiogram import F
+from aiogram.enums import ChatType
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, CallbackQuery
@@ -9,7 +10,7 @@ from modules.main import MainModule
 from translator import Translator
 
 
-@MainModule.router.message(Command("profile"))
+@MainModule.router.message(F.chat.type == ChatType.PRIVATE, Command("profile"))
 @MainModule.router.callback_query(F.data == "profile")
 @users_table.update_last_activity
 async def profile_(event: Message | CallbackQuery, state: FSMContext) -> None:

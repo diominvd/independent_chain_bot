@@ -30,6 +30,8 @@ def calculate_last_code_time(callback: CallbackQuery, time: datetime) -> str:
         hours_str = f"1 {strings['hour'][language][0]}"
     elif 2 <= hours <= 4:
         hours_str = f"{hours} {strings['hour'][language][1]}"
+    elif 21 <= hours <= 24:
+        hours_str = f"{hours} {strings['hour'][language][1]}"
     else:
         hours_str = f"{hours} {strings['hour'][language][2]}"
 

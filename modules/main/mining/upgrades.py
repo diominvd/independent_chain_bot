@@ -36,16 +36,16 @@ async def upgrades_(callback: CallbackQuery, state: FSMContext) -> None:
     strings: dict[str, dict] = {
         "upgrades": {
             "ru": (f"Покупка улучшений позволит увеличить количество добываемых $tINCH ⬆️\n\n"
-                   f"⚙️ {Markdown.bold('Реактор')}: {user_mining_data[0]} уровень\n"
-                   f"🕑 {Markdown.bold('Хранилище')}: {user_mining_data[1]} уровень\n"
+                   f"⚙️ {Markdown.bold('Реактор')}: {user_mining_data[0]} уровень ({round(reactor * 0.001, 3)}/сек)\n"
+                   f"🕑 {Markdown.bold('Хранилище')}: {user_mining_data[1]} уровень ({await format_hour(storage)})\n"
                    f"🤖 {Markdown.bold('Автосбор')}: {'Выключен' if user_mining_data[2] == 0 else 'Включён'}\n\n"
                    f"{Markdown.bold('Баланс')}: {user_data['balance']} $tINCH\n\n"
                    f"{Markdown.bold('Стоимость улучшений')}:\n"
                    f"Реактор ({round((reactor + 1) * 0.001, 3)}/сек): {round(reactor_price)} $tINCH\n"
                    f"Хранилище ({await format_hour(storage + 1)}): {round(storage_price)} $tINCH"),
             "en": (f"Buying upgrades will increase the amount of $tINCH mined ⬆️\n\n"
-                   f"⚙️ {Markdown.bold('Reactor')}: {user_mining_data[0]} уровень\n"
-                   f"🕑 {Markdown.bold('Storage')}: {user_mining_data[1]} уровень\n"
+                   f"⚙️ {Markdown.bold('Reactor')}: {user_mining_data[0]} level ({round(reactor * 0.001, 3)}/сек)\n"
+                   f"🕑 {Markdown.bold('Storage')}: {user_mining_data[1]} level ({await format_hour(storage)})\n"
                    f"🤖 {Markdown.bold('Auto claim')}: {'Turned off' if user_mining_data[2] == 0 else 'Turned on'}\n\n"
                    f"{Markdown.bold('Balance')}: {user_data['balance']} $tINCH\n\n"
                    f"{Markdown.bold('Cost of improvements')}:\n"

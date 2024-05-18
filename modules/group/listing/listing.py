@@ -1,4 +1,5 @@
 from aiogram import F
+from aiogram.enums import ChatType
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, Message
@@ -7,7 +8,7 @@ from pytonapi import Tonapi
 from core.config import users_table
 from core.secrets import TON_API
 from markdown import Markdown
-from modules.main import MainModule
+from modules.group import GroupModule
 from translator import Translator
 
 
@@ -18,9 +19,9 @@ async def get_project_balance() -> float:
     return balance
 
 
-@MainModule.router.message(Command("listing"))
+@GroupModule.router.message(Command("listing"))
 @users_table.update_last_activity
-async def listing(message: Message, state: FSMContext) -> None:
+async def listing_(message: Message, state: FSMContext) -> None:
     balance: float = await get_project_balance()
 
     strings: dict[str, dict] = {
@@ -40,6 +41,6 @@ async def listing(message: Message, state: FSMContext) -> None:
 
     await message.answer(
         text=Translator.text(message, strings, "support"),
-        reply_markup=MainModule.modules["listing"].keyboard(message)
+        reply_markup=GroupModule.modules["listing"].keyboard(message)
     )
     return None

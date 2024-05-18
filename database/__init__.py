@@ -153,6 +153,7 @@ class UsersTable(Database):
 
 class MiningTable(Database):
     def __init__(self):
+        self.full_storage: list = []
         self.global_booster: float = 1.0
         self.upgrade_discount = 0
         self._create_table()
@@ -212,6 +213,11 @@ class MiningTable(Database):
         return None
 
     def claim(self, user_id: int, profit: float) -> None:
+        try:
+            self.full_storage.remove(user_id)
+        except:
+            pass
+
         query: str = "UPDATE mining SET claims = claims + 1, amount = amount + %s * %s WHERE user_id = %s"
         values: tuple = tuple([profit, self.global_booster, user_id])
         self.update(query, values)
@@ -233,17 +239,32 @@ class CodesTable(Database):
         self._create_table()
 
     def _create_table(self) -> None:
-        query: str = "CREATE TABLE IF NOT EXISTS codes (code_id BIGINT PRIMARY KEY AUTO_INCREMENT, code VARCHAR(20), value FLOAT)"
+        query: str = "CREATE TABLE IF NOT EXISTS codes (code_id BIGINT PRIMARY KEY AUTO_INCREMENT, code VARCHAR(20), activations INT, value FLOAT)"
         self.create(query)
         return None
 
-    def generate(self, number: int, value: float) -> list:
-        codes: list = ["".join([random.choice(self.symbols) for i in range(16)]) for i in range(number)]
-        for code in codes:
-            query: str = "INSERT INTO codes (code, value) VALUES (%s, %s)"
-            values: tuple = tuple([code, value])
-            self.insert(query, values)
-        return codes
+    def generate(self, number: int, value: float) -> str:
+        code_symbols: list = [random.choice(self.symbols) for i in range(16)]
+        code: str = "".join(code_symbols)
+        query: str = "INSERT INTO codes (code, activations, value) VALUES (%s, %s, %s)"
+        values: tuple = tuple([code, number, value])
+        self.insert(query, values)
+        return code
+
+    def update_code(self, code: str) -> bool:
+        query: str = "SELECT activations FROM codes WHERE code = %s"
+        activations: int = self.select(query, (code, ))[0][0]
+
+        if activations > 0:
+            query: str = "UPDATE codes SET activations = activations - 1 WHERE code = %s"
+            self.update(query, (code, ))
+            if activations == 1:
+                self.delete_code(code)
+                return True
+            else:
+                return True
+        else:
+            return False
 
     def load_code(self, code: str) -> list:
         query: str = "SELECT * FROM codes WHERE code = %s"
@@ -256,25 +277,3 @@ class CodesTable(Database):
         values: tuple = tuple([code])
         self.delete(query, values)
         return None
-
-
-class GeckoshiTable(Database):
-    def __init__(self):
-        self._create_table()
-
-    def _create_table(self) -> None:
-        query: str = "CREATE TABLE IF NOT EXISTS geckoshi (user_id BIGINT)"
-        self.create(query)
-        return None
-
-    def create_user(self, user_id: int) -> None:
-        query: str = "INSERT INTO geckoshi (user_id) VALUES (%s)"
-        values: tuple = tuple([user_id])
-        self.insert(query, values)
-        return None
-
-    def check_user(self, user_id: int) -> bool:
-        query: str = "SELECT user_id FROM geckoshi WHERE user_id = %s"
-        values: tuple = tuple([user_id])
-        response: bool = True if len(self.select(query, values)) > 0 else False
-        return response

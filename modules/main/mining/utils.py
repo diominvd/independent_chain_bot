@@ -1,3 +1,4 @@
+import asyncio
 import datetime
 
 from aiogram.types import CallbackQuery
@@ -70,3 +71,39 @@ def update_boosters(user_id: int) -> None:
                     boosters_value = boosters_value * float(attribute["value"])
     mining_table.update_booster(user_id, boosters_value)
     return
+
+
+async def storage_checker(bot) -> None:
+    while True:
+        query: str = f"SELECT * FROM mining ORDER BY last_claim"
+        response: list = mining_table.select(query, ())
+
+        for user in response:
+            current_time: datetime = datetime.datetime.now()
+            last_claim: datetime = user[1]
+
+            time_difference: float = (current_time - last_claim).total_seconds()
+            storage: float = user[3] * 60 * 60
+
+            if time_difference > 3600:
+                if user[0] not in mining_table.full_storage:
+                    mining_table.full_storage.append(user[0])
+
+                    user_language: str = users_table.get_value("language", "user_id", user[0])
+                    strings: dict[str, dict] = {
+                        "notify": {
+                            "ru": "Хранилище заполнено.\nПора собирать добычу 🔥\n\nПерейти в профиль: /profile",
+                            "en": "The vault is full.\nIt's time to collect the loot 🔥\n\nGo to Profile: /profile"
+                        }
+                    }
+
+                    if user_language == "ru":
+                        text: str = strings["notify"]["ru"]
+                    else:
+                        text: str = strings["notify"]["en"]
+
+                    await bot.send_message(
+                        chat_id=user[0],
+                        text=text
+                    )
+        await asyncio.sleep(60)
