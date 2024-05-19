@@ -11,7 +11,7 @@ class Database:
         host=DATABASE["host"],
         user=DATABASE["username"],
         password=DATABASE["password"],
-        database=DATABASE["name"]
+        database=DATABASE["scheme"]
     )
     cursor = connection.cursor()
 
