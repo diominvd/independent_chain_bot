@@ -6,8 +6,8 @@ from core.config import users_table
 
 def keyboard(event: Message | CallbackQuery) -> InlineKeyboardMarkup:
     buttons: dict[str, list] = {
-        "ru": [InlineKeyboardButton(text="Канал проекта", url="https://t.me/inch_ru")],
-        "en": [InlineKeyboardButton(text="Project channel", url="https://t.me/inch_en")]
+        "ru": [InlineKeyboardButton(text="Канал проекта", url="https://t.me/inch_ton")],
+        "en": [InlineKeyboardButton(text="Project channel", url="https://t.me/inch_ton")]
     }
 
     user_language: str = users_table.get_value("language", "user_id", event.from_user.id)

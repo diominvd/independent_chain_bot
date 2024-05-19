@@ -85,7 +85,7 @@ async def storage_checker(bot) -> None:
             time_difference: float = (current_time - last_claim).total_seconds()
             storage: float = user[3] * 60 * 60
 
-            if time_difference > 3600:
+            if time_difference > user[3] * 60 * 60:
                 if user[0] not in mining_table.full_storage:
                     mining_table.full_storage.append(user[0])
 

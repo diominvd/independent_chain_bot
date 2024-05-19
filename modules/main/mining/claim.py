@@ -30,7 +30,7 @@ async def claim(callback: CallbackQuery, state: FSMContext) -> None:
         if time_difference > storage * 3600:
             time_difference = storage * 3600
 
-        reward: float = time_difference * reactor * 0.001 * booster
+        reward: float = time_difference * reactor * 0.001 * booster * mining_table.global_booster
         mining_table.claim(callback.from_user.id, reward)
 
         await asyncio.sleep(0.5)

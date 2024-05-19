@@ -1,15 +1,11 @@
-from aiogram import F, types
-from aiogram import types
+from aiogram import F
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
-from aiogram.types import CallbackQuery, Message
-from pytonapi import Tonapi
+from aiogram.types import Message
 
-from core.config import users_table, bot
-from core.secrets import TON_API
+from core.config import users_table
 from markdown import Markdown
 from modules.group import GroupModule
-from translator import Translator
 
 
 @GroupModule.router.message(Command("leaderboard"))

@@ -43,16 +43,14 @@ async def mining_(callback: CallbackQuery, state: FSMContext) -> None:
         strings: dict[str, dict] = {
             "mining": {
                 "ru": (f"Добыча {Markdown.bold('$tINCH')} открыта 🔥\n\n"
-                       f"{Markdown.url('Настоятельно рекомендуем ознакомиться с руководством по использованию данного раздела.', 
-                                       "https://teletype.in/@inch_ton/inch_mining_ru")}\n\n"
+                       f"{Markdown.url('Настоятельно рекомендуем ознакомиться с руководством по использованию данного раздела.', 'https://teletype.in/@inch_ton/inch_mining_ru')}\n\n"
                        f"Купленные усилители должны храниться на кошельке {Markdown.bold('Ton Space')}.\n\n"
                        f"{Markdown.bold('Последний сбор')}: {last_claim_formated}\n"
                        f"{Markdown.bold('Усилитель')}: x{round(user_mining_data[3]*mining_table.global_booster, 4)}\n"
                        f"{Markdown.bold('Количество сборов')}: {user_mining_data[4]}\n"
                        f"{Markdown.bold('Ваша добыча')}: {round(user_mining_data[5], 4)} $tINCH\n\n"),
                 "en": (f"Mining {Markdown.bold('$tINCH')} is open 🔥\n\n"
-                       f"{Markdown.url('We strongly recommend that you familiarize yourself with manual for using this section.', 
-                                       "https://teletype.in/@inch_ton/inch_mining_en")}\n\n"
+                       f"{Markdown.url('We strongly recommend that you familiarize yourself with manual for using this section.', 'https://teletype.in/@inch_ton/inch_mining_en')}\n\n"
                        f"The purchased amplifiers must be stored on the {Markdown.bold('Ton Space')} wallet.\n\n"
                        f"{Markdown.bold('Last claim')}: {last_claim_formated}\n"
                        f"{Markdown.bold('Booster')}: x{round(user_mining_data[3]*mining_table.global_booster, 4)}\n"

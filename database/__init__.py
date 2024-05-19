@@ -122,6 +122,12 @@ class UsersTable(Database):
         else:
             return False
 
+    def update_username(self, user_id: int, username: str) -> None:
+        query: str = "UPDATE users SET username = %s WHERE user_id = %s"
+        values: tuple = tuple([user_id, username])
+        self.update(query, values)
+        return None
+
     def update_balance(self, user_id: int, operation: str, value: float) -> None:
         query: str = f"UPDATE users SET balance = balance {operation} %s WHERE user_id = %s"
         values: tuple = tuple([value, user_id])
