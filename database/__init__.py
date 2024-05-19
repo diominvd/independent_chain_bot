@@ -124,7 +124,7 @@ class UsersTable(Database):
 
     def update_username(self, user_id: int, username: str) -> None:
         query: str = "UPDATE users SET username = %s WHERE user_id = %s"
-        values: tuple = tuple([user_id, username])
+        values: tuple = tuple([username, user_id])
         self.update(query, values)
         return None
 
