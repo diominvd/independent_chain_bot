@@ -12,6 +12,7 @@ from translator import Translator
 
 @MainModule.router.message(F.chat.type == ChatType.PRIVATE, Command("profile"))
 @MainModule.router.callback_query(F.data == "profile")
+@users_table.check_wallet_black_list
 @users_table.update_last_activity
 async def profile_(event: Message | CallbackQuery, state: FSMContext) -> None:
     users_table.update_username(event.from_user.id, event.from_user.username)

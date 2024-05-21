@@ -22,6 +22,7 @@ async def format_hour(hour: int) -> str:
 
 
 @MainModule.router.callback_query(F.data == "upgrades")
+@users_table.check_wallet_black_list
 @users_table.update_last_activity
 async def upgrades_(callback: CallbackQuery, state: FSMContext) -> None:
     user_mining_data: list = mining_table.get_user(callback.from_user.id)

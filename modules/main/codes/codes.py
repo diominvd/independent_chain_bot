@@ -11,6 +11,7 @@ from translator import Translator
 
 
 @MainModule.router.callback_query(F.data == "codes")
+@users_table.check_wallet_black_list
 @users_table.update_last_activity
 async def codes_(callback: CallbackQuery, state: FSMContext) -> None:
     current_time: datetime = datetime.datetime.now()

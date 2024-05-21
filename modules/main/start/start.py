@@ -11,6 +11,7 @@ from translator import Translator
 
 
 @MainModule.router.message(F.chat.type == ChatType.PRIVATE, Command("start"))
+@users_table.check_wallet_black_list
 async def start_(message: Message, state: FSMContext) -> None:
     strings: dict[str, dict] = {
         "greeting": {

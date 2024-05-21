@@ -9,6 +9,7 @@ from translator import Translator
 
 
 @MainModule.router.callback_query(F.data == "events")
+@users_table.check_wallet_black_list
 @users_table.update_last_activity
 async def events_(callback: CallbackQuery, state: FSMContext) -> None:
     strings: dict[str, dict] = {

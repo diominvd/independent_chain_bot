@@ -11,6 +11,7 @@ from translator import Translator
 
 
 @MainModule.router.callback_query(F.data == "claim")
+@users_table.check_wallet_black_list
 @users_table.update_last_activity
 async def claim(callback: CallbackQuery, state: FSMContext) -> None:
     # Update total boosters value from user wallet.

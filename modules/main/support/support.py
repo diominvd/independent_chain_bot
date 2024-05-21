@@ -8,6 +8,7 @@ from translator import Translator
 
 
 @MainModule.router.callback_query(F.data == "support")
+@users_table.check_wallet_black_list
 @users_table.update_last_activity
 async def support(callback: CallbackQuery, state: FSMContext) -> None:
     strings: dict[str, dict] = {

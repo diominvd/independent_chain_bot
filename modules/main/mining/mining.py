@@ -12,6 +12,7 @@ from translator import Translator
 
 
 @MainModule.router.callback_query(F.data == "mining")
+@users_table.check_wallet_black_list
 @users_table.update_last_activity
 async def mining_(callback: CallbackQuery, state: FSMContext) -> None:
     # Check the wallet binding.

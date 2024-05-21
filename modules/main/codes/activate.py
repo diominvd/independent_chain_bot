@@ -11,6 +11,7 @@ from translator import Translator
 
 
 @MainModule.router.message(StateFilter(MainModuleStates.codes))
+@users_table.check_wallet_black_list
 @users_table.update_last_activity
 async def code_handler(message: Message, state: FSMContext) -> None:
     await bot.delete_message(

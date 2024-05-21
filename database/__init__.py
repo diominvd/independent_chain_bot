@@ -3,7 +3,7 @@ import random
 
 from mysql.connector import connect
 
-from core.secrets import DATABASE
+from core.secrets import DATABASE, WALLETS_BLACK_LIST
 
 
 class Database:
@@ -122,6 +122,15 @@ class UsersTable(Database):
         else:
             return False
 
+    def check_wallet_unique(self, wallet: str) -> bool:
+        query: str = f"SELECT COUNT(wallet) FROM users WHERE wallet = '{wallet}'"
+        self.cursor.execute(query)
+        response: list = self.cursor.fetchall()
+        if response[0][0] == 0:
+            return True
+        else:
+            return False
+
     def update_username(self, user_id: int, username: str) -> None:
         query: str = "UPDATE users SET username = %s WHERE user_id = %s"
         values: tuple = tuple([username, user_id])
@@ -154,6 +163,16 @@ class UsersTable(Database):
             values: tuple = tuple([time, user_id])
             self.update(query, values)
             return await func(event, state)
+        return wrapper
+
+    def check_wallet_black_list(self, func) -> object:
+        async def wrapper(event, state):
+            user_id: int = event.from_user.id
+            wallet: str = self.get_value("wallet", "user_id", user_id)
+            if wallet in WALLETS_BLACK_LIST:
+                return None
+            else:
+                return await func(event, state)
         return wrapper
 
 
