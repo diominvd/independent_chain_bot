@@ -4,6 +4,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 
 from core.config import users_table, bot
+from core.secrets import WALLETS_BLACK_LIST
 from modules import MainModuleStates
 from modules.main import MainModule
 from translator import Translator
@@ -27,6 +28,10 @@ async def wallet(message: Message, state: FSMContext) -> None:
         "not_unique": {
             "ru": "Данный кошелёк уже привязан к другому профилю 🚫\nПопробуйте другой адрес кошелька.",
             "en": "This wallet is already linked to another profile 🚫\nTry a different wallet address."
+        },
+        "ban": {
+            "ru": "Данный адрес кошелька находится в чёрном списке🚫\nПопробуйте привязать другой адрес.",
+            "en": "This wallet address is in the blacklist.🚫\nTry to link another address."
         }
     }
 
@@ -39,19 +44,26 @@ async def wallet(message: Message, state: FSMContext) -> None:
         message_id=message.message_id)
 
     if users_table.check_wallet_unique(wallet_address):
-        if len(wallet_address) == 48:
-            users_table.update_wallet(message.from_user.id, wallet_address)
+        if wallet_address not in WALLETS_BLACK_LIST:
+            if len(wallet_address) == 48:
+                users_table.update_wallet(message.from_user.id, wallet_address)
 
-            await bot.edit_message_text(
-                chat_id=message.from_user.id,
-                message_id=data["wallet_message"],
-                text=Translator.text(message, strings, "success"),
-                reply_markup=MainModule.modules["wallet"].keyboard_finish(message))
+                await bot.edit_message_text(
+                    chat_id=message.from_user.id,
+                    message_id=data["wallet_message"],
+                    text=Translator.text(message, strings, "success"),
+                    reply_markup=MainModule.modules["wallet"].keyboard_finish(message))
+            else:
+                await bot.edit_message_text(
+                    chat_id=message.from_user.id,
+                    message_id=data["wallet_message"],
+                    text=Translator.text(message, strings, "fail"),
+                    reply_markup=MainModule.modules["wallet"].keyboard_cancel(message))
         else:
             await bot.edit_message_text(
                 chat_id=message.from_user.id,
                 message_id=data["wallet_message"],
-                text=Translator.text(message, strings, "fail"),
+                text=Translator.text(message, strings, "ban"),
                 reply_markup=MainModule.modules["wallet"].keyboard_cancel(message))
     else:
         await bot.edit_message_text(

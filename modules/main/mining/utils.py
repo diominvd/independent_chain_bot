@@ -65,7 +65,7 @@ def update_boosters(user_id: int) -> None:
     boosters_value: float = 1
 
     for nft in response.nft_items:
-        if nft.metadata["name"] in ["BRONZE INCH", "SILVER INCH", "GOLD INCH", "BLACK INCH", "GECKOSHI INCH"]:
+        if nft.metadata["name"] in ["BRONZE INCH", "SILVER INCH", "GOLD INCH", "BLACK INCH", "GECKOSHI INCH", "GHOSTEX INCH"]:
             for attribute in nft.metadata["attributes"]:
                 if attribute['trait_type'] == 'multiplier':
                     boosters_value = boosters_value * float(attribute["value"])
