@@ -4,10 +4,9 @@ from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 
-from core.config import UsersTable
-from markdown import Markdown
 from modules.main import MainModule
-from translator import Translator
+from core.config import UsersTable
+from utils import Markdown, Translator
 
 
 def language(language_code: str) -> str:

@@ -1,7 +1,7 @@
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message, CallbackQuery
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-from translator import Translator
+from utils import Translator
 
 
 def keyboard(event: Message | CallbackQuery) -> InlineKeyboardMarkup:
