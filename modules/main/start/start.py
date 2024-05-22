@@ -4,10 +4,26 @@ from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 
-from core.config import users_table
+from core.config import UsersTable
 from markdown import Markdown
 from modules.main import MainModule
 from translator import Translator
+
+
+def language(language_code: str) -> str:
+    if language_code not in ["ru", "en"]:
+        return "en"
+    else:
+        return language_code
+
+
+def inviter(message: Message) -> int | None:
+    text: list = message.text.split(" ")
+    if len(text) == 2:
+        inviter_id: int = int(text[1])
+        return inviter_id
+    else:
+        return None
 
 
 @MainModule.router.message(F.chat.type == ChatType.PRIVATE, Command("start"))
@@ -38,13 +54,23 @@ async def start_(message: Message, state: FSMContext) -> None:
     await state.clear()
 
     # Check user existence in bot database.
-    user_existence: bool = users_table.check_user_existence(user_id=message.from_user.id)
-    if not user_existence:
-        user_data: dict = MainModule.modules["start"].pack_user_data(message)
-        users_table.create_user(user_data)
+    user: tuple = UsersTable.select(("user_id", ), "user_id", message.from_user.id)
+    if user is None:
+        UsersTable.insert(
+            user_id=message.from_user.id,
+            username=message.from_user.username,
+            language=language(message.from_user.language_code),
+            wallet="NULL",
+            balance=UsersTable.start,
+            referals=0
+        )
+
+    inviter_id: int | None = inviter(message)
+    if inviter_id is not None:
+        UsersTable.increase("referals", 1, "user_id", message.from_user.id)
+        UsersTable.increase("balance", UsersTable.referal, "user_id", inviter_id)
 
     await message.answer_photo(
         photo="https://github.com/diominvd/independent_chain_bot/blob/main/modules/main/start/image.jpg?raw=true",
         caption=Translator.text(message, strings, "greeting"),
         reply_markup=MainModule.modules["start"].keyboard(message))
-    return None
