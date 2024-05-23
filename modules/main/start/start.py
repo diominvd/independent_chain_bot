@@ -4,9 +4,9 @@ from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 
+from database import UsersTable
 from modules.main import MainModule
-from core.config import UsersTable
-from utils import Markdown, Translator
+from utils import Markdown as md, Translator
 
 
 def language(language_code: str) -> str:
@@ -26,27 +26,38 @@ def inviter(message: Message) -> int | None:
 
 
 @MainModule.router.message(F.chat.type == ChatType.PRIVATE, Command("start"))
-async def start_(message: Message, state: FSMContext) -> None:
+async def h_start(message: Message, state: FSMContext) -> None:
     strings: dict[str, dict] = {
         "greeting": {
             "ru": (
-                f"Добро пожаловать в {Markdown.bold('INCH Project')} - крипто-проект, запущенный группой энтузиастов.\n\n"
+                f"Добро пожаловать в {md.bold('Independent Chain Project')} - крипто-проект, запущенный группой энтузиастов.\n"
+                f"\n"
                 f"Наша цель - запустить собственную, независимую от коммерческих организаций, спонсоров и сторонних "
-                f"организаций блокчейн-сеть с внутресетевой монетой.\n\n"
+                f"организаций блокчейн-сеть с внутресетевой монетой.\n"
+                f"\n"
                 f"Уже запущена рекламная компания на платформе Telegram в рамках которой было отчеканено 10,000,000 "
-                f"жетонов $INCH в сети TON 🔥\n\n"
-                f"За каждого приглашённого друга вы получите 50 $tINCH - внутрення валюта бота. В дальнейшем каждый "
-                f"сможет конвертировать свои накопления в жетон $INCH 🔄\n\n"
-                f"Для просмотра профиля воспользуйтесь командой /profile."),
+                f"жетонов $INCH в сети TON 🔥\n"
+                f"\n"
+                f"За каждого приглашённого друга вы получите {UsersTable.referal} $tINCH - внутрення валюта бота. В дальнейшем каждый "
+                f"сможет конвертировать свои накопления в жетон $INCH 🔄\n"
+                f"\n"
+                f"Для просмотра профиля воспользуйтесь командой /profile.\n"
+                f"\n"
+                f"{md.monospaced('Перед использованием бота настоятельно рекомендуем ознакомиться с пользовательским соглашением.')}"),
             "en": (
-                f"Welcome to {Markdown.bold('INCH Project')}, a crypto project launched by a group of enthusiasts.\n\n"
+                f"Welcome to {md.bold('Independent Chain Project')}, a crypto project launched by a group of enthusiasts.\n"
+                f"\n"
                 f"Our goal is to launch our own blockchain network with an intra-network coin, independent of commercial "
-                f"organizations, sponsors and third-party organizations.\n\n"
+                f"organizations, sponsors and third-party organizations.\n"
+                f"\n"
                 f"An advertising campaign has already been launched on the Telegram platform, within the framework of which 10,000,000 "
-                f"$INCH tokens were minted on the TON 🔥\n\n network"
-                f"For each invited friend, you will receive $ 50 tINCH - the internal currency of the bot. In the future, everyone "
-                f"will be able to convert his savings into a $INCH token 🔄\n\n"
-                f"To view the profile, use the /profile command.")
+                f"$INCH tokens were minted on the TON network🔥\n"
+                f"\n"
+                f"For each invited friend, you will receive {UsersTable.referal} $tINCH - the internal currency of the bot. In the future, everyone "
+                f"will be able to convert his savings into a $INCH token 🔄\n"
+                f"\n"
+                f"To view the profile, use the /profile command.\n"
+                f"{md.monospaced('Before using the bot, we strongly recommend that you read the user agreement.')}")
         }
     }
 
@@ -66,10 +77,10 @@ async def start_(message: Message, state: FSMContext) -> None:
 
     inviter_id: int | None = inviter(message)
     if inviter_id is not None:
-        UsersTable.increase("referals", 1, "user_id", message.from_user.id)
+        UsersTable.increase("referals", 1, "user_id", inviter_id)
         UsersTable.increase("balance", UsersTable.referal, "user_id", inviter_id)
 
-    await message.answer_photo(
-        photo="https://github.com/diominvd/independent_chain_bot/blob/main/modules/main/start/image.jpg?raw=true",
-        caption=Translator.text(message, strings, "greeting"),
-        reply_markup=MainModule.modules["start"].keyboard(message))
+    await message.answer(
+        text=Translator.text(message, strings, "greeting"),
+        reply_markup=MainModule.modules["start"].keyboard(message)
+    )

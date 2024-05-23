@@ -16,26 +16,3 @@ class ModulesManager:
     def disconnect(self, name: str) -> None:
         del self.modules[name]
         return None
-
-
-class MainModuleStates(StatesGroup):
-    mining = State()
-    upgrades = State()
-    wallet = State()
-    codes = State()
-    geckoshi = State()
-    slots = State()
-
-
-class AdminModuleStates(StatesGroup):
-    panel = State()
-    messages = State()
-    mail = State()
-    mailing = State()
-    database = State()
-    codes = State()
-    generate_codes = State()
-    get_codes = State()
-    statistics = State()
-    get_values = State()
-    change_values = State()
