@@ -1,10 +1,8 @@
 from aiogram import F
-from aiogram.enums import ChatType
-from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
-from aiogram.types import Message, CallbackQuery
+from aiogram.types import CallbackQuery
 
-from database import UsersTable
+from database import t_users
 from modules.main import MainModule
 from states import WalletStates
 from utils import Markdown as md, Translator
@@ -13,7 +11,7 @@ from utils import Markdown as md, Translator
 @MainModule.router.callback_query(F.data == "wallet")
 async def h_wallet(callback: CallbackQuery, state: FSMContext):
 
-    address: str = UsersTable.select(("wallet", ), "user_id", callback.from_user.id)
+    address: str = t_users.select(("wallet",), "user_id", callback.from_user.id)
 
     strings: dict[str, dict] = {
         "linked": {

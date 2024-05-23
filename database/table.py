@@ -1,3 +1,5 @@
+import datetime
+
 from database.database import Database
 
 
@@ -5,8 +7,8 @@ class Table(Database):
     def __init__(self, name: str, **kwargs):
         self.name = name
 
-        for field, field_type in kwargs.items():
-            setattr(self, field, field_type.type)
+        for title, field in kwargs.items():
+            setattr(self, title, field)
 
         query: str = f"CREATE TABLE IF NOT EXISTS {self.name} ({', '.join([f'{field} {field_type.type}' for field, field_type in kwargs.items()])})"
         self.request(query, (), True)
@@ -32,8 +34,11 @@ class Table(Database):
 
     def insert(self, **kwargs) -> None:
         query: str = f"INSERT INTO {self.name} ({', '.join([field for field in kwargs.keys()])}) VALUES ({', '.join([f'%s' for _ in range(len(kwargs))])})"
-        print(query, (value for value in kwargs.values()))
         self.request(query, tuple(value for value in kwargs.values()), True)
+
+    def delete(self, where: str, condition: any) -> None:
+        query: str = f"DELETE FROM {self.name} WHERE {where} = %s"
+        self.request(query, (condition, ), True)
 
     def assign(self, field: str, value: any, where: str, condition: any) -> None:
         query: str = f"UPDATE {self.name} SET {field} = %s WHERE {where} = %s"
@@ -66,30 +71,9 @@ class UsersTable(Table):
                 self.referals: int = referals
 
         data: tuple = self.select((), "user_id", userid)
-        user: User = User(*data)
+        _user: User = User(*data)
 
-        return user
-
-    def f_uid(self, where: str, condition: any) -> int:
-        return self.select(("project_id", ), where, condition)
-
-    def f_user_id(self, where: str, condition: any) -> int:
-        return self.select(("user_id",), where, condition)
-
-    def f_username(self, where: str, condition: any) -> str:
-        return self.select(("user_id",), where, condition)
-
-    def f_language(self, where: str, condition: any) -> str:
-        return self.select(("language",), where, condition)
-
-    def f_wallet(self, where: str, condition: any) -> str:
-        return self.select(("wallet",), where, condition)
-
-    def f_balance(self, where: str, condition: any) -> int:
-        return self.select(("balance",), where, condition)
-
-    def f_referals(self, where: str, condition: any) -> int:
-        return self.select(("referals",), where, condition)
+        return _user
 
 
 class MiningTable(Table):
@@ -102,7 +86,42 @@ class UsersCodesTable(Table):
     def __init__(self, name: str, **kwargs):
         super().__init__(name, **kwargs)
 
+    def user(self, userid: int):
+        class User:
+            def __init__(self, user_id, username, last_code):
+                self.user_id: int = user_id
+                self.username: str = username
+                self.last_code: datetime.datetime = last_code
+
+        data: tuple = self.select((), "user_id", userid)
+        _user: User = User(*data)
+
+        return _user
+
 
 class CodesTable(Table):
     def __init__(self, name: str, **kwargs):
         super().__init__(name, **kwargs)
+
+    def get(self, signature: str):
+        class Code:
+            def __init__(self, code, value, activations):
+                self.code: int = code
+                self.value: float = value
+                self.activations: int = activations
+
+        data: tuple = self.select((), "code", signature)
+
+        try:
+            _code: Code = Code(*data)
+        except:
+            return None
+
+        return _code
+
+    def activate(self, code) -> None:
+        if code.activations == 1:
+            self.delete("code", code.code)
+        else:
+            self.decrease("activations", 1, "code", code.code)
+        return None

@@ -1,18 +1,16 @@
-from aiogram import F
-from aiogram.enums import ChatType
-from aiogram.filters import Command, StateFilter
+from aiogram.filters import StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 
 from core.config import bot
-from database import UsersTable
+from database import t_users
 from modules.main import MainModule
 from states import WalletStates
-from utils import Markdown as md, Translator
+from utils import Translator
 
 
 def unique(address: str) -> bool:
-    if UsersTable.f_wallet("wallet", address) is None:
+    if t_users.select(("wallet",), "wallet", address) is None:
         return True
     else:
         return False
@@ -20,6 +18,7 @@ def unique(address: str) -> bool:
 
 @MainModule.router.message(StateFilter(WalletStates.address))
 async def h_address(message: Message, state: FSMContext) -> None:
+
     address: str = message.text
 
     strings: dict[str, dict] = {
@@ -49,11 +48,6 @@ async def h_address(message: Message, state: FSMContext) -> None:
         }
     }
 
-    await bot.delete_message(
-        chat_id=message.from_user.id,
-        message_id=message.message_id
-    )
-
     state_data: dict = await state.get_data()
 
     if unique(address) is True:
@@ -70,7 +64,7 @@ async def h_address(message: Message, state: FSMContext) -> None:
         else:
             await state.clear()
 
-            UsersTable.assign("wallet", address, "user_id", message.from_user.id)
+            t_users.assign("wallet", address, "user_id", message.from_user.id)
 
             await bot.edit_message_text(
                 chat_id=message.from_user.id,
@@ -85,3 +79,8 @@ async def h_address(message: Message, state: FSMContext) -> None:
             text=Translator.text(message, strings, "not unique"),
             reply_markup=MainModule.modules["wallet"].keyboard(message, "back")
         )
+
+    await bot.delete_message(
+        chat_id=message.from_user.id,
+        message_id=message.message_id
+    )

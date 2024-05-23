@@ -4,7 +4,7 @@ from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, CallbackQuery
 
-from database import UsersTable
+from database import t_users
 from modules.main import MainModule
 from utils import Markdown as md, Translator
 
@@ -22,7 +22,7 @@ def wallet(language: str, address: str) -> str:
 @MainModule.router.message(Command("profile"), F.chat.type == ChatType.PRIVATE)
 async def h_profile(message: Message, state: FSMContext):
 
-    user = UsersTable.user(message.from_user.id)
+    user = t_users.user(message.from_user.id)
 
     strings: dict[str, dict] = {
         "profile": {
@@ -59,7 +59,7 @@ async def h_profile(message: Message, state: FSMContext):
 @MainModule.router.callback_query(F.data == "profile")
 async def h_profile(callback: CallbackQuery, state: FSMContext):
 
-    user = UsersTable.user(callback.from_user.id)
+    user = t_users.user(callback.from_user.id)
 
     strings: dict[str, dict] = {
         "profile": {

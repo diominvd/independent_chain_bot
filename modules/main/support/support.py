@@ -1,12 +1,9 @@
 from aiogram import F
-from aiogram.enums import ChatType
-from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
-from aiogram.types import Message, CallbackQuery
+from aiogram.types import CallbackQuery
 
-from database import UsersTable
 from modules.main import MainModule
-from utils import Markdown as md, Translator
+from utils import Translator
 
 
 def wallet(language: str, address: str) -> str:
@@ -21,6 +18,7 @@ def wallet(language: str, address: str) -> str:
 
 @MainModule.router.callback_query(F.data == "support")
 async def h_support(callback: CallbackQuery, state: FSMContext):
+
     strings: dict[str, dict] = {
         "support": {
             "ru": (f"В случае возникновения ошибок или каких-либо проблем с ботом просим написать вас в поддержку.\n"

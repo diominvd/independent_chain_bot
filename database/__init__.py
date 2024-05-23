@@ -2,7 +2,7 @@ from database.field import Field
 from database.table import UsersTable, MiningTable, UsersCodesTable, CodesTable
 
 
-UsersTable: UsersTable = UsersTable(
+t_users: UsersTable = UsersTable(
     name="users",
     project_id=Field("project_id", "BIGINT", "AUTO_INCREMENT PRIMARY KEY"),
     user_id=Field("user_id", "BIGINT"),
@@ -13,7 +13,7 @@ UsersTable: UsersTable = UsersTable(
     referals=Field("referals", "BIGINT"),
 )
 
-MiningTable: MiningTable = MiningTable(
+t_mining: MiningTable = MiningTable(
     name="mining",
     user_id=Field("user_id", "BIGINT"),
     username=Field("username", "VARCHAR(255)"),
@@ -23,14 +23,14 @@ MiningTable: MiningTable = MiningTable(
     bot=Field("bot", "INT")
 )
 
-UserCodesTable: UsersCodesTable = UsersCodesTable(
+t_users_codes: UsersCodesTable = UsersCodesTable(
     name="user_codes",
     user_id=Field("user_id", "BIGINT"),
     username=Field("username", "VARCHAR(255)"),
     last_code=Field("last_code", "DATETIME")
 )
 
-CodesTable: CodesTable = CodesTable(
+t_codes: CodesTable = CodesTable(
     name="codes",
     code=Field("code", "VARCHAR(255)"),
     value=Field("value", "FLOAT"),

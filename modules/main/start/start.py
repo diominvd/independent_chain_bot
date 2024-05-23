@@ -4,7 +4,7 @@ from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 
-from database import UsersTable
+from database import t_users
 from modules.main import MainModule
 from utils import Markdown as md, Translator
 
@@ -27,6 +27,7 @@ def inviter(message: Message) -> int | None:
 
 @MainModule.router.message(F.chat.type == ChatType.PRIVATE, Command("start"))
 async def h_start(message: Message, state: FSMContext) -> None:
+
     strings: dict[str, dict] = {
         "greeting": {
             "ru": (
@@ -38,7 +39,7 @@ async def h_start(message: Message, state: FSMContext) -> None:
                 f"Уже запущена рекламная компания на платформе Telegram в рамках которой было отчеканено 10,000,000 "
                 f"жетонов $INCH в сети TON 🔥\n"
                 f"\n"
-                f"За каждого приглашённого друга вы получите {UsersTable.referal} $tINCH - внутрення валюта бота. В дальнейшем каждый "
+                f"За каждого приглашённого друга вы получите {t_users.referal} $tINCH - внутрення валюта бота. В дальнейшем каждый "
                 f"сможет конвертировать свои накопления в жетон $INCH 🔄\n"
                 f"\n"
                 f"Для просмотра профиля воспользуйтесь командой /profile.\n"
@@ -53,7 +54,7 @@ async def h_start(message: Message, state: FSMContext) -> None:
                 f"An advertising campaign has already been launched on the Telegram platform, within the framework of which 10,000,000 "
                 f"$INCH tokens were minted on the TON network🔥\n"
                 f"\n"
-                f"For each invited friend, you will receive {UsersTable.referal} $tINCH - the internal currency of the bot. In the future, everyone "
+                f"For each invited friend, you will receive {t_users.referal} $tINCH - the internal currency of the bot. In the future, everyone "
                 f"will be able to convert his savings into a $INCH token 🔄\n"
                 f"\n"
                 f"To view the profile, use the /profile command.\n"
@@ -64,21 +65,21 @@ async def h_start(message: Message, state: FSMContext) -> None:
     await state.clear()
 
     # Check user existence in bot database.
-    user: tuple = UsersTable.select(("user_id", ), "user_id", message.from_user.id)
+    user: tuple = t_users.select(("user_id", ), "user_id", message.from_user.id)
     if user is None:
-        UsersTable.insert(
+        t_users.insert(
             user_id=message.from_user.id,
             username=message.from_user.username,
             language=language(message.from_user.language_code),
             wallet="NULL",
-            balance=UsersTable.start,
+            balance=t_users.start,
             referals=0
         )
 
     inviter_id: int | None = inviter(message)
     if inviter_id is not None:
-        UsersTable.increase("referals", 1, "user_id", inviter_id)
-        UsersTable.increase("balance", UsersTable.referal, "user_id", inviter_id)
+        t_users.increase("referals", 1, "user_id", inviter_id)
+        t_users.increase("balance", t_users.referal, "user_id", inviter_id)
 
     await message.answer(
         text=Translator.text(message, strings, "greeting"),
