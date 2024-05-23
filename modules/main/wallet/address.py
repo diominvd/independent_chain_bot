@@ -19,7 +19,7 @@ def unique(address: str) -> bool:
 
 
 @MainModule.router.message(StateFilter(WalletStates.address))
-async def h_start(message: Message, state: FSMContext) -> None:
+async def h_address(message: Message, state: FSMContext) -> None:
     address: str = message.text
 
     strings: dict[str, dict] = {
