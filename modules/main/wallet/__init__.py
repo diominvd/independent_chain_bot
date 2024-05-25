@@ -1,3 +1,2 @@
-from .wallet import *
-from .address import *
+from .handlers import *
 from .keyboard import *

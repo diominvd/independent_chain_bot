@@ -32,6 +32,21 @@ class Table(Database):
         else:
             return self.all()
 
+    def order(self, fields: tuple, by: str, limit: int):
+        query: str = f"SELECT {', '.join(fields) if len(fields) != 0 else '*'} FROM {self.name} ORDER BY {by} DESC LIMIT {limit}"
+        self.request(query, (), False)
+
+        if len(fields) == 0:
+            return self.one()
+        elif len(fields) == 1:
+            response = self.one()
+            if response is not None:
+                return response[0]
+            else:
+                return None
+        else:
+            return self.all()
+
     def insert(self, **kwargs) -> None:
         query: str = f"INSERT INTO {self.name} ({', '.join([field for field in kwargs.keys()])}) VALUES ({', '.join([f'%s' for _ in range(len(kwargs))])})"
         self.request(query, tuple(value for value in kwargs.values()), True)
@@ -61,7 +76,7 @@ class UsersTable(Table):
 
     def user(self, userid: int):
         class User:
-            def __init__(self, uid, user_id, username, language, wallet, balance, referals):
+            def __init__(self, uid, user_id, username, language, wallet, balance, referals, last_code):
                 self.uid: int = uid
                 self.user_id: int = user_id
                 self.username: str = username
@@ -69,17 +84,55 @@ class UsersTable(Table):
                 self.wallet: str = wallet
                 self.balance: float = balance
                 self.referals: int = referals
+                self.last_code: datetime.datetime = last_code
 
         data: tuple = self.select((), "user_id", userid)
+
+        if data is None:
+            return None
+
         _user: User = User(*data)
 
         return _user
+
+    def rating(self, user_id: int) -> int:
+        query: str = f"SELECT (SELECT COUNT(DISTINCT balance) + 1 FROM users WHERE balance > t1.balance) AS position FROM users AS t1 WHERE user_id = {user_id}"
+        self.request(query, (), False)
+        place: int = self.one()[0]
+        return place
 
 
 class MiningTable(Table):
     def __init__(self, name: str, **kwargs):
         super().__init__(name, **kwargs)
         self.booster: float = 1
+        self.discount: float = 0
+
+    def user(self, userid: int):
+        class User:
+            def __init__(self, user_id, username, last_claim, reactor, storage, bot, booster):
+                self.user_id: int = user_id
+                self.username: str = username
+                self.last_claim: datetime.datetime = last_claim
+                self.reactor: int = reactor
+                self.storage: int = storage
+                self.bot: float = bot
+                self.booster: float = booster
+
+        data: tuple = self.select((), "user_id", userid)
+
+        if data is None:
+            return None
+
+        _user: User = User(*data)
+
+        return _user
+
+    def upgrade_price(self, device: str, level: int) -> float:
+        if device == 'reactor':
+            return int(150 * 2.2**(level-1) * (1 - self.discount))
+        if device == 'storage':
+            return int(75 * 2.2 ** (level - 1) * (1 - self.discount))
 
 
 class UsersCodesTable(Table):

@@ -1,5 +1,4 @@
 from aiogram import Router
-from aiogram.fsm.state import StatesGroup, State
 
 
 class ModulesManager:

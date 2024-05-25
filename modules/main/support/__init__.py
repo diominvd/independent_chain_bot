@@ -1,2 +1,2 @@
-from .support import *
+from .handlers import *
 from .keyboard import *

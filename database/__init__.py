@@ -11,23 +11,18 @@ t_users: UsersTable = UsersTable(
     wallet=Field("wallet", "VARCHAR(48)"),
     balance=Field("balance", "FLOAT"),
     referals=Field("referals", "BIGINT"),
+    last_code=Field("last_code", "DATETIME"),
 )
 
 t_mining: MiningTable = MiningTable(
     name="mining",
     user_id=Field("user_id", "BIGINT"),
     username=Field("username", "VARCHAR(255)"),
-    last_claim=Field("last_claimed", "BIGINT"),
+    last_claim=Field("last_claimed", "DATETIME"),
     reactor=Field("reactor", "INT"),
     storage=Field("storage", "INT"),
-    bot=Field("bot", "INT")
-)
-
-t_users_codes: UsersCodesTable = UsersCodesTable(
-    name="user_codes",
-    user_id=Field("user_id", "BIGINT"),
-    username=Field("username", "VARCHAR(255)"),
-    last_code=Field("last_code", "DATETIME")
+    bot=Field("bot", "FLOAT"),
+    booster=Field("booster", "FLOAT"),
 )
 
 t_codes: CodesTable = CodesTable(

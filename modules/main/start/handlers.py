@@ -1,3 +1,5 @@
+import datetime
+
 from aiogram import F
 from aiogram.enums import ChatType
 from aiogram.filters import Command
@@ -65,7 +67,7 @@ async def h_start(message: Message, state: FSMContext) -> None:
     await state.clear()
 
     # Check user existence in bot database.
-    user: tuple = t_users.select(("user_id", ), "user_id", message.from_user.id)
+    user = t_users.user(message.from_user.id)
     if user is None:
         t_users.insert(
             user_id=message.from_user.id,
@@ -73,7 +75,8 @@ async def h_start(message: Message, state: FSMContext) -> None:
             language=language(message.from_user.language_code),
             wallet="NULL",
             balance=t_users.start,
-            referals=0
+            referals=0,
+            last_code=(datetime.datetime.now() - datetime.timedelta(days=1)),
         )
 
     inviter_id: int | None = inviter(message)

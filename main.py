@@ -4,13 +4,13 @@ from aiogram.methods import DeleteWebhook
 
 from core.config import bot, dispatcher
 from modules.main import MainModule
-#from modules.group import GroupModule
+from modules.group import GroupModule
 #from modules.admin import AdminModule
 
 # Comment down string for off logging.
 logging.basicConfig(level=logging.INFO)
 
-dispatcher.include_routers(MainModule.router)
+dispatcher.include_routers(MainModule.router, GroupModule.router)
 
 
 async def main() -> None:

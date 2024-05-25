@@ -1,2 +1,2 @@
-from .start import *
+from .handlers import *
 from .keyboard import *
