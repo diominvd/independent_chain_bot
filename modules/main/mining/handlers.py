@@ -132,6 +132,9 @@ async def h_claim(callback: CallbackQuery, state: FSMContext) -> None:
 
     user = t_mining.user(callback.from_user.id)
 
+    # Update booster value.
+    user.booster = TonSpace.booster(callback.from_user.id)
+
     time_difference: float = (datetime.datetime.now() - user.last_claim).total_seconds()
 
     if time_difference < 3600 * user.storage + 7200:
