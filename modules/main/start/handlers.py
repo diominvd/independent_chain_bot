@@ -81,8 +81,9 @@ async def h_start(message: Message, state: FSMContext) -> None:
 
     inviter_id: int | None = inviter(message)
     if inviter_id is not None:
-        t_users.increase("referals", 1, "user_id", inviter_id)
-        t_users.increase("balance", t_users.referal, "user_id", inviter_id)
+        if user is None:
+            t_users.increase("referals", 1, "user_id", inviter_id)
+            t_users.increase("balance", t_users.referal, "user_id", inviter_id)
 
     await message.answer(
         text=Translator.text(message, strings, "greeting"),

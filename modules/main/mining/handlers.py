@@ -97,7 +97,7 @@ async def h_mining(callback: CallbackQuery, state: FSMContext) -> None:
     strings: dict[str, dict] = {
         "mining": {
             "ru": (f"{md.bold('Последний сбор')}: {format_time(callback, time_difference)} назад\n"
-                   f"{md.bold('Скорость добычи')}: {user.reactor * 0.001 * 3600 * user.booster} $tINCH в час\n"
+                   f"{md.bold('Скорость добычи')}: {round(user.reactor * 0.001 * 3600 * user.booster, 3)} $tINCH в час\n"
                    f"{md.bold('Усилитель добычи')}: x{user.booster}\n"
                    f"\n"
                    f"Обращаем внимание ⚠️ Для корректной работы добычи все приобретённые усилители должны "
@@ -106,7 +106,7 @@ async def h_mining(callback: CallbackQuery, state: FSMContext) -> None:
                    f"Для комфортного использования раздела \"Добыча\" настоятельно рекомендуем ознакомиться "
                    f"с {md.url('данным руководством', 'https://teletype.in/@inch_ton/inch_mining_ru')}."),
             "en": (f"{md.bold('Last claim')}: {format_time(callback, time_difference)} back\n"
-                   f"{md.bold('Mining speed')}: {user.reactor * 0.001 * 3600 * user.booster} $tINCH в час\n"
+                   f"{md.bold('Mining speed')}: {round(user.reactor * 0.001 * 3600 * user.booster, 3)} $tINCH в час\n"
                    f"{md.bold('Mining booster')}: x{user.booster}\n"
                    f"\n"
                    f"Please note that ⚠️ For the correct operation of mining, all purchased amplifiers must "

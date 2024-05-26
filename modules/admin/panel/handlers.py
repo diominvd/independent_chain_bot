@@ -1,8 +1,9 @@
 from aiogram import F
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
-from aiogram.types import Message, InlineKeyboardMarkup, CallbackQuery
+from aiogram.types import Message, CallbackQuery
 
+from core.config import bot
 from core.secrets import ADMINS
 from modules.admin import AdminModule
 from utils import Translator
@@ -56,4 +57,16 @@ async def h_admin(callback: CallbackQuery, state: FSMContext) -> None:
     await callback.message.edit_text(
         text=Translator.text(callback, strings, "panel"),
         reply_markup=AdminModule.modules["panel"].keyboard(callback)
+    )
+
+
+@AdminModule.router.callback_query(F.data == "close_panel")
+async def h_admin(callback: CallbackQuery, state: FSMContext) -> None:
+
+    await state.clear()
+    await callback.answer(show_alert=False)
+
+    await bot.delete_message(
+        chat_id=callback.from_user.id,
+        message_id=callback.message.message_id
     )

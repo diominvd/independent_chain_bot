@@ -5,7 +5,6 @@ from aiogram.types import CallbackQuery, Message
 
 from core.config import bot
 from database import t_users, t_mining
-from database.table import Admin
 from modules.admin import AdminModule
 from states import AdminStates
 from utils import Markdown as md, Translator
@@ -39,7 +38,7 @@ async def h_constants(callback: CallbackQuery, state: FSMContext) -> None:
 
     await callback.message.edit_text(
         text=Translator.text(callback, strings, "constants"),
-        reply_markup=AdminModule.modules["constants"].keyboard(callback, "panel")
+        reply_markup=AdminModule.modules["constants"].keyboard(callback, "back")
     )
 
 
@@ -67,16 +66,16 @@ async def h_constants_template(message: Message, state: FSMContext) -> None:
         }
     }
 
-    state_data: dict = await state.get_data()
-
     await bot.delete_message(
         chat_id=message.from_user.id,
         message_id=message.message_id
     )
 
+    state_data: dict = await state.get_data()
+
     await bot.edit_message_text(
         chat_id=message.from_user.id,
         message_id=state_data["anchor"],
         text=Translator.text(message, strings, "notify"),
-        reply_markup=AdminModule.modules["constants"].keyboard(message, "constants")
+        reply_markup=AdminModule.modules["constants"].keyboard(message, "close")
     )

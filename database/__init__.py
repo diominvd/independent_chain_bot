@@ -1,5 +1,5 @@
 from database.field import Field
-from database.table import UsersTable, MiningTable, UsersCodesTable, CodesTable
+from database.table import UsersTable, MiningTable, CodesTable
 
 
 t_users: UsersTable = UsersTable(

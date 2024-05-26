@@ -1,4 +1,5 @@
 import datetime
+import random
 
 from database.database import Database
 
@@ -22,7 +23,10 @@ class Table(Database):
         self.request(query, (), False)
 
         if len(fields) == 0:
-            return self.one()
+            if where is None:
+                return self.all()
+            else:
+                return self.one()
         elif len(fields) == 1:
             response = self.one()
             if response is not None:
@@ -135,28 +139,25 @@ class MiningTable(Table):
             return int(75 * 2.2 ** (level - 1) * (1 - self.discount))
 
 
-class UsersCodesTable(Table):
-    def __init__(self, name: str, **kwargs):
-        super().__init__(name, **kwargs)
-
-    def user(self, userid: int):
-        class User:
-            def __init__(self, user_id, username, last_code):
-                self.user_id: int = user_id
-                self.username: str = username
-                self.last_code: datetime.datetime = last_code
-
-        data: tuple = self.select((), "user_id", userid)
-        _user: User = User(*data)
-
-        return _user
-
-
 class CodesTable(Table):
     def __init__(self, name: str, **kwargs):
         super().__init__(name, **kwargs)
 
-    def get(self, signature: str):
+    def generate(self, activations: int, value: float) -> str:
+        symbols: str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmopqrstuvwxyz0123456789"
+        code: str = ""
+
+        for s in range(16):
+            code += random.choice(symbols)
+
+        self.insert(code=code, value=value, activations=activations)
+        return code
+
+    def get(self) -> list:
+        codes: list = self.select(())
+        return codes
+
+    def check(self, signature: str):
         class Code:
             def __init__(self, code, value, activations):
                 self.code: int = code

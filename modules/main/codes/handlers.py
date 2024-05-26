@@ -101,7 +101,7 @@ async def h_codes(callback: CallbackQuery, state: FSMContext):
 async def h_code(message: Message, state: FSMContext) -> None:
 
     signature: str = message.text
-    code = t_codes.get(signature)
+    code = t_codes.check(signature)
 
     state_data: dict = await state.get_data()
 
@@ -118,7 +118,7 @@ async def h_code(message: Message, state: FSMContext) -> None:
         await state.clear()
 
         t_users.increase("balance", code.value, "user_id", message.from_user.id)
-        t_users.assign("code", datetime.datetime.now(), "user_id", message.from_user.id)
+        t_users.assign("last_code", datetime.datetime.now(), "user_id", message.from_user.id)
         t_codes.activate(code)
 
         await bot.edit_message_text(

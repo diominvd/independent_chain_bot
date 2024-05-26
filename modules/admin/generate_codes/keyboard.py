@@ -8,11 +8,11 @@ def keyboard(event: Message | CallbackQuery, flag: str) -> InlineKeyboardMarkup:
     buttons: dict[str, list] = {
         "ru": [
             InlineKeyboardButton(text="Назад", callback_data="panel"),
-            InlineKeyboardButton(text="Закрыть", callback_data="constants")
+            InlineKeyboardButton(text="Закрыть", callback_data="generate_codes")
         ],
         "en": [
             InlineKeyboardButton(text="Back", callback_data="panel"),
-            InlineKeyboardButton(text="Close", callback_data="constants")
+            InlineKeyboardButton(text="Close", callback_data="generate_codes")
         ]
     }
 
