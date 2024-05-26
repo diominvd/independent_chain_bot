@@ -10,6 +10,7 @@ def keyboard(event: Message | CallbackQuery) -> InlineKeyboardMarkup:
             InlineKeyboardButton(text="Обновить", callback_data="mining"),
             InlineKeyboardButton(text="Собрать", callback_data="claim"),
             InlineKeyboardButton(text="Улучшения", callback_data="upgrades"),
+            InlineKeyboardButton(text="Усилители", url="https://getgems.io/collection/EQCwKU6XtfzfiT-7-tbzZI1zjkt1PBmYshkUQ05QPLDviMPG?filter=%7B%22attributes%22%3A%7B%22multiplier%22%3A%5B%221.1%22%5D%7D%7D"),
             InlineKeyboardButton(text="Руководство", url="https://teletype.in/@inch_ton/inch_mining_ru"),
             InlineKeyboardButton(text="Назад", callback_data="profile"),
         ],
@@ -17,6 +18,7 @@ def keyboard(event: Message | CallbackQuery) -> InlineKeyboardMarkup:
             InlineKeyboardButton(text="Refresh", callback_data="mining"),
             InlineKeyboardButton(text="Claim", callback_data="claim"),
             InlineKeyboardButton(text="Upgrades", callback_data="upgrades"),
+            InlineKeyboardButton(text="Boosters", url="https://getgems.io/collection/EQCwKU6XtfzfiT-7-tbzZI1zjkt1PBmYshkUQ05QPLDviMPG?filter=%7B%22attributes%22%3A%7B%22multiplier%22%3A%5B%221.1%22%5D%7D%7D"),
             InlineKeyboardButton(text="Manual", url="https://teletype.in/@inch_ton/inch_mining_en"),
             InlineKeyboardButton(text="Back", callback_data="profile"),
         ]
@@ -29,4 +31,5 @@ def keyboard(event: Message | CallbackQuery) -> InlineKeyboardMarkup:
     builder.row(buttons[language][2])
     builder.row(buttons[language][3])
     builder.row(buttons[language][4])
+    builder.row(buttons[language][5])
     return builder.as_markup()
