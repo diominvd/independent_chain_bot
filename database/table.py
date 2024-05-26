@@ -178,3 +178,35 @@ class CodesTable(Table):
         else:
             self.decrease("activations", 1, "code", code.code)
         return None
+
+
+class Admin(Table):
+    @classmethod
+    def users(cls) -> int:
+        query: str = f"SELECT COUNT(*) FROM users"
+        cls.cursor.execute(query)
+        return cls.cursor.fetchone()[0]
+
+    @classmethod
+    def miners(cls) -> int:
+        query: str = f"SELECT COUNT(*) FROM mining"
+        cls.cursor.execute(query)
+        return cls.cursor.fetchone()[0]
+
+    @classmethod
+    def points(cls) -> float:
+        query: str = f"SELECT SUM(balance) FROM users"
+        cls.cursor.execute(query)
+        return cls.cursor.fetchone()[0]
+
+    @classmethod
+    def codes(cls) -> int:
+        query: str = f"SELECT COUNT(*) FROM codes"
+        cls.cursor.execute(query)
+        return cls.cursor.fetchone()[0]
+
+    @classmethod
+    def ids(cls) -> list:
+        query: str = f"SELECT user_id FROM users"
+        cls.cursor.execute(query)
+        return [user[0] for user in cls.cursor.fetchall()]

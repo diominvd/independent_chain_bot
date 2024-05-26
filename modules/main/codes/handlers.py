@@ -78,12 +78,8 @@ async def h_codes(callback: CallbackQuery, state: FSMContext):
     else:
         strings: dict[str, dict] = {
             "codes": {
-                "ru": f"Промокоды можно получить в различных активностях проекта (канал, чат).\n"
-                      f"\n"
-                      f"Отправьте 16-ти значный код для его активации 🔠",
-                "en": f"Promo codes can be obtained in various project activities (channel, chat).\n"
-                      f"\n"
-                      f"Send a 16-digit code to activate it 🔠"
+                "ru": f"Отправьте 16-ти значный код для его активации 🔠",
+                "en": f"Send a 16-digit code to activate it 🔠"
             }
         }
 
