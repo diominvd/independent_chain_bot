@@ -19,7 +19,7 @@ from pytonconnect.exceptions import TonConnectError
 
 
 async def generate_url():
-    connector = TonConnect(manifest_url='https://raw.githubusercontent.com/diominvd/independent_chain_bot/test/modules/main/wallet/manifest.json')
+    connector = TonConnect(manifest_url='https://raw.githubusercontent.com/diominvd/independent_chain_bot/main/modules/main/wallet/manifest.json')
 
     wallets: list = connector.get_wallets()
     connect_url = await connector.connect(wallets[0])
