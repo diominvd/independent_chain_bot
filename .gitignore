@@ -5,4 +5,5 @@
 
 core/secrets.py
 database/backup.sql
+modules/main/wallet/connection_data.json'
 scheme.drawio

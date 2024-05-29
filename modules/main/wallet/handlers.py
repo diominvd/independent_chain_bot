@@ -10,6 +10,35 @@ from states import WalletStates
 from utils import Markdown as md, Translator
 
 
+import asyncio
+from tonsdk.utils import Address
+
+from pytonconnect import TonConnect
+from pytonconnect.storage import FileStorage
+from pytonconnect.exceptions import TonConnectError
+
+
+async def generate_url():
+    connector = TonConnect(
+        manifest_url='https://raw.githubusercontent.com/XaBbl4/pytonconnect/main/pytonconnect-manifest.json')
+    wallets: list = connector.get_wallets()
+    connect_url = await connector.connect(wallets[0])
+    return connector, connect_url
+
+
+async def connect(connector, user_id: int):
+    connected = await connector.wait_for_connection()
+
+    for i in range(300):
+        await asyncio.sleep(1)
+        if connected:
+            if connector.connected and connector.account.address:
+                wallet: str = Address(connector.account.address).to_string(is_user_friendly=True,  is_url_safe=True, is_bounceable=False)
+                t_users.assign("wallet", wallet, "user_id", user_id)
+                await connector.disconnect()
+                return None
+
+
 @MainModule.router.callback_query(F.data == "wallet")
 async def h_wallet(callback: CallbackQuery, state: FSMContext) -> None:
 
@@ -39,21 +68,17 @@ async def h_wallet(callback: CallbackQuery, state: FSMContext) -> None:
     }
 
     await callback.answer(show_alert=False)
-    await state.set_state(WalletStates.address)
-    await state.update_data(anchor=callback.message.message_id)
 
-    if address == "NULL":
-        await callback.message.edit_text(
-            text=Translator.text(callback, strings, "not linked"),
-            reply_markup=MainModule.modules["wallet"].keyboard(callback, "cancel"),
-            disable_web_page_preview=True
-        )
-    else:
-        await callback.message.edit_text(
-            text=Translator.text(callback, strings, "linked"),
-            reply_markup=MainModule.modules["wallet"].keyboard(callback, "cancel"),
-            disable_web_page_preview=True
-        )
+    connector, url = await generate_url()
+
+
+    await callback.message.edit_text(
+        text=Translator.text(callback, strings, "not linked"),
+        reply_markup=MainModule.modules["wallet"].keyboard_connect(callback, url),
+        disable_web_page_preview=True
+    )
+
+    await connect(connector, callback.from_user.id)
 
 
 def unique(address: str) -> bool:
