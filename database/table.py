@@ -18,7 +18,7 @@ class Table(Database):
         query: str = f"SELECT {', '.join(fields) if len(fields) != 0 else '*'} FROM {self.name}"
 
         if where is not None:
-            query += f" WHERE {where} = {condition if type(condition).__name__ != 'str' else f'\'{condition}\''}"
+            query += f" WHERE {where} = {condition if type(condition).__name__ != 'str' else f"'{condition}'"}"
 
         self.request(query, (), False)
 

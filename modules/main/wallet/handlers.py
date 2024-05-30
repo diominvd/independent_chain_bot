@@ -30,7 +30,7 @@ async def connect(connector, user_id: int):
                                                                             is_bounceable=False)
 
                 # Check wallet unique.
-                result = t_users.select(("wallet",), "wallet", address)
+                result = t_users.select(("wallet", ), "wallet", address)
                 if result is None:
                     t_users.assign("wallet", address, "user_id", user_id)
                     return True
