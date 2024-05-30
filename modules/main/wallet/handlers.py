@@ -26,10 +26,11 @@ async def connect(connector, user_id: int):
         await asyncio.sleep(1)
         if connector.connected:
             if connector.account.address:
-                address: str = Address(connector.account.address).to_string(is_user_friendly=True, is_url_safe=True,is_bounceable=False)
+                address: str = Address(connector.account.address).to_string(is_user_friendly=True, is_url_safe=True,
+                                                                            is_bounceable=False)
 
                 # Check wallet unique.
-                result = t_users.select(("wallet", ), "wallet", address)
+                result = t_users.select(("wallet",), "wallet", address)
                 if result is None:
                     t_users.assign("wallet", address, "user_id", user_id)
                     return True
@@ -76,7 +77,6 @@ async def h_wallet(callback: CallbackQuery, state: FSMContext) -> None:
 
 @MainModule.router.callback_query(F.data == "tonspace")
 async def h_wallet_tonspace(callback: CallbackQuery, state: FSMContext) -> None:
-
     strings: dict[str, dict] = {
         "tonspace": {
             "ru": "Для подключения кошелька TonSpace к вашему профилю воспользуйтесь кнопкой ниже.",
@@ -87,18 +87,19 @@ async def h_wallet_tonspace(callback: CallbackQuery, state: FSMContext) -> None:
             "en": f"The wallet address has been successfully linked to your profile ✅"
         },
         "fail": {
-            "ru": "Данный адрес кошелька уже зарегистрирован в системе 🚫\n"
-                  "\n"
-                  "Если вы не осуществляли привязку данного кошелька обратитесь в поддержку.",
-            "en": "This wallet address has already been registered in system 🚫\n"
-                  "\n"
-                  "If you have not linked this wallet, contact support."
+            "ru": ("Данный адрес кошелька уже зарегистрирован в системе 🚫\n"
+                   "\n"
+                   "Если вы не осуществляли привязку данного кошелька обратитесь в поддержку."),
+            "en": ("This wallet address has already been registered in system 🚫\n"
+                   "\n"
+                   "If you have not linked this wallet, contact support.")
         }
     }
 
     await callback.answer(show_alert=False)
 
-    connector = TonConnect(manifest_url='https://raw.githubusercontent.com/diominvd/independent_chain_bot/main/modules/main/wallet/manifest.json')
+    connector = TonConnect(
+        manifest_url='https://raw.githubusercontent.com/diominvd/independent_chain_bot/main/modules/main/wallet/manifest.json')
     url: str = await tonspace(connector)
 
     await callback.message.edit_text(
@@ -120,7 +121,6 @@ async def h_wallet_tonspace(callback: CallbackQuery, state: FSMContext) -> None:
 
 @MainModule.router.callback_query(F.data == "tonkeeper")
 async def h_wallet_tonkeeper(callback: CallbackQuery, state: FSMContext) -> None:
-
     strings: dict[str, dict] = {
         "tonspace": {
             "ru": "Для подключения кошелька Tonkeeper к вашему профилю воспользуйтесь кнопкой ниже.",
@@ -131,18 +131,19 @@ async def h_wallet_tonkeeper(callback: CallbackQuery, state: FSMContext) -> None
             "en": f"The wallet address has been successfully linked to your profile ✅"
         },
         "fail": {
-            "ru": "Данный адрес кошелька уже зарегистрирован в системе 🚫\n"
-                  "\n"
-                  "Если вы не осуществляли привязку данного кошелька обратитесь в поддержку.",
-            "en": "This wallet address has already been registered in system 🚫\n"
-                  "\n"
-                  "If you have not linked this wallet, contact support."
+            "ru": ("Данный адрес кошелька уже зарегистрирован в системе 🚫\n"
+                   "\n"
+                   "Если вы не осуществляли привязку данного кошелька обратитесь в поддержку."),
+            "en": ("This wallet address has already been registered in system 🚫\n"
+                   "\n"
+                   "If you have not linked this wallet, contact support.")
         }
     }
 
     await callback.answer(show_alert=False)
 
-    connector = TonConnect(manifest_url='https://raw.githubusercontent.com/diominvd/independent_chain_bot/main/modules/main/wallet/manifest.json')
+    connector = TonConnect(
+        manifest_url='https://raw.githubusercontent.com/diominvd/independent_chain_bot/main/modules/main/wallet/manifest.json')
     url: str = await tonkeeper(connector)
 
     await callback.message.edit_text(
