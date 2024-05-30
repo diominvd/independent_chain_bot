@@ -4,6 +4,7 @@ from aiogram import F
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery
 from pytonconnect import TonConnect
+from pytonconnect.storage import FileStorage
 from tonsdk.utils import Address
 
 from database import t_users
@@ -98,8 +99,11 @@ async def h_wallet_tonspace(callback: CallbackQuery, state: FSMContext) -> None:
 
     await callback.answer(show_alert=False)
 
+    storage = FileStorage("modules/main/wallet/storage.json")
     connector = TonConnect(
-        manifest_url='https://raw.githubusercontent.com/diominvd/independent_chain_bot/main/modules/main/wallet/manifest.json')
+        manifest_url='https://raw.githubusercontent.com/diominvd/independent_chain_bot/main/modules/main/wallet/manifest.json',
+        storage=storage
+    )
     url: str = await tonspace(connector)
 
     await callback.message.edit_text(

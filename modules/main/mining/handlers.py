@@ -72,8 +72,8 @@ async def h_mining(callback: CallbackQuery, state: FSMContext) -> None:
         )
         return None
 
-    user = t_mining.user(callback.from_user.id)
-    if user is None:
+    m_user = t_mining.user(callback.from_user.id)
+    if m_user is None:
         t_mining.insert(
             user_id=callback.from_user.id,
             username=callback.from_user.username,
@@ -86,28 +86,31 @@ async def h_mining(callback: CallbackQuery, state: FSMContext) -> None:
 
     await callback.answer(show_alert=False)
 
-    user = t_mining.user(callback.from_user.id)
+    user = t_users.user(callback.from_user.id)
+    m_user = t_mining.user(callback.from_user.id)
 
     # Update booster value.
-    user.booster = TonSpace.booster(callback.from_user.id)
+    m_user.booster = TonSpace.booster(callback.from_user.id)
 
     # Calculate time from last claim (in seconds).
-    time_difference: float = (datetime.datetime.now() - user.last_claim).total_seconds()
+    time_difference: float = (datetime.datetime.now() - m_user.last_claim).total_seconds()
 
     strings: dict[str, dict] = {
         "mining": {
-            "ru": (f"{md.bold('Последний сбор')}: {format_time(callback, time_difference)} назад\n"
-                   f"{md.bold('Скорость добычи')}: {round(user.reactor * 0.001 * 3600 * user.booster, 3)} $tINCH в час\n"
-                   f"{md.bold('Усилитель добычи')}: x{user.booster}\n"
+            "ru": (f"{md.bold('Баланс')}: {user.balance} $tINCH\n"
+                   f"{md.bold('Последний сбор')}: {format_time(callback, time_difference)} назад\n"
+                   f"{md.bold('Скорость добычи')}: {round(m_user.reactor * 0.001 * 3600 * m_user.booster, 3)} $tINCH в час\n"
+                   f"{md.bold('Усилитель добычи')}: x{m_user.booster}\n"
                    f"\n"
                    f"Обращаем внимание ⚠️ Для корректной работы добычи все приобретённые усилители должны "
                    f"храниться на кошельке Ton Space.\n"
                    f"\n"
                    f"Для комфортного использования раздела \"Добыча\" настоятельно рекомендуем ознакомиться "
                    f"с {md.url('данным руководством', 'https://teletype.in/@inch_ton/inch_mining_ru')}."),
-            "en": (f"{md.bold('Last claim')}: {format_time(callback, time_difference)} back\n"
-                   f"{md.bold('Mining speed')}: {round(user.reactor * 0.001 * 3600 * user.booster, 3)} $tINCH в час\n"
-                   f"{md.bold('Mining booster')}: x{user.booster}\n"
+            "en": (f"{md.bold('Balance')}: {user.balance} $tINCH\n"
+                   f"{md.bold('Last claim')}: {format_time(callback, time_difference)} back\n"
+                   f"{md.bold('Mining speed')}: {round(m_user.reactor * 0.001 * 3600 * m_user.booster, 3)} $tINCH в час\n"
+                   f"{md.bold('Mining booster')}: x{m_user.booster}\n"
                    f"\n"
                    f"Please note that ⚠️ For the correct operation of mining, all purchased amplifiers must "
                    f"be stored on the Ton Space wallet.\n"
