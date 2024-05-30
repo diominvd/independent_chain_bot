@@ -99,11 +99,7 @@ async def h_wallet_tonspace(callback: CallbackQuery, state: FSMContext) -> None:
 
     await callback.answer(show_alert=False)
 
-    storage = FileStorage("modules/main/wallet/storage.json")
-    connector = TonConnect(
-        manifest_url='https://raw.githubusercontent.com/diominvd/independent_chain_bot/main/modules/main/wallet/manifest.json',
-        storage=storage
-    )
+    connector = TonConnect(manifest_url='https://raw.githubusercontent.com/diominvd/independent_chain_bot/main/modules/main/wallet/manifest.json')
     url: str = await tonspace(connector)
 
     await callback.message.edit_text(
@@ -121,6 +117,8 @@ async def h_wallet_tonspace(callback: CallbackQuery, state: FSMContext) -> None:
             text=Translator.text(callback, strings, "fail"),
             reply_markup=MainModule.modules["wallet"].keyboard_connected_error(callback)
         )
+
+    await connector.disconnect()
 
 
 @MainModule.router.callback_query(F.data == "tonkeeper")
@@ -146,8 +144,7 @@ async def h_wallet_tonkeeper(callback: CallbackQuery, state: FSMContext) -> None
 
     await callback.answer(show_alert=False)
 
-    connector = TonConnect(
-        manifest_url='https://raw.githubusercontent.com/diominvd/independent_chain_bot/main/modules/main/wallet/manifest.json')
+    connector = TonConnect(manifest_url='https://raw.githubusercontent.com/diominvd/independent_chain_bot/main/modules/main/wallet/manifest.json')
     url: str = await tonkeeper(connector)
 
     await callback.message.edit_text(
@@ -165,3 +162,5 @@ async def h_wallet_tonkeeper(callback: CallbackQuery, state: FSMContext) -> None
             text=Translator.text(callback, strings, "fail"),
             reply_markup=MainModule.modules["wallet"].keyboard_connected_error(callback)
         )
+
+    await connector.disconnect()
