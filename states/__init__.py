@@ -1,11 +1,6 @@
 from aiogram.fsm.state import StatesGroup, State
 
 
-class WalletStates(StatesGroup):
-    tonspace = State()
-    tonkeeper = State()
-
-
 class CodesStates(StatesGroup):
     code = State()
 
