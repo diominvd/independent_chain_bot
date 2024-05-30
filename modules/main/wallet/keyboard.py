@@ -7,10 +7,89 @@ from utils import Translator
 def keyboard(event: Message | CallbackQuery) -> InlineKeyboardMarkup:
     buttons: dict[str, list] = {
         "ru": [
+            InlineKeyboardButton(text="TonSpace", callback_data="tonspace"),
+            InlineKeyboardButton(text="TonKeeper", callback_data="tonkeeper"),
             InlineKeyboardButton(text="Назад", callback_data="profile"),
         ],
         "en": [
+            InlineKeyboardButton(text="TonSpace", callback_data="tonspace"),
+            InlineKeyboardButton(text="TonKeeper", callback_data="tonkeeper"),
             InlineKeyboardButton(text="Back", callback_data="profile"),
+        ]
+    }
+
+    language: str = Translator.language(event)
+    builder: InlineKeyboardBuilder = InlineKeyboardBuilder()
+    builder.row(buttons[language][0])
+    builder.row(buttons[language][1])
+    builder.row(buttons[language][2])
+    return builder.as_markup()
+
+
+def keyboard_linked(event: Message | CallbackQuery) -> InlineKeyboardMarkup:
+    buttons: dict[str, list] = {
+        "ru": [
+            InlineKeyboardButton(text="Поддержка", url="https://t.me/diominvd"),
+            InlineKeyboardButton(text="Назад", callback_data="profile"),
+        ],
+        "en": [
+            InlineKeyboardButton(text="Support", url="https://t.me/diominvd"),
+            InlineKeyboardButton(text="Back", callback_data="profile"),
+        ]
+    }
+
+    language: str = Translator.language(event)
+    builder: InlineKeyboardBuilder = InlineKeyboardBuilder()
+    builder.row(buttons[language][0])
+    builder.row(buttons[language][1])
+    return builder.as_markup()
+
+
+def keyboard_connect_tonspace(event: Message | CallbackQuery, url: str) -> InlineKeyboardMarkup:
+    buttons: dict[str, list] = {
+        "ru": [
+            InlineKeyboardButton(text="Подключить TonSpace", url=url),
+            InlineKeyboardButton(text="Назад", callback_data="profile"),
+        ],
+        "en": [
+            InlineKeyboardButton(text="Connect TonSpace", url=url),
+            InlineKeyboardButton(text="Back", callback_data="profile"),
+        ]
+    }
+
+    language: str = Translator.language(event)
+    builder: InlineKeyboardBuilder = InlineKeyboardBuilder()
+    builder.row(buttons[language][0])
+    builder.row(buttons[language][1])
+    return builder.as_markup()
+
+
+def keyboard_connect_tonkeeper(event: Message | CallbackQuery, url: str) -> InlineKeyboardMarkup:
+    buttons: dict[str, list] = {
+        "ru": [
+            InlineKeyboardButton(text="Подключить Tonkeeper", url=url),
+            InlineKeyboardButton(text="Назад", callback_data="wallet"),
+        ],
+        "en": [
+            InlineKeyboardButton(text="Connect Tonkeeper", url=url),
+            InlineKeyboardButton(text="Back", callback_data="wallet"),
+        ]
+    }
+
+    language: str = Translator.language(event)
+    builder: InlineKeyboardBuilder = InlineKeyboardBuilder()
+    builder.row(buttons[language][0])
+    builder.row(buttons[language][1])
+    return builder.as_markup()
+
+
+def keyboard_connected(event: Message | CallbackQuery) -> InlineKeyboardMarkup:
+    buttons: dict[str, list] = {
+        "ru": [
+            InlineKeyboardButton(text="Закрыть", callback_data="profile"),
+        ],
+        "en": [
+            InlineKeyboardButton(text="Close", callback_data="profile"),
         ]
     }
 
@@ -20,15 +99,15 @@ def keyboard(event: Message | CallbackQuery) -> InlineKeyboardMarkup:
     return builder.as_markup()
 
 
-def keyboard_connect(event: Message | CallbackQuery, url: str) -> InlineKeyboardMarkup:
+def keyboard_connected_error(event: Message | CallbackQuery) -> InlineKeyboardMarkup:
     buttons: dict[str, list] = {
         "ru": [
-            InlineKeyboardButton(text="Подключить", url=url),
-            InlineKeyboardButton(text="Назад", callback_data="profile"),
+            InlineKeyboardButton(text="Поддержка", url="https://t.me/diominvd"),
+            InlineKeyboardButton(text="Закрыть", callback_data="profile"),
         ],
         "en": [
-            InlineKeyboardButton(text="Connect", url=url),
-            InlineKeyboardButton(text="Back", callback_data="profile"),
+            InlineKeyboardButton(text="Support", url="https://t.me/diominvd"),
+            InlineKeyboardButton(text="Close", callback_data="profile"),
         ]
     }
 
