@@ -125,7 +125,7 @@ async def h_code(message: Message, state: FSMContext) -> None:
             chat_id=message.from_user.id,
             message_id=state_data["anchor"],
             text=Translator.text(message, strings, "success"),
-            reply_markup=MainModule.modules["wallet"].keyboard(message, "back")
+            reply_markup=MainModule.modules["codes"].keyboard(message, "back")
         )
     else:
         strings: dict[str, dict] = {
@@ -139,7 +139,7 @@ async def h_code(message: Message, state: FSMContext) -> None:
                 chat_id=message.from_user.id,
                 message_id=state_data["anchor"],
                 text=Translator.text(message, strings, "invalid"),
-                reply_markup=MainModule.modules["wallet"].keyboard(message, "back")
+                reply_markup=MainModule.modules["codes"].keyboard(message, "back")
             )
         except:
             pass
