@@ -7,6 +7,7 @@ from pytonconnect import TonConnect
 from pytonconnect.storage import FileStorage
 from tonsdk.utils import Address
 
+from core.secrets import WALLET_STORAGE_PATH
 from database import t_users
 from modules.main import MainModule
 from utils import Markdown as md, Translator
@@ -101,7 +102,7 @@ async def h_wallet_tonspace(callback: CallbackQuery, state: FSMContext) -> None:
 
     connector = TonConnect(
         manifest_url='https://raw.githubusercontent.com/diominvd/independent_chain_bot/main/modules/main/wallet/manifest.json',
-        storage=FileStorage(f"modules/main/wallet/storage/{callback.from_user.id}.json")
+        storage=FileStorage(WALLET_STORAGE_PATH + f"storage/{callback.from_user.id}.json")
     )
 
     connect_url: str = await tonspace(connector)
@@ -148,7 +149,7 @@ async def h_wallet_tonkeeper(callback: CallbackQuery, state: FSMContext) -> None
 
     connector = TonConnect(
         manifest_url='https://raw.githubusercontent.com/diominvd/independent_chain_bot/main/modules/main/wallet/manifest.json',
-        storage=FileStorage(f"modules/main/wallet/storage/{callback.from_user.id}.json")
+        storage=FileStorage(WALLET_STORAGE_PATH + f"storage/{callback.from_user.id}.json")
     )
 
     connect_url: str = await tonkeeper(connector)
