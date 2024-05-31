@@ -103,7 +103,7 @@ async def h_mining(callback: CallbackQuery, state: FSMContext) -> None:
                    f"{md.bold('Усилитель добычи')}: x{m_user.booster}\n"
                    f"\n"
                    f"Обращаем внимание ⚠️ Для корректной работы добычи все приобретённые усилители должны "
-                   f"храниться на кошельке Ton Space.\n"
+                   f"храниться на кошельке в сети TON.\n"
                    f"\n"
                    f"Для комфортного использования раздела \"Добыча\" настоятельно рекомендуем ознакомиться "
                    f"с {md.url('данным руководством', 'https://teletype.in/@inch_ton/inch_mining_ru')}."),
@@ -113,7 +113,7 @@ async def h_mining(callback: CallbackQuery, state: FSMContext) -> None:
                    f"{md.bold('Mining booster')}: x{m_user.booster}\n"
                    f"\n"
                    f"Please note that ⚠️ For the correct operation of mining, all purchased amplifiers must "
-                   f"be stored on the Ton Space wallet.\n"
+                   f"be stored on a wallet on the TON network.\n"
                    f"\n"
                    f"For comfortable use of the \"Mining\" section, we strongly recommend that you read"
                    f"{md.url('this manual', 'https://teletype.in/@inch_ton/inch_mining_en')}."),
@@ -179,4 +179,4 @@ async def h_claim(callback: CallbackQuery, state: FSMContext) -> None:
             show_alert=True
         )
 
-        await h_mining(callback, state)
+    await h_mining(callback, state)
