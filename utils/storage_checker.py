@@ -1,6 +1,7 @@
 import asyncio
 import datetime
 
+from aiogram.exceptions import TelegramForbiddenError
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
@@ -31,11 +32,14 @@ class StorageChecker:
             if time_difference > m_user.storage * 3600:
                 if user.user_id not in cls.storage:
                     cls.storage.append(user.user_id)
-                    await bot.send_message(
-                        chat_id=user.user_id,
-                        text=cls.strings["notification"][user.language],
-                        reply_markup=cls.keyboard_builder(user.language),
-                    )
+                    try:
+                        await bot.send_message(
+                            chat_id=user.user_id,
+                            text=cls.strings["notification"][user.language],
+                            reply_markup=cls.keyboard_builder(user.language),
+                        )
+                    except TelegramForbiddenError:
+                        pass
             else:
                 try:
                     cls.storage.remove(user.user_id)
