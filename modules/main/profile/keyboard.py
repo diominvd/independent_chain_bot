@@ -21,7 +21,7 @@ def keyboard(event: Message | CallbackQuery) -> InlineKeyboardMarkup:
         "ru": [
             InlineKeyboardButton(text="💳 Кошелёк", callback_data="wallet"),
             InlineKeyboardButton(text="🔥 Добыча", callback_data="mining"),
-            InlineKeyboardButton(text="💯 Промокоды", callback_data="codes"),
+            InlineKeyboardButton(text="♻️ Промокоды", callback_data="codes"),
             InlineKeyboardButton(text="🎉 События", callback_data="events"),
             InlineKeyboardButton(text="🛟 Поддержка", callback_data="support"),
             InlineKeyboardButton(text="Пригласить друга", switch_inline_query=invite(event))
@@ -29,7 +29,7 @@ def keyboard(event: Message | CallbackQuery) -> InlineKeyboardMarkup:
         "en": [
             InlineKeyboardButton(text="💳 Wallet", callback_data="wallet"),
             InlineKeyboardButton(text="🔥 Mining", callback_data="mining"),
-            InlineKeyboardButton(text="💯 Codes", callback_data="codes"),
+            InlineKeyboardButton(text="♻️ Codes", callback_data="codes"),
             InlineKeyboardButton(text="🎉 Events", callback_data="events"),
             InlineKeyboardButton(text="🛟 Support", callback_data="support"),
             InlineKeyboardButton(text="Invite friend", switch_inline_query=invite(event))
