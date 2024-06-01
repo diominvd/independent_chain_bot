@@ -51,6 +51,12 @@ class Table(Database):
         else:
             return self.all()
 
+    def count(self, field: str = None) -> int:
+        query: str = f"SELECT COUNT({'*' if field is None else field}) FROM {self.name}"
+        self.request(query, (), False)
+        response: tuple = self.one()
+        return response[0]
+
     def insert(self, **kwargs) -> None:
         query: str = f"INSERT INTO {self.name} ({', '.join([field for field in kwargs.keys()])}) VALUES ({', '.join([f'%s' for _ in range(len(kwargs))])})"
         self.request(query, tuple(value for value in kwargs.values()), True)

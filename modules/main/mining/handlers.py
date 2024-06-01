@@ -140,7 +140,7 @@ async def h_claim(callback: CallbackQuery, state: FSMContext) -> None:
 
     time_difference: float = (datetime.datetime.now() - user.last_claim).total_seconds()
 
-    if time_difference < 3600 * user.storage + 7200:
+    if time_difference < user.storage * 3600 + 7200:
 
         # Update last claim time.
         t_mining.assign("last_claim", datetime.datetime.now(), "user_id", user.user_id)
