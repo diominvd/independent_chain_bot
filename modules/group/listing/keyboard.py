@@ -7,10 +7,10 @@ from utils import Translator
 def keyboard(event: Message | CallbackQuery) -> InlineKeyboardMarkup:
     buttons: dict[str, list] = {
         "ru": [
-            InlineKeyboardButton(text="TonScan", url="https://tonscan.org/address/EQDRaPxN8MkJOJYX-adlBBFnhMlHfPzIgD7NtyM0dtiauCZL"),
+            InlineKeyboardButton(text="TonScan", url="https://tonscan.org/jetton/EQDRaPxN8MkJOJYX-adlBBFnhMlHfPzIgD7NtyM0dtiauCZL"),
         ],
         "en": [
-            InlineKeyboardButton(text="TonScan", url="https://tonscan.org/address/EQDRaPxN8MkJOJYX-adlBBFnhMlHfPzIgD7NtyM0dtiauCZL"),
+            InlineKeyboardButton(text="TonScan", url="https://tonscan.org/jetton/EQDRaPxN8MkJOJYX-adlBBFnhMlHfPzIgD7NtyM0dtiauCZL"),
         ]
     }
 
