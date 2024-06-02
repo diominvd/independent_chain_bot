@@ -42,7 +42,7 @@ async def h_start(message: Message, state: FSMContext) -> None:
     strings: dict[str, dict] = {
         "greeting": {
             "ru": (
-                f"Добро пожаловать в {md.bold('Independent Chain Project')} - крипто-проект, запущенный группой энтузиастов.\n"
+                f"Добро пожаловать в {md.bold('Independent Chain')} - крипто-проект, запущенный группой энтузиастов.\n"
                 f"\n"
                 f"Наша цель - запустить собственную, независимую от коммерческих организаций, спонсоров и сторонних "
                 f"организаций блокчейн-сеть с внутресетевой монетой.\n"
@@ -57,7 +57,7 @@ async def h_start(message: Message, state: FSMContext) -> None:
                 f"\n"
                 f"{md.monospaced('Перед использованием бота настоятельно рекомендуем ознакомиться с пользовательским соглашением.')}"),
             "en": (
-                f"Welcome to {md.bold('Independent Chain Project')}, a crypto project launched by a group of enthusiasts.\n"
+                f"Welcome to {md.bold('Independent Chain')}, a crypto project launched by a group of enthusiasts.\n"
                 f"\n"
                 f"Our goal is to launch our own blockchain network with an intra-network coin, independent of commercial "
                 f"organizations, sponsors and third-party organizations.\n"
