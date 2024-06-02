@@ -72,11 +72,17 @@ async def h_mailing_template(message: Message, state: FSMContext) -> None:
         language: str = t_users.select(("language",), "user_id", user)
         try:
             result["total"] += 1
-            await bot.send_message(
-                chat_id=user,
-                text=eval(language)["text"],
-                reply_markup=AdminModule.modules["mailing"].keyboard_constructor(eval(language)["button"], eval(language)["link"])
-            )
+            if eval(language)["button"] == "None" and eval(language)["link"] == "None":
+                await bot.send_message(
+                    chat_id=user,
+                    text=eval(language)["text"]
+                )
+            else:
+                await bot.send_message(
+                    chat_id=user,
+                    text=eval(language)["text"],
+                    reply_markup=AdminModule.modules["mailing"].keyboard_constructor(eval(language)["button"], eval(language)["link"])
+                )
         except:
             result["fail"] += 1
         else:
