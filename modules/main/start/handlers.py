@@ -1,14 +1,23 @@
 import datetime
 
 from aiogram import F
-from aiogram.enums import ChatType
+from aiogram.enums import ChatType, ChatMemberStatus
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
-from aiogram.types import Message
+from aiogram.types import Message, CallbackQuery
 
+from core.config import bot
 from database import t_users
 from modules.main import MainModule
 from utils import Markdown as md, Translator
+
+
+async def check_subscribe(user_id: int) -> bool:
+    status = await bot.get_chat_member(chat_id="@inch_ton", user_id=user_id)
+    if status.status != ChatMemberStatus.LEFT:
+        return True
+    else:
+        return False
 
 
 def language(language_code: str) -> str:
@@ -61,31 +70,68 @@ async def h_start(message: Message, state: FSMContext) -> None:
                 f"\n"
                 f"To view the profile, use the /profile command.\n"
                 f"{md.monospaced('Before using the bot, we strongly recommend that you read the user agreement.')}")
+        },
+        "subscribe": {
+            "ru": "Подпишитесь на канал проекта для использования бота.",
+            "en": "Subscribe to the project channel to use the bot."
         }
     }
 
     await state.clear()
 
-    # Check user existence in bot database.
-    user = t_users.user(message.from_user.id)
-    if user is None:
-        t_users.insert(
-            user_id=message.from_user.id,
-            username=message.from_user.username,
-            language=language(message.from_user.language_code),
-            wallet="NULL",
-            balance=t_users.start,
-            referals=0,
-            last_code=(datetime.datetime.now() - datetime.timedelta(days=1)),
+    if not await check_subscribe(message.from_user.id):
+        await message.answer(
+            text=Translator.text(message, strings, "subscribe"),
+            reply_markup=MainModule.modules["start"].keyboard_subscribe(message)
+        )
+    else:
+        # Check user existence in bot database.
+        user = t_users.user(message.from_user.id)
+        if user is None:
+            t_users.insert(
+                user_id=message.from_user.id,
+                username=message.from_user.username,
+                language=language(message.from_user.language_code),
+                wallet="NULL",
+                balance=t_users.start,
+                referals=0,
+                last_code=(datetime.datetime.now() - datetime.timedelta(days=1)),
+            )
+
+        inviter_id: int | None = inviter(message)
+        if inviter_id is not None:
+            if user is None:
+                t_users.increase("referals", 1, "user_id", inviter_id)
+                t_users.increase("balance", t_users.referal, "user_id", inviter_id)
+
+        await message.answer(
+            text=Translator.text(message, strings, "greeting"),
+            reply_markup=MainModule.modules["start"].keyboard(message)
         )
 
-    inviter_id: int | None = inviter(message)
-    if inviter_id is not None:
-        if user is None:
-            t_users.increase("referals", 1, "user_id", inviter_id)
-            t_users.increase("balance", t_users.referal, "user_id", inviter_id)
 
-    await message.answer(
-        text=Translator.text(message, strings, "greeting"),
-        reply_markup=MainModule.modules["start"].keyboard(message)
-    )
+@MainModule.router.callback_query(F.data == "check_subscribe")
+async def h_subscribe(callback: CallbackQuery, state: FSMContext) -> None:
+
+    strings: dict[str, dict] = {
+        "success": {
+            "ru": ("Подписка подтверждена ✅\n"
+                   "Воспользуйтесь командой → /start"),
+            "en": ("Subscription is confirmed ✅\n"
+                   "Use command → /start")
+        },
+        "fail": {
+            "ru": "Вы не подписаны на канал 🚫",
+            "en": "You are not subscribed to the channel 🚫"
+        }
+    }
+
+    if await check_subscribe(callback.from_user.id):
+        await callback.message.edit_text(
+            text=Translator.text(callback, strings, "success")
+        )
+    else:
+        await callback.answer(
+            text=Translator.text(callback, strings, "fail"),
+            show_alert=True
+        )
