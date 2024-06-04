@@ -79,31 +79,31 @@ async def h_start(message: Message, state: FSMContext) -> None:
 
     await state.clear()
 
+    # Check user existence in bot database.
+    user = t_users.user(message.from_user.id)
+    if user is None:
+        t_users.insert(
+            user_id=message.from_user.id,
+            username=message.from_user.username,
+            language=language(message.from_user.language_code),
+            wallet="NULL",
+            balance=t_users.start,
+            referals=0,
+            last_code=(datetime.datetime.now() - datetime.timedelta(days=1)),
+        )
+
+    inviter_id: int | None = inviter(message)
+    if inviter_id is not None:
+        if user is None:
+            t_users.increase("referals", 1, "user_id", inviter_id)
+            t_users.increase("balance", t_users.referal, "user_id", inviter_id)
+
     if not await check_subscribe(message.from_user.id):
         await message.answer(
             text=Translator.text(message, strings, "subscribe"),
             reply_markup=MainModule.modules["start"].keyboard_subscribe(message)
         )
     else:
-        # Check user existence in bot database.
-        user = t_users.user(message.from_user.id)
-        if user is None:
-            t_users.insert(
-                user_id=message.from_user.id,
-                username=message.from_user.username,
-                language=language(message.from_user.language_code),
-                wallet="NULL",
-                balance=t_users.start,
-                referals=0,
-                last_code=(datetime.datetime.now() - datetime.timedelta(days=1)),
-            )
-
-        inviter_id: int | None = inviter(message)
-        if inviter_id is not None:
-            if user is None:
-                t_users.increase("referals", 1, "user_id", inviter_id)
-                t_users.increase("balance", t_users.referal, "user_id", inviter_id)
-
         await message.answer(
             text=Translator.text(message, strings, "greeting"),
             reply_markup=MainModule.modules["start"].keyboard(message)
