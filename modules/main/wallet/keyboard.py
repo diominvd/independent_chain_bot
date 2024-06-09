@@ -9,11 +9,13 @@ def keyboard(event: Message | CallbackQuery) -> InlineKeyboardMarkup:
         "ru": [
             InlineKeyboardButton(text="TonSpace", callback_data="tonspace"),
             InlineKeyboardButton(text="TonKeeper", callback_data="tonkeeper"),
+            InlineKeyboardButton(text="MyTonWallet", callback_data="mytonwallet"),
             InlineKeyboardButton(text="Назад", callback_data="profile"),
         ],
         "en": [
             InlineKeyboardButton(text="TonSpace", callback_data="tonspace"),
             InlineKeyboardButton(text="TonKeeper", callback_data="tonkeeper"),
+            InlineKeyboardButton(text="MyTonWallet", callback_data="mytonwallet"),
             InlineKeyboardButton(text="Back", callback_data="profile"),
         ]
     }
@@ -23,6 +25,7 @@ def keyboard(event: Message | CallbackQuery) -> InlineKeyboardMarkup:
     builder.row(buttons[language][0])
     builder.row(buttons[language][1])
     builder.row(buttons[language][2])
+    builder.row(buttons[language][3])
     return builder.as_markup()
 
 
@@ -72,6 +75,25 @@ def keyboard_connect_tonkeeper(event: Message | CallbackQuery, url: str) -> Inli
         ],
         "en": [
             InlineKeyboardButton(text="Connect Tonkeeper", url=url),
+            InlineKeyboardButton(text="Back", callback_data="wallet"),
+        ]
+    }
+
+    language: str = Translator.language(event)
+    builder: InlineKeyboardBuilder = InlineKeyboardBuilder()
+    builder.row(buttons[language][0])
+    builder.row(buttons[language][1])
+    return builder.as_markup()
+
+
+def keyboard_connect_mytonwallet(event: Message | CallbackQuery, url: str) -> InlineKeyboardMarkup:
+    buttons: dict[str, list] = {
+        "ru": [
+            InlineKeyboardButton(text="Подключить MyTonWallet", url=url),
+            InlineKeyboardButton(text="Назад", callback_data="wallet"),
+        ],
+        "en": [
+            InlineKeyboardButton(text="Connect MyTonWallet", url=url),
             InlineKeyboardButton(text="Back", callback_data="wallet"),
         ]
     }
