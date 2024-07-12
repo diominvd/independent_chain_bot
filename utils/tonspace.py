@@ -25,9 +25,13 @@ class TonSpace:
     def filter_nft(cls, nft_items: NftItems) -> list:
         inch_nft: list = []
         for nft in nft_items.nft_items:
-            name: str = nft.metadata["name"]
-            if name in cls.available:
-                inch_nft.append(nft)
+            try:
+                name: str = nft.metadata["name"]
+            except:
+                pass
+            else:
+                if name in cls.available:
+                    inch_nft.append(nft)
         return inch_nft
 
     @classmethod
@@ -37,6 +41,7 @@ class TonSpace:
             for attr in nft.metadata["attributes"]:
                 if attr["trait_type"] == "multiplier":
                     booster = booster * float(attr["value"])
+        print(booster)
         t_mining.assign("booster", booster, "user_id", user_id)
         return round(booster, 2)
 

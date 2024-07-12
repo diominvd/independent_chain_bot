@@ -7,12 +7,12 @@ from utils import Translator
 def keyboard(event: Message | CallbackQuery) -> InlineKeyboardMarkup:
     buttons: dict[str, list] = {
         "ru": [
-            InlineKeyboardButton(text="Поддержка", url="https://t.me/diominvd"),
+            InlineKeyboardButton(text="Поддержка", url="https://t.me/inch_support"),
             InlineKeyboardButton(text="Пользовательское соглашение", url="https://teletype.in/@inch_ton/user_agreement_ru"),
             InlineKeyboardButton(text="Назад", callback_data="profile"),
         ],
         "en": [
-            InlineKeyboardButton(text="Support", url="https://t.me/diominvd"),
+            InlineKeyboardButton(text="Support", url="https://t.me/inch_support"),
             InlineKeyboardButton(text="User agreement", url="https://teletype.in/@inch_ton/user_agreement_en"),
             InlineKeyboardButton(text="Back", callback_data="profile"),
         ]
